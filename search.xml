@@ -521,142 +521,6 @@
       </tags>
   </entry>
   <entry>
-    <title>从零开始搭建个人博客或网站</title>
-    <url>/posts/423ac30d.html</url>
-    <content><![CDATA[<h1 id="从零开始搭建个人博客或网站"><a href="#从零开始搭建个人博客或网站" class="headerlink" title="从零开始搭建个人博客或网站"></a>从零开始搭建个人博客或网站</h1><h2 id="一、安装git和node环境"><a href="#一、安装git和node环境" class="headerlink" title="一、安装git和node环境"></a>一、安装git和node环境</h2><p>1、下载版本管理工具git（官网下载地址<a href="https://git-scm.com/download/%EF%BC%89%EF%BC%8C%E5%AE%89%E8%A3%85%E6%97%B6%E7%9B%B4%E6%8E%A5%E7%82%B9%E5%87%BB%E4%B8%8B%E4%B8%80%E6%AD%A5%EF%BC%8C%E6%A0%B9%E6%8D%AE%E9%BB%98%E8%AE%A4%E5%8B%BE%E9%80%89%E8%BF%9B%E8%A1%8C%E5%AE%89%E8%A3%85%E5%8D%B3%E5%8F%AF%E3%80%82">https://git-scm.com/download/），安装时直接点击下一步，根据默认勾选进行安装即可。</a></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311026983.jpg" alt="img"></p>
-<p>2、安装完 Git 后还需要进行全局配置。Git中必须配置全局用户名和邮箱后才能用。鼠标右击，选择Git Bash Here，输入下面两条命令（其中name填你的用户名，email填你的邮箱）：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ git config --global user.name &quot;name&quot;</span><br><span class="line">$ git config --global user.email &quot;email@example.com&quot;</span><br></pre></td></tr></table></figure>
-<p>3、下载nodejs（官网下载地址<a href="https://nodejs.org/en/%EF%BC%89%EF%BC%8C%E4%B8%8B%E8%BD%BDLTS%E7%89%88%E6%9C%AC%E5%8D%B3%E5%8F%AF%EF%BC%88%E9%95%BF%E6%9C%9F%E6%94%AF%E6%8C%81%E7%89%88%EF%BC%89%EF%BC%8C%E9%BB%98%E8%AE%A4%E7%82%B9%E5%87%BB%E4%B8%8B%E4%B8%80%E6%AD%A5%E5%AE%89%E8%A3%85%E5%8D%B3%E5%8F%AF%E3%80%82">https://nodejs.org/en/），下载LTS版本即可（长期支持版），默认点击下一步安装即可。</a></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311026472.jpg" alt="img"></p>
-<p>4、打开cmd或powershell命令终端，分别输入git –version和node –version检查下是否安装成功，如果显示版本信息则说明安装成功。最后再查看下 npm 包管理器的版本（npm是随NodeJS一起安装的包管理器），以后主要通过npm来安装各种软件包。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311026196.jpg" alt="img"></p>
-<h2 id="二、安装Hexo博客框架"><a href="#二、安装Hexo博客框架" class="headerlink" title="二、安装Hexo博客框架"></a>二、安装Hexo博客框架</h2><p>1、使用 npm 安装 Hexo，输入下面命令：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-<p>2、输入hexo –version查看版本信息，若显示如下图，则说明hexo环境安装成功。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025996.jpg" alt="img"></p>
-<h2 id="三、开始搭建Hexo博客"><a href="#三、开始搭建Hexo博客" class="headerlink" title="三、开始搭建Hexo博客"></a>三、开始搭建Hexo博客</h2><p>1、 首先新建一个目录myblog，然后进入到该目录，以后的所有操作都是在该目录下进行。命令如下</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ mkdir myblog</span><br><span class="line">$ cd myblog</span><br></pre></td></tr></table></figure>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025003.jpg" alt="img"></p>
-<p>2、对博客进行初始化并生成静态文件，命令如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ hexo init</span><br><span class="line">$ hexo generate（该命令可以简写为$ hexo g）</span><br></pre></td></tr></table></figure>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311026495.jpg" alt="img"></p>
-<p>3、输入命令hexo server启动博客服务器，默认情况下，访问网址为： <a href="http://localhost:4000/%E3%80%82">http://localhost:4000/。</a></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311026008.jpeg" alt="img"></p>
-<p>4、输入网址后，可以看到一个简单的网站雏形，到此Hexo个人博客或网站搭建完毕。另外，官网给出了很多炫丽花哨的博客主题模板，大家可以根据个人喜好换个主题，瞬间就高大上起来了。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311028644.jpg" alt="img"></p>
-<p>官网提供了各种各样的主题模板，什么类型的都有，颜值质量都很高。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025177.jpg" alt="img"></p>
-<p>这是我的博客美化后的效果，欢迎大家访问我的小站<a href="https://liupaopao.top/%E3%80%82">https://liupaopao.top/。</a></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025912.jpg" alt="img"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025976.jpg" alt="img"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025288.jpg" alt="img"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025107.jpg" alt="img"></p>
-]]></content>
-      <categories>
-        <category>博客相关</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>添加有趣的自定义HTML页面</title>
-    <url>/posts/b668aba.html</url>
-    <content><![CDATA[<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>网上有很多有趣的 html 特效网页，一般由index.html+js+css组成，且只能本地预览，下面介绍一种方法将html源码整合后添加到博客里面。</p>
-<h2 id="具体方法"><a href="#具体方法" class="headerlink" title="具体方法"></a>具体方法</h2><h3 id="1-新建HTML文件夹"><a href="#1-新建HTML文件夹" class="headerlink" title="1. 新建HTML文件夹"></a>1. 新建HTML文件夹</h3><p>首先在博客根目录的 source 文件夹下，新建一个文件夹用于存放要部署的 HTML 文件。</p>
-<p>我这里建了一个叫HTML的文件夹，里面的子文件夹可以存放各个HTML文件，当然也可以只创建一个主文件夹，直接在里面放 HTML 文件。</p>
-<h3 id="2-跳过hexo渲染"><a href="#2-跳过hexo渲染" class="headerlink" title="2. 跳过hexo渲染"></a>2. 跳过hexo渲染</h3><p>然后在博客根目录的配置文件_config.yml 文件里，设置跳过渲染：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 跳过渲染</span><br><span class="line">skip_render: </span><br><span class="line">  - &quot;xxxx.html&quot;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 跳过文件夹下所有文件</span><br><span class="line">skip_render: </span><br><span class="line">  - &quot;文件夹名/*&quot;</span><br><span class="line">如果父文件夹下还有子文件夹，就写：</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 跳过子文件夹</span><br><span class="line">skip_render: </span><br><span class="line">  - &quot;文件夹名/子文件夹名/*&quot;</span><br><span class="line">或更简单粗暴的方式：</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 跳过文件夹下所有子文件夹和文件</span><br><span class="line">skip_render: </span><br><span class="line">  - &quot;文件夹名/**&quot;   </span><br></pre></td></tr></table></figure>
-
-<h3 id="3-整合css、js文件"><a href="#3-整合css、js文件" class="headerlink" title="3. 整合css、js文件"></a>3. 整合css、js文件</h3><p>因为 hexo 部署的是静态文件，所有文章的 md 文件会被渲染成 html 文件，<br>hexo 会帮我们把所有 css、js 文件都加到文章里，我们之前跳过了渲染，所以就需要手动把 css、js 整合到 html 文件里</p>
-<p>下面处理分两部分：</p>
-<p>css：找到 index.html 文件里的语句，如：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;css/xxx.css&quot;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>然后在 css 文件夹中找到对应的文件 xxx.css，复制文件内容，把上面的代码改为：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;style&gt; css代码内容 &lt;/style&gt;</span><br></pre></td></tr></table></figure>
-
-<p>js：找到 index.html 文件里的语句，如：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;script src=&quot;js/xxx.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-<p> 然后在 js 文件夹中找到对应的文件 xxx.js，复制文件内容，把上面的代码改为：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;script&gt; js代码内容 &lt;/script&gt;</span><br></pre></td></tr></table></figure>
-<h3 id="4-验证效果"><a href="#4-验证效果" class="headerlink" title="4. 验证效果"></a>4. 验证效果</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-<p>部署后来到 <a href="https://xxxxx.github.io/">https://xxxxx.github.io/</a> 存放 html 文件的文件夹 &#x2F;xxx.html</p>
-<p>即可查看到你的自定义 html 页面了！</p>
-<p>建议在部署前先试试在本地能否打开，如果不行再按上文修改一次。</p>
-<h3 id="5-添加到导航菜单栏"><a href="#5-添加到导航菜单栏" class="headerlink" title="5. 添加到导航菜单栏"></a>5. 添加到导航菜单栏</h3><p>如果想将这些 html 的界面放到导航菜单栏上，修改主题配置文件_config.butterfly.yml 对应的导航菜单栏代码即可，这里将我的代码放出：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">menu:</span><br><span class="line">   主页: / || fas fa-home</span><br><span class="line">   时间轴: /archives/ || fas fa-archive</span><br><span class="line">   标签: /tags/ || fas fa-tags</span><br><span class="line">   分类: /categories/ || fas fa-folder-open</span><br><span class="line">   Demo||fas fa-file-code:</span><br><span class="line">     - all html demo || /Demo/ || far fa-file-code</span><br><span class="line">     - 圈小猫 || /HTML/圈小猫.html || fas fa-code</span><br><span class="line">     - 撕渔网 || /HTML/撕渔网.html || fas fa-code</span><br><span class="line">     - 纸飞机 || /HTML/纸飞机.html || fas fa-code</span><br><span class="line">     - 彩虹雨 || /HTML/彩虹雨.html || fas fa-code</span><br><span class="line">     - 方块穿梭 || /HTML/方块穿梭.html || fas fa-code</span><br><span class="line">     - 碰撞小球 || /HTML/碰撞小球.html || fas fa-code</span><br><span class="line">     - 烟花效果 || /HTML/烟花效果.html || fas fa-code</span><br><span class="line">     - 骇客帝国 || /HTML/骇客帝国.html || fas fa-code</span><br><span class="line">   娱乐||fas fa-list:</span><br><span class="line">     - 音乐 || /music/ || fas fa-music</span><br><span class="line">     - 电影 || /movies/ || fas fa-video</span><br><span class="line">   友链: /link/ || fas fa-link</span><br><span class="line">   关于: /about/ || fas fa-heart</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>博客相关</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>通过hexo-pdf插件在博客上发布pdf</title>
-    <url>/posts/54657.html</url>
-    <content><![CDATA[<p>我又回来写hexo博客的技术笔记了，因为有一个大(cai)佬(bi)他平时的文档都是用latex写得，发博客有点麻烦，所以要用嵌入pdf的方式进行发表，但是hexo原生不支持pdf，所以我就写了这个教程附带了hexo博客平时的部署方法，供参考。</p>
-<h2 id="安装PDF插件"><a href="#安装PDF插件" class="headerlink" title="安装PDF插件"></a>安装PDF插件</h2><ul>
-<li><p>进入你个人博客本地的根目录，在命令行中打开，并运行</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">BASH</span><br><span class="line">npm install --save hexo-pdf</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="PDF发表"><a href="#PDF发表" class="headerlink" title="PDF发表"></a>PDF发表</h2><p>  这一步在国内有两种可行办法，一种是使用本地的文件，让hexo从博客中加载，一种就是放在云端的存储仓库进行加载。这里两种方法都做演示，但是推荐使用后者。</p>
-<h3 id="方法一：本地仓库"><a href="#方法一：本地仓库" class="headerlink" title="方法一：本地仓库"></a>方法一：本地仓库</h3><ol>
-<li><p>这个方法比较简单，但是效果较差，可能会造成较大的卡顿，首先在本地的根目录下打开<code>source</code>在这个文件夹下直接将你的pdf放进去即可。</p>
-</li>
-<li><p>在你的本地的博客根目录下新建一篇文章命令行</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">BASH</span><br><span class="line">hexo new &quot;文章名称&quot;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>到你的根目录里的<code>source/_posts</code>文件夹中找到新建的文章，在完成了文章的头部编辑之后，在正文部分只用加一句</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">BASH</span><br><span class="line">&#123;% pdf /你自己刚刚放的pdf文档的名称.pdf %&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>回到博客的根目录运行,生成hexo部署文档</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">BASH</span><br><span class="line">hexo g</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>运行<code>hexo s</code>做本地调试或者是使用<code>hexo d</code>进行远端部署，这个过程中可能会遇到命令行提示github用户名和密码，用户名是GitHub注册邮箱，输入后回车确认密码的输入是不可见的，保证输入无误之后回车即可。</p>
-</li>
-</ol>
-<h3 id="方法二：远端仓库"><a href="#方法二：远端仓库" class="headerlink" title="方法二：远端仓库"></a>方法二：远端仓库</h3><p>白嫖GitHub的远端资源。（这里默认已经掌握GitHub基本操作）</p>
-<ol>
-<li><p>新建一个英文名称的公共仓库。</p>
-</li>
-<li><p>在本地文件夹clone或者是通过任何方法使本地文件夹和仓库相连通</p>
-</li>
-<li><p>将你要发布的pdf放在本地的文件夹中</p>
-</li>
-<li><p>使用<code>git push</code>命令将文件推到远端仓库</p>
-</li>
-<li><p>使用jsDelivr的cdn服务实现国内的加速访问，访问方法如下：<br>在文档中加入pdf嵌入语句</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">BASH</span><br><span class="line">&#123;% pdf https://cdn.jsdelivr.net/gh/你的GitHub账户名/你的新建的仓库名/你的文件路径/你的pdf文件.pdf %&#125;</span><br></pre></td></tr></table></figure>
-
-<p><em>其中的文件路径需要自己进行调整，若是主目录直接使用pdf文件名即可，不需要输入路径。</em></p>
-</li>
-<li><p>和第一种方法一致，新建文章并进行推送即可。</p>
-</li>
-</ol>
-<h2 id="访问网站"><a href="#访问网站" class="headerlink" title="访问网站"></a>访问网站</h2><p>  到这里应该就已经全部结束了，但是在实际访问过程中，我发现我的一些下载插件经常会自动抓取到pdf并提示下载，遇到这种情况就可以通过白名单，或者是忽略解决。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% pdf https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/pdf/test.pdf %&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<div class="pdf-container" data-target="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/pdf/test.pdf" data-height="500px"></div>]]></content>
-      <categories>
-        <category>博客相关</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>RPM介绍</title>
     <url>/posts/22588541.html</url>
     <content><![CDATA[<h1 id="RPM-命令"><a href="#RPM-命令" class="headerlink" title="RPM 命令"></a>RPM 命令</h1><p><strong>一、RPM 介绍</strong></p>
@@ -931,6 +795,142 @@
       </categories>
       <tags>
         <tag>Linux命令</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从零开始搭建个人博客或网站</title>
+    <url>/posts/423ac30d.html</url>
+    <content><![CDATA[<h1 id="从零开始搭建个人博客或网站"><a href="#从零开始搭建个人博客或网站" class="headerlink" title="从零开始搭建个人博客或网站"></a>从零开始搭建个人博客或网站</h1><h2 id="一、安装git和node环境"><a href="#一、安装git和node环境" class="headerlink" title="一、安装git和node环境"></a>一、安装git和node环境</h2><p>1、下载版本管理工具git（官网下载地址<a href="https://git-scm.com/download/%EF%BC%89%EF%BC%8C%E5%AE%89%E8%A3%85%E6%97%B6%E7%9B%B4%E6%8E%A5%E7%82%B9%E5%87%BB%E4%B8%8B%E4%B8%80%E6%AD%A5%EF%BC%8C%E6%A0%B9%E6%8D%AE%E9%BB%98%E8%AE%A4%E5%8B%BE%E9%80%89%E8%BF%9B%E8%A1%8C%E5%AE%89%E8%A3%85%E5%8D%B3%E5%8F%AF%E3%80%82">https://git-scm.com/download/），安装时直接点击下一步，根据默认勾选进行安装即可。</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311026983.jpg" alt="img"></p>
+<p>2、安装完 Git 后还需要进行全局配置。Git中必须配置全局用户名和邮箱后才能用。鼠标右击，选择Git Bash Here，输入下面两条命令（其中name填你的用户名，email填你的邮箱）：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ git config --global user.name &quot;name&quot;</span><br><span class="line">$ git config --global user.email &quot;email@example.com&quot;</span><br></pre></td></tr></table></figure>
+<p>3、下载nodejs（官网下载地址<a href="https://nodejs.org/en/%EF%BC%89%EF%BC%8C%E4%B8%8B%E8%BD%BDLTS%E7%89%88%E6%9C%AC%E5%8D%B3%E5%8F%AF%EF%BC%88%E9%95%BF%E6%9C%9F%E6%94%AF%E6%8C%81%E7%89%88%EF%BC%89%EF%BC%8C%E9%BB%98%E8%AE%A4%E7%82%B9%E5%87%BB%E4%B8%8B%E4%B8%80%E6%AD%A5%E5%AE%89%E8%A3%85%E5%8D%B3%E5%8F%AF%E3%80%82">https://nodejs.org/en/），下载LTS版本即可（长期支持版），默认点击下一步安装即可。</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311026472.jpg" alt="img"></p>
+<p>4、打开cmd或powershell命令终端，分别输入git –version和node –version检查下是否安装成功，如果显示版本信息则说明安装成功。最后再查看下 npm 包管理器的版本（npm是随NodeJS一起安装的包管理器），以后主要通过npm来安装各种软件包。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311026196.jpg" alt="img"></p>
+<h2 id="二、安装Hexo博客框架"><a href="#二、安装Hexo博客框架" class="headerlink" title="二、安装Hexo博客框架"></a>二、安装Hexo博客框架</h2><p>1、使用 npm 安装 Hexo，输入下面命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+<p>2、输入hexo –version查看版本信息，若显示如下图，则说明hexo环境安装成功。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025996.jpg" alt="img"></p>
+<h2 id="三、开始搭建Hexo博客"><a href="#三、开始搭建Hexo博客" class="headerlink" title="三、开始搭建Hexo博客"></a>三、开始搭建Hexo博客</h2><p>1、 首先新建一个目录myblog，然后进入到该目录，以后的所有操作都是在该目录下进行。命令如下</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ mkdir myblog</span><br><span class="line">$ cd myblog</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025003.jpg" alt="img"></p>
+<p>2、对博客进行初始化并生成静态文件，命令如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ hexo init</span><br><span class="line">$ hexo generate（该命令可以简写为$ hexo g）</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311026495.jpg" alt="img"></p>
+<p>3、输入命令hexo server启动博客服务器，默认情况下，访问网址为： <a href="http://localhost:4000/%E3%80%82">http://localhost:4000/。</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311026008.jpeg" alt="img"></p>
+<p>4、输入网址后，可以看到一个简单的网站雏形，到此Hexo个人博客或网站搭建完毕。另外，官网给出了很多炫丽花哨的博客主题模板，大家可以根据个人喜好换个主题，瞬间就高大上起来了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311028644.jpg" alt="img"></p>
+<p>官网提供了各种各样的主题模板，什么类型的都有，颜值质量都很高。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025177.jpg" alt="img"></p>
+<p>这是我的博客美化后的效果，欢迎大家访问我的小站<a href="https://liupaopao.top/%E3%80%82">https://liupaopao.top/。</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025912.jpg" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025976.jpg" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025288.jpg" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025107.jpg" alt="img"></p>
+]]></content>
+      <categories>
+        <category>博客相关</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>添加有趣的自定义HTML页面</title>
+    <url>/posts/b668aba.html</url>
+    <content><![CDATA[<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>网上有很多有趣的 html 特效网页，一般由index.html+js+css组成，且只能本地预览，下面介绍一种方法将html源码整合后添加到博客里面。</p>
+<h2 id="具体方法"><a href="#具体方法" class="headerlink" title="具体方法"></a>具体方法</h2><h3 id="1-新建HTML文件夹"><a href="#1-新建HTML文件夹" class="headerlink" title="1. 新建HTML文件夹"></a>1. 新建HTML文件夹</h3><p>首先在博客根目录的 source 文件夹下，新建一个文件夹用于存放要部署的 HTML 文件。</p>
+<p>我这里建了一个叫HTML的文件夹，里面的子文件夹可以存放各个HTML文件，当然也可以只创建一个主文件夹，直接在里面放 HTML 文件。</p>
+<h3 id="2-跳过hexo渲染"><a href="#2-跳过hexo渲染" class="headerlink" title="2. 跳过hexo渲染"></a>2. 跳过hexo渲染</h3><p>然后在博客根目录的配置文件_config.yml 文件里，设置跳过渲染：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 跳过渲染</span><br><span class="line">skip_render: </span><br><span class="line">  - &quot;xxxx.html&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 跳过文件夹下所有文件</span><br><span class="line">skip_render: </span><br><span class="line">  - &quot;文件夹名/*&quot;</span><br><span class="line">如果父文件夹下还有子文件夹，就写：</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 跳过子文件夹</span><br><span class="line">skip_render: </span><br><span class="line">  - &quot;文件夹名/子文件夹名/*&quot;</span><br><span class="line">或更简单粗暴的方式：</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 跳过文件夹下所有子文件夹和文件</span><br><span class="line">skip_render: </span><br><span class="line">  - &quot;文件夹名/**&quot;   </span><br></pre></td></tr></table></figure>
+
+<h3 id="3-整合css、js文件"><a href="#3-整合css、js文件" class="headerlink" title="3. 整合css、js文件"></a>3. 整合css、js文件</h3><p>因为 hexo 部署的是静态文件，所有文章的 md 文件会被渲染成 html 文件，<br>hexo 会帮我们把所有 css、js 文件都加到文章里，我们之前跳过了渲染，所以就需要手动把 css、js 整合到 html 文件里</p>
+<p>下面处理分两部分：</p>
+<p>css：找到 index.html 文件里的语句，如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;css/xxx.css&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>然后在 css 文件夹中找到对应的文件 xxx.css，复制文件内容，把上面的代码改为：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;style&gt; css代码内容 &lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<p>js：找到 index.html 文件里的语句，如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;script src=&quot;js/xxx.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p> 然后在 js 文件夹中找到对应的文件 xxx.js，复制文件内容，把上面的代码改为：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;script&gt; js代码内容 &lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="4-验证效果"><a href="#4-验证效果" class="headerlink" title="4. 验证效果"></a>4. 验证效果</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+<p>部署后来到 <a href="https://xxxxx.github.io/">https://xxxxx.github.io/</a> 存放 html 文件的文件夹 &#x2F;xxx.html</p>
+<p>即可查看到你的自定义 html 页面了！</p>
+<p>建议在部署前先试试在本地能否打开，如果不行再按上文修改一次。</p>
+<h3 id="5-添加到导航菜单栏"><a href="#5-添加到导航菜单栏" class="headerlink" title="5. 添加到导航菜单栏"></a>5. 添加到导航菜单栏</h3><p>如果想将这些 html 的界面放到导航菜单栏上，修改主题配置文件_config.butterfly.yml 对应的导航菜单栏代码即可，这里将我的代码放出：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">menu:</span><br><span class="line">   主页: / || fas fa-home</span><br><span class="line">   时间轴: /archives/ || fas fa-archive</span><br><span class="line">   标签: /tags/ || fas fa-tags</span><br><span class="line">   分类: /categories/ || fas fa-folder-open</span><br><span class="line">   Demo||fas fa-file-code:</span><br><span class="line">     - all html demo || /Demo/ || far fa-file-code</span><br><span class="line">     - 圈小猫 || /HTML/圈小猫.html || fas fa-code</span><br><span class="line">     - 撕渔网 || /HTML/撕渔网.html || fas fa-code</span><br><span class="line">     - 纸飞机 || /HTML/纸飞机.html || fas fa-code</span><br><span class="line">     - 彩虹雨 || /HTML/彩虹雨.html || fas fa-code</span><br><span class="line">     - 方块穿梭 || /HTML/方块穿梭.html || fas fa-code</span><br><span class="line">     - 碰撞小球 || /HTML/碰撞小球.html || fas fa-code</span><br><span class="line">     - 烟花效果 || /HTML/烟花效果.html || fas fa-code</span><br><span class="line">     - 骇客帝国 || /HTML/骇客帝国.html || fas fa-code</span><br><span class="line">   娱乐||fas fa-list:</span><br><span class="line">     - 音乐 || /music/ || fas fa-music</span><br><span class="line">     - 电影 || /movies/ || fas fa-video</span><br><span class="line">   友链: /link/ || fas fa-link</span><br><span class="line">   关于: /about/ || fas fa-heart</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>博客相关</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>通过hexo-pdf插件在博客上发布pdf</title>
+    <url>/posts/54657.html</url>
+    <content><![CDATA[<p>我又回来写hexo博客的技术笔记了，因为有一个大(cai)佬(bi)他平时的文档都是用latex写得，发博客有点麻烦，所以要用嵌入pdf的方式进行发表，但是hexo原生不支持pdf，所以我就写了这个教程附带了hexo博客平时的部署方法，供参考。</p>
+<h2 id="安装PDF插件"><a href="#安装PDF插件" class="headerlink" title="安装PDF插件"></a>安装PDF插件</h2><ul>
+<li><p>进入你个人博客本地的根目录，在命令行中打开，并运行</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">BASH</span><br><span class="line">npm install --save hexo-pdf</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="PDF发表"><a href="#PDF发表" class="headerlink" title="PDF发表"></a>PDF发表</h2><p>  这一步在国内有两种可行办法，一种是使用本地的文件，让hexo从博客中加载，一种就是放在云端的存储仓库进行加载。这里两种方法都做演示，但是推荐使用后者。</p>
+<h3 id="方法一：本地仓库"><a href="#方法一：本地仓库" class="headerlink" title="方法一：本地仓库"></a>方法一：本地仓库</h3><ol>
+<li><p>这个方法比较简单，但是效果较差，可能会造成较大的卡顿，首先在本地的根目录下打开<code>source</code>在这个文件夹下直接将你的pdf放进去即可。</p>
+</li>
+<li><p>在你的本地的博客根目录下新建一篇文章命令行</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">BASH</span><br><span class="line">hexo new &quot;文章名称&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>到你的根目录里的<code>source/_posts</code>文件夹中找到新建的文章，在完成了文章的头部编辑之后，在正文部分只用加一句</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">BASH</span><br><span class="line">&#123;% pdf /你自己刚刚放的pdf文档的名称.pdf %&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>回到博客的根目录运行,生成hexo部署文档</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">BASH</span><br><span class="line">hexo g</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行<code>hexo s</code>做本地调试或者是使用<code>hexo d</code>进行远端部署，这个过程中可能会遇到命令行提示github用户名和密码，用户名是GitHub注册邮箱，输入后回车确认密码的输入是不可见的，保证输入无误之后回车即可。</p>
+</li>
+</ol>
+<h3 id="方法二：远端仓库"><a href="#方法二：远端仓库" class="headerlink" title="方法二：远端仓库"></a>方法二：远端仓库</h3><p>白嫖GitHub的远端资源。（这里默认已经掌握GitHub基本操作）</p>
+<ol>
+<li><p>新建一个英文名称的公共仓库。</p>
+</li>
+<li><p>在本地文件夹clone或者是通过任何方法使本地文件夹和仓库相连通</p>
+</li>
+<li><p>将你要发布的pdf放在本地的文件夹中</p>
+</li>
+<li><p>使用<code>git push</code>命令将文件推到远端仓库</p>
+</li>
+<li><p>使用jsDelivr的cdn服务实现国内的加速访问，访问方法如下：<br>在文档中加入pdf嵌入语句</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">BASH</span><br><span class="line">&#123;% pdf https://cdn.jsdelivr.net/gh/你的GitHub账户名/你的新建的仓库名/你的文件路径/你的pdf文件.pdf %&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em>其中的文件路径需要自己进行调整，若是主目录直接使用pdf文件名即可，不需要输入路径。</em></p>
+</li>
+<li><p>和第一种方法一致，新建文章并进行推送即可。</p>
+</li>
+</ol>
+<h2 id="访问网站"><a href="#访问网站" class="headerlink" title="访问网站"></a>访问网站</h2><p>  到这里应该就已经全部结束了，但是在实际访问过程中，我发现我的一些下载插件经常会自动抓取到pdf并提示下载，遇到这种情况就可以通过白名单，或者是忽略解决。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% pdf https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/pdf/test.pdf %&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<div class="pdf-container" data-target="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/pdf/test.pdf" data-height="500px"></div>]]></content>
+      <categories>
+        <category>博客相关</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
       </tags>
   </entry>
   <entry>
