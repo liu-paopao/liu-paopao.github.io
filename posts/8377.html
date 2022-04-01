@@ -23,15 +23,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="vim中可视模式下多行添加注释和取消注释正常模式 –&gt; 可视模式：    指令 描述    v 可视模式   ctrl+v 可视块模式   shift+v 可视行模式   可视块模式有一个非常实用的作用：选多行进行注释 多行添加注释：- 光标置于行首- ctrl + v，进入可视块模式- 移动光标，选中的位置会有高亮显示- shift + i，进入 insert 模式- 输入&#x2F;&#x2F;- esc">
+    <meta name="description" content="vim中可视模式下多行添加注释和取消注释正常模式 –&gt; 可视模式：    指令 描述    v 可视模式   ctrl+v 可视块模式   shift+v 可视行模式   可视块模式有一个非常实用的作用：选多行进行注释 多行添加注释：- 光标置于行首- ctrl + v，进入可视块模式- 移动光标，选中的位置会有高亮显示- shift + i，进入 insert 模式- 输入&#x2F;&#x2F;- es">
 <meta property="og:type" content="article">
 <meta property="og:title" content="vim中可视模式下添加或取消多行注释">
 <meta property="og:url" content="https://liu-paopao.github.io/posts/8377.html">
 <meta property="og:site_name" content="跑跑的技术笔记">
-<meta property="og:description" content="vim中可视模式下多行添加注释和取消注释正常模式 –&gt; 可视模式：    指令 描述    v 可视模式   ctrl+v 可视块模式   shift+v 可视行模式   可视块模式有一个非常实用的作用：选多行进行注释 多行添加注释：- 光标置于行首- ctrl + v，进入可视块模式- 移动光标，选中的位置会有高亮显示- shift + i，进入 insert 模式- 输入&#x2F;&#x2F;- esc">
+<meta property="og:description" content="vim中可视模式下多行添加注释和取消注释正常模式 –&gt; 可视模式：    指令 描述    v 可视模式   ctrl+v 可视块模式   shift+v 可视行模式   可视块模式有一个非常实用的作用：选多行进行注释 多行添加注释：- 光标置于行首- ctrl + v，进入可视块模式- 移动光标，选中的位置会有高亮显示- shift + i，进入 insert 模式- 输入&#x2F;&#x2F;- es">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-06-06T07:46:48.000Z">
-<meta property="article:modified_time" content="2021-12-18T13:08:31.167Z">
+<meta property="article:modified_time" content="2022-04-01T14:05:06.132Z">
 <meta property="article:author" content="paopao">
 <meta property="article:tag" content="Vim">
 <meta name="twitter:card" content="summary">
@@ -41,7 +41,7 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://liu-paopao.github.io/posts/8377.html","path":"posts/8377.html","title":"vim中可视模式下添加或取消多行注释"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/8377.html","path":"posts/8377.html","title":"vim中可视模式下添加或取消多行注释"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>vim中可视模式下添加或取消多行注释 | 跑跑的技术笔记</title>
@@ -161,18 +161,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -277,7 +277,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2021-12-18 21:08:31" itemprop="dateModified" datetime="2021-12-18T21:08:31+08:00">2021-12-18</time>
+      <time title="修改时间：2022-04-01 22:05:06" itemprop="dateModified" datetime="2022-04-01T22:05:06+08:00">2022-04-01</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -290,18 +290,6 @@
     </span>
 
   
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Changyan：</span>
-    
-    <a title="vim中可视模式下添加或取消多行注释" href="/posts/8377.html#SOHUCS" itemprop="discussionUrl">
-      <span id="sourceId::3d9de98eacce6a8361d3aa37e83126fe" class="cy_cmt_count" itemprop="commentCount"></span>
-    </a>
-  </span>
   
   
     <span class="post-meta-break"></span>
@@ -328,7 +316,9 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h2 id="vim中可视模式下多行添加注释和取消注释"><a href="#vim中可视模式下多行添加注释和取消注释" class="headerlink" title="vim中可视模式下多行添加注释和取消注释"></a>vim中可视模式下多行添加注释和取消注释</h2><p><strong>正常模式 –&gt; 可视模式：</strong></p>
+        <span id="more"></span>
+
+<h2 id="vim中可视模式下多行添加注释和取消注释"><a href="#vim中可视模式下多行添加注释和取消注释" class="headerlink" title="vim中可视模式下多行添加注释和取消注释"></a>vim中可视模式下多行添加注释和取消注释</h2><p><strong>正常模式 –&gt; 可视模式：</strong></p>
 <table>
 <thead>
 <tr>
@@ -397,7 +387,6 @@
 
 
 
-    <div class="comments" id="SOHUCS" sid="3d9de98eacce6a8361d3aa37e83126fe"></div>
 </div>
   </main>
 
@@ -419,7 +408,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">66k</span>
+    <span title="站点总字数">67k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">

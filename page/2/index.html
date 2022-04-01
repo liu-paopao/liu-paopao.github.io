@@ -157,18 +157,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -227,664 +227,6 @@
 
 
     <div class="main-inner index posts-expand">
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/dcedac78.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="跑跑的技术笔记">
-      <meta itemprop="description" content="努力">
-    </span>
-    
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 跑跑的技术笔记">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/dcedac78.html" class="post-title-link" itemprop="url">vim中统计字符串出现的次数</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-12-18 21:00:00 / 修改时间：21:06:48" itemprop="dateCreated datePublished" datetime="2021-12-18T21:00:00+08:00">2021-12-18</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Vim/" itemprop="url" rel="index"><span itemprop="name">Vim</span></a>
-        </span>
-    </span>
-
-  
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Changyan：</span>
-    
-    <a title="vim中统计字符串出现的次数" href="/posts/dcedac78.html#SOHUCS" itemprop="discussionUrl">
-      <span id="sourceId::37ba00cfd109b626c98a17b70a77a106" class="cy_cmt_count" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>304</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>vim中统计字符串出现的次数</p>
-<p><strong>关键命令：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:%s/pattern//gn</span><br></pre></td></tr></table></figure>
-
-<p>参数说明：</p>
-<p> % ：指明操作区间，%表示全文本；可以使用1,$或者行区间代替</p>
-<p> s：substitute，表示替换</p>
-<p> pattern：要查找的字符串</p>
-<p> &#x2F;&#x2F;：替代文本应该放在这里，两个斜杠中间没有任何字符表示无替代文本</p>
-<p> g：替换该行所有出现的字符串，如果没有该参数则只替换该行第一次出现的地方</p>
-<p> n：表示匹配的行数</p>
-<p><strong>进一步扩展：</strong></p>
-<p>统计k行到l行出现pattern的次数：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:k,ls/pattern//gn</span><br></pre></td></tr></table></figure>
-
-<p>统计在当前编辑文本出现的次数：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:%s/pattern//gn</span><br></pre></td></tr></table></figure>
-
-<p>统计在文件中出现的行数：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat file|greg –i pattern |wc –l</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/bc41595b.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="跑跑的技术笔记">
-      <meta itemprop="description" content="努力">
-    </span>
-    
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 跑跑的技术笔记">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/bc41595b.html" class="post-title-link" itemprop="url">解决vim中鼠标选中不能复制</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-12-18 20:55:49 / 修改时间：21:06:48" itemprop="dateCreated datePublished" datetime="2021-12-18T20:55:49+08:00">2021-12-18</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Vim/" itemprop="url" rel="index"><span itemprop="name">Vim</span></a>
-        </span>
-    </span>
-
-  
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Changyan：</span>
-    
-    <a title="解决vim中鼠标选中不能复制" href="/posts/bc41595b.html#SOHUCS" itemprop="discussionUrl">
-      <span id="sourceId::83f5ba261f885a26f6abc91d3fd9d204" class="cy_cmt_count" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>241</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h2><p>vim中鼠标选中不能复制并进入可视模式，习惯了在vim中鼠标选中即复制的效果，对此问题从网上查了下发现是vim的默认配置导致的。</p>
-<h2 id="解决方法："><a href="#解决方法：" class="headerlink" title="解决方法："></a>解决方法：</h2><ol>
-<li><p>修改 vim 的默认配置文件</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /usr/share/vim/vim81/defaults.vim</span><br></pre></td></tr></table></figure></li>
-<li><p>输入 <code>/mouse</code> 搜索关键词 <code>mouse</code> ，定位到下面位置</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if has(&#x27;mouse&#x27;)</span><br><span class="line">set mouse=a</span><br><span class="line">endif</span><br></pre></td></tr></table></figure>
-<p>将 <code>set mouse=a</code> 改为 <code>set mouse-=a</code>（在等号前面加上一个减号）</p>
-</li>
-<li><p>输入 <code>:wq!</code> 保存即可解决问题。</p>
-</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/f3677974.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="跑跑的技术笔记">
-      <meta itemprop="description" content="努力">
-    </span>
-    
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 跑跑的技术笔记">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/f3677974.html" class="post-title-link" itemprop="url">vim中同一窗口操作多个文件</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-12-18 20:50:49 / 修改时间：20:53:40" itemprop="dateCreated datePublished" datetime="2021-12-18T20:50:49+08:00">2021-12-18</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Vim/" itemprop="url" rel="index"><span itemprop="name">Vim</span></a>
-        </span>
-    </span>
-
-  
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Changyan：</span>
-    
-    <a title="vim中同一窗口操作多个文件" href="/posts/f3677974.html#SOHUCS" itemprop="discussionUrl">
-      <span id="sourceId::23c314fb4c4a1fddc02fc84cc55e478e" class="cy_cmt_count" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>390</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="1、vim-同时打开两个文件并分割窗口"><a href="#1、vim-同时打开两个文件并分割窗口" class="headerlink" title="1、vim 同时打开两个文件并分割窗口"></a>1、vim 同时打开两个文件并分割窗口</h2><p>上下分割：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim -o filename1 filename2  </span><br></pre></td></tr></table></figure>
-<p>左右分割：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim -O filename1 filename2</span><br></pre></td></tr></table></figure>
-
-<h2 id="2、vim-已打开一个文件，同时再打开另一个文件"><a href="#2、vim-已打开一个文件，同时再打开另一个文件" class="headerlink" title="2、vim 已打开一个文件，同时再打开另一个文件"></a>2、vim 已打开一个文件，同时再打开另一个文件</h2><p>上下分割：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:vs filename</span><br></pre></td></tr></table></figure>
-<p>左右分割：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:sp filename</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>其中，vs可以用vsplit替换，sp可以用split替换。<br>如果finename不存在，则会新建该文件并打开。</p>
-</blockquote>
-<h2 id="3、vim-切换窗口"><a href="#3、vim-切换窗口" class="headerlink" title="3、vim 切换窗口"></a>3、vim 切换窗口</h2><p>先<code>ctrl + w</code>开启窗口切换后，再选择按上下左右键进行跳转：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ctrl + w w  // 即按住ctrl键，再按两下w键。或者ctrl + w &lt;h|j|k|l&gt;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>即按住ctrl键，按一次w键，再按一次表示方向的h或j或k或l，则光标会切换到当前窗口的 左｜下｜上｜右 侧的窗口。</p>
-</blockquote>
-<h2 id="4、关闭-vim-窗口"><a href="#4、关闭-vim-窗口" class="headerlink" title="4、关闭 vim 窗口"></a>4、关闭 vim 窗口</h2><p>关闭光标所在的窗口：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:q</span><br></pre></td></tr></table></figure>
-<p>关闭所有窗口：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:qa</span><br></pre></td></tr></table></figure>
-<p>关闭除光标所在的窗口之外的其他窗口：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:only</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/36fffd2c.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="跑跑的技术笔记">
-      <meta itemprop="description" content="努力">
-    </span>
-    
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 跑跑的技术笔记">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/36fffd2c.html" class="post-title-link" itemprop="url">读书笔记-《编码：隐匿在计算机软硬件背后的语言》</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-12-12 10:56:21" itemprop="dateCreated datePublished" datetime="2021-12-12T10:56:21+08:00">2021-12-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2021-12-18 18:48:39" itemprop="dateModified" datetime="2021-12-18T18:48:39+08:00">2021-12-18</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">计算机基础知识</span></a>
-        </span>
-    </span>
-
-  
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Changyan：</span>
-    
-    <a title="读书笔记-《编码：隐匿在计算机软硬件背后的语言》" href="/posts/36fffd2c.html#SOHUCS" itemprop="discussionUrl">
-      <span id="sourceId::4a05dc04d88f7f6b740a065cbacce452" class="cy_cmt_count" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>162</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202112161937656.jpg" alt="书封面"></p>
-<h3 id="第1章-至密亲友"><a href="#第1章-至密亲友" class="headerlink" title="第1章 至密亲友"></a>第1章 至密亲友</h3><p>编码：一种用来在机器和人之间传递信息的方式，编码就是交流。可以通过不同事物的组合表示出特定的信息，最常见的是通过两种事物的组合，如：</p>
-<ul>
-<li>手电筒的<strong>快闪</strong>和<strong>慢闪</strong>组合</li>
-<li>摩尔斯电码的<strong>点</strong>和<strong>划</strong>组合</li>
-</ul>
-<h3 id="第2章-编码与组合"><a href="#第2章-编码与组合" class="headerlink" title="第2章 编码与组合"></a>第2章 编码与组合</h3><p>通过<strong>点</strong>和<strong>划</strong>组合而成的摩尔斯电码表：<br><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202112161954230.png" alt="image-20211216195448024"><br>这样就可以表示不同的字母，达到信息传递的作用。摩尔斯码又称作二进制码，因为其组合方式</p>
-
-      
-    </div>
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/423ac30d.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="跑跑的技术笔记">
-      <meta itemprop="description" content="努力">
-    </span>
-    
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 跑跑的技术笔记">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/423ac30d.html" class="post-title-link" itemprop="url">从零开始搭建个人博客或网站</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-10-31 21:08:31" itemprop="dateCreated datePublished" datetime="2021-10-31T21:08:31+08:00">2021-10-31</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-03-19 10:16:13" itemprop="dateModified" datetime="2022-03-19T10:16:13+08:00">2022-03-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/" itemprop="url" rel="index"><span itemprop="name">博客相关</span></a>
-        </span>
-    </span>
-
-  
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Changyan：</span>
-    
-    <a title="从零开始搭建个人博客或网站" href="/posts/423ac30d.html#SOHUCS" itemprop="discussionUrl">
-      <span id="sourceId::d2ceac7475499130fcffa8c54667284d" class="cy_cmt_count" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>968</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="从零开始搭建个人博客或网站"><a href="#从零开始搭建个人博客或网站" class="headerlink" title="从零开始搭建个人博客或网站"></a>从零开始搭建个人博客或网站</h1><h2 id="一、安装git和node环境"><a href="#一、安装git和node环境" class="headerlink" title="一、安装git和node环境"></a>一、安装git和node环境</h2><p>1、下载版本管理工具git（官网下载地址<a target="_blank" rel="noopener" href="https://git-scm.com/download/%EF%BC%89%EF%BC%8C%E5%AE%89%E8%A3%85%E6%97%B6%E7%9B%B4%E6%8E%A5%E7%82%B9%E5%87%BB%E4%B8%8B%E4%B8%80%E6%AD%A5%EF%BC%8C%E6%A0%B9%E6%8D%AE%E9%BB%98%E8%AE%A4%E5%8B%BE%E9%80%89%E8%BF%9B%E8%A1%8C%E5%AE%89%E8%A3%85%E5%8D%B3%E5%8F%AF%E3%80%82">https://git-scm.com/download/），安装时直接点击下一步，根据默认勾选进行安装即可。</a></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311026983.jpg" alt="img"></p>
-<p>2、安装完 Git 后还需要进行全局配置。Git中必须配置全局用户名和邮箱后才能用。鼠标右击，选择Git Bash Here，输入下面两条命令（其中name填你的用户名，email填你的邮箱）：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global user.name &quot;name&quot;</span><br><span class="line">$ git config --global user.email &quot;email@example.com&quot;</span><br></pre></td></tr></table></figure>
-<p>3、下载nodejs（官网下载地址<a target="_blank" rel="noopener" href="https://nodejs.org/en/%EF%BC%89%EF%BC%8C%E4%B8%8B%E8%BD%BDLTS%E7%89%88%E6%9C%AC%E5%8D%B3%E5%8F%AF%EF%BC%88%E9%95%BF%E6%9C%9F%E6%94%AF%E6%8C%81%E7%89%88%EF%BC%89%EF%BC%8C%E9%BB%98%E8%AE%A4%E7%82%B9%E5%87%BB%E4%B8%8B%E4%B8%80%E6%AD%A5%E5%AE%89%E8%A3%85%E5%8D%B3%E5%8F%AF%E3%80%82">https://nodejs.org/en/），下载LTS版本即可（长期支持版），默认点击下一步安装即可。</a></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311026472.jpg" alt="img"></p>
-<p>4、打开cmd或powershell命令终端，分别输入git –version和node –version检查下是否安装成功，如果显示版本信息则说明安装成功。最后再查看下 npm 包管理器的版本（npm是随NodeJS一起安装的包管理器），以后主要通过npm来安装各种软件包。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311026196.jpg" alt="img"></p>
-<h2 id="二、安装Hexo博客框架"><a href="#二、安装Hexo博客框架" class="headerlink" title="二、安装Hexo博客框架"></a>二、安装Hexo博客框架</h2><p>1、使用 npm 安装 Hexo，输入下面命令：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-<p>2、输入hexo –version查看版本信息，若显示如下图，则说明hexo环境安装成功。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025996.jpg" alt="img"></p>
-<h2 id="三、开始搭建Hexo博客"><a href="#三、开始搭建Hexo博客" class="headerlink" title="三、开始搭建Hexo博客"></a>三、开始搭建Hexo博客</h2><p>1、 首先新建一个目录myblog，然后进入到该目录，以后的所有操作都是在该目录下进行。命令如下</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir myblog</span><br><span class="line">$ cd myblog</span><br></pre></td></tr></table></figure>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025003.jpg" alt="img"></p>
-<p>2、对博客进行初始化并生成静态文件，命令如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init</span><br><span class="line">$ hexo generate（该命令可以简写为$ hexo g）</span><br></pre></td></tr></table></figure>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311026495.jpg" alt="img"></p>
-<p>3、输入命令hexo server启动博客服务器，默认情况下，访问网址为： <a target="_blank" rel="noopener" href="http://localhost:4000/%E3%80%82">http://localhost:4000/。</a></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311026008.jpeg" alt="img"></p>
-<p>4、输入网址后，可以看到一个简单的网站雏形，到此Hexo个人博客或网站搭建完毕。另外，官网给出了很多炫丽花哨的博客主题模板，大家可以根据个人喜好换个主题，瞬间就高大上起来了。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311028644.jpg" alt="img"></p>
-<p>官网提供了各种各样的主题模板，什么类型的都有，颜值质量都很高。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025177.jpg" alt="img"></p>
-<p>这是我的博客美化后的效果，欢迎大家访问我的小站<a target="_blank" rel="noopener" href="https://liupaopao.top/%E3%80%82">https://liupaopao.top/。</a></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025912.jpg" alt="img"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025976.jpg" alt="img"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025288.jpg" alt="img"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311025107.jpg" alt="img"></p>
-
-      
-    </div>
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
 
     
 
@@ -1377,114 +719,6 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/5441.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="跑跑的技术笔记">
-      <meta itemprop="description" content="努力">
-    </span>
-    
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 跑跑的技术笔记">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/5441.html" class="post-title-link" itemprop="url">GitHub入门与实践.pdf</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-07-30 15:45:06" itemprop="dateCreated datePublished" datetime="2021-07-30T15:45:06+08:00">2021-07-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2021-08-07 17:27:57" itemprop="dateModified" datetime="2021-08-07T17:27:57+08:00">2021-08-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
-        </span>
-    </span>
-
-  
-  
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>13</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="《GitHub入门与实践》"><a href="#《GitHub入门与实践》" class="headerlink" title="《GitHub入门与实践》"></a>《GitHub入门与实践》</h2><div class="pdf-container" data-target="https://cdn.jsdelivr.net/gh/HanxuLiu/books-pdf/Git/GitHub入门与实践.pdf" data-height="500px"></div>
-
-<hr>
-
-      
-    </div>
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/659154a1.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1672,8 +906,1004 @@
 
 
 
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/6748ea9.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="跑跑的技术笔记">
+      <meta itemprop="description" content="努力">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 跑跑的技术笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/posts/6748ea9.html" class="post-title-link" itemprop="url">搞懂链接器3：重定位</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-29 21:31:26" itemprop="dateCreated datePublished" datetime="2021-07-29T21:31:26+08:00">2021-07-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2021-08-14 13:20:13" itemprop="dateModified" datetime="2021-08-14T13:20:13+08:00">2021-08-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E8%AF%91%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">编译器</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Changyan：</span>
+    
+    <a title="搞懂链接器3：重定位" href="/posts/6748ea9.html#SOHUCS" itemprop="discussionUrl">
+      <span id="sourceId::3115e1efab20c61eb1493d297b38f499" class="cy_cmt_count" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>程序的运行过程就是CPU不断的从内存中取出指令然后执行执行的过程，对于函数调用来说比如我们在C&#x2F;C++语言中调用简单的加法函数add，其对应的汇编指令可能是这样的:</p>
+<blockquote>
+<p> <em>call 0x4004fd</em></p>
+</blockquote>
+<p>其中0x4004fd即为函数add在内存中的地址，当CPU执行这条语句的时候就会跳转到0x4004fd这个位置开始执行函数add对应的机器指令。</p>
+<p>再比如我们在C语言中对一个全局变量g_num不断加一来进行计数，其对应的汇编指令可能是这样的：</p>
+<blockquote>
+<p> <em>mov 0x400fda %eax</em></p>
+<p> <em>add $0x1 %eax</em></p>
+</blockquote>
+<p>这里的意思是把内存中 0x400fda 这个地址的数据放到寄存器当中，然后将寄存器中的数据加一，在这里g_num这个全局变量的内存地址就是0x400fda。</p>
+<p>好奇的同学可能会问，那这些函数以及数据的内存地址是怎么来的呢？</p>
+<p>确定程序运行时的内存地址就是接下来我们要讲解的重点内容，这里先给出答案，可执行文件中代码以及数据的运行时内存地址是链接器指定的，也就是上面示例中add的内存地址0x4004fd其是链接器指定的。确定程序运行时地址的过程就是这里重定位(Relocation)。</p>
+<p>为什么这个过程叫做重定位呢，之所以叫做重定位是因为确定可执行文件中代码和数据的运行时地址是分为两个阶段的，在第一个阶段中无法确定这些地址，只有在第二个阶段才可以确定，因此就叫做重定位。接下来让我们来看看这两个阶段，合并同类型段以及引用符号的重定位。</p>
+<p>编译器的工作</p>
+<p>让我们回忆一下前几节的内容，源文件首先被编译器编译生成目标文件，目标文件种有三段内容：数据段、代码段以及符号表，所有的函数定义被放在了代码段，全局变量的定义放在了数据段，对外部变量的引用放到了符号表。</p>
+<p>编译器在将源文件编译生成目标文件时可以确定一下两件事：</p>
+<ul>
+<li>定义在该源文件中函数的内存地址</li>
+<li>定义在该源文件中全局变量的内存地址</li>
+</ul>
+<p>注意这里的内存地址其实只是相对地址，相对于谁的呢，相对于自己的。为什么只是一个相对地址呢？因为在生成一个目标文件时编译器并不知道这个目标文件要和哪些目标文件进行链接生成最后的可执行文件，而链接器是知道要链接哪些目标文件的。因此编译器仅仅生成一个相对地址。</p>
+<p>而对于引用类的变量，也就是在当前代码中引用而定义是在其它源文件中的变量，对于这样的变量编译器是无法确定其内存地址的，这不是编译器需要关心的，确定引用类变量的内存地址是链接器的任务，链接器在进行链接时能够确定这类变量的内存地址。因此当编译器在遇到这样的变量时，比如使用了外部定义的函数时，其在目标文件中对应的机器指令可能是这样的:</p>
+<blockquote>
+<p><em>call 0x000000</em></p>
+</blockquote>
+<p>也就是说对于编译器不能确定的地址都这设置为空(0x000000)，同时编译器还会生成一条记录，该记录告诉链接器在进行链接时要修正这条指令中函数的内存地址，这个记录就放在了目标文件的.rel.text段中。相应的如果是对外部定义的全局变量的使用，则该记录放在了目标文件的.rel.data段中。即链接器需要在链接过程中根据.rel.data以及.rel.text来填好编译器留下的空白位置</p>
+<p>(0x000000)。因此在这里我们进一步丰富目标文件中的内容，如图所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730101533.png" alt="image-20210730101533085"></p>
+<p>生成目标文件后，编译器完成任务，编译器确定了定义在该源文件中函数以及全局变量的相对地址。对于编译器不能确定的引用类变量，编译器在目标文件的.rel.text以及.rel.data段中生成相应的记录告诉链接器要修正这些变量的地址。</p>
+<p>接下来就是链接器的工作了。</p>
+<p>链接器的工作</p>
+<p>我们在静态库下可执行文件的生成一节中知道，链接器会将所有的目标文件进行合并，所有目标文件的数据段合并到可执行文件的数据段，所有目标文件的代码段合并到可执行文件的代码段。当所有合并完成后，各个目标文件中的相对地址也就确定了。因此在这个阶段，链接器需要修正目标文件中的相对地址。</p>
+<p>在这里我们以合并目标文件中的数据段为例来说明链接器是如何修正目标文件的相对地址的，合并代码段时修正相对位置的原理是一样的。</p>
+<p>我们假设链接器需要链接三个目标文件：</p>
+<ul>
+<li>目标文件一：该文件数据段定义了两个变量apple和banana，apple的长度为2字节，banana的长度4字节，因此目标文件一的数据段长度为6字节。从图中也可以看出apple的内存地址为0，也就是相对地址，即apple这个变量在目标文件一的地址是0，banana的地址为2。</li>
+<li>目标文件二：该文件的数据段比较简单，只定义了一个变量orange，其长度为2，因此该目标文件的数据段长度为2。</li>
+<li>目标文件三：该文件的数据段定义了三个变量grape、mango以及limo，其长度分别为4字节、2字节以及2字节，因此该目标文件的数据段长度为8字节。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730101619.png" alt="image-20210730101619806"></p>
+<p>链接器在链接三个目标文件时其顺序是依次链接的，链接完成后：</p>
+<ul>
+<li>目标文件一：该数据段的起始地址为0，因此该数据段中的变量的最终地址不变。</li>
+<li>目标文件二：由于目标文件一的数据段长度为6，因此链接完成后该数据段的起始地址为6(这里的起始地址其实就是偏移offset)，相应的orange的最终内存地址为0+offset即6。</li>
+<li>目标文件三：由于前两个数据段的长度为8，因此该数据段的起始地址为8(即offset为8)，因此所有该数据段中的变量其地址都要加上该offset，即grape的最终地址为8，即0+offset，mango的最终地址为4+offset即12，limo的最终地址为6+offset即14。</li>
+</ul>
+<p>从这个过程中可以看到，数据段中的相对地址是通过这个公式来修正的，即：</p>
+<blockquote>
+<p>相对地址 + offset(偏移) &#x3D; 最终内存地址</p>
+</blockquote>
+<p>而每个段的偏移只有在链接完成后才能确定，因此对相对地址的修正只能由链接器来完成，编译器无法完成这项任务。</p>
+<p>当所有目标文件的同类型段合并完毕后，数据段和代码段中的相对地址都被链接器修正为最终的内存位置，这样所有的变量以及函数都确定了其各自位置。</p>
+<p>至此，重定位的第一阶段完成。接下来是重定位的第二阶段，即引用符号的重定位。</p>
+<p>相对地址是编译器在编译过程中确定了，在链接器完成后被链接器修正为最终地址，而对于编译器没有确定的所引用的外部函数以及变量的地址，编译器将其记录在了.rel.text和.rel.data中。</p>
+<p>由于在第一阶段中，所有函数以及数据都有了最终地址，因此重定位的第二阶段就相对简单了。我们知道编译器引用外部变量时将机器指令中的引用地址设置为空(比如call 0x000000)，并将该信息记录在了目标文件的.rel.text以及.rel.data段中。因此在这个阶段链接器依次扫描所有的.rel.text以及.rel.data段并找到相应变量的最终地址(这些位置都已在第一阶段确定)，并将机器指令中的0x000000修正为所引用变量的最终地址就可以了。</p>
+<p>到这里链接器的重定位就讲解的这里，作为程序员一般很少会有问题出现在重定位阶段，因此这个阶段对程序员相对透明。请同学们注意一点，这里的分析仅限于目标文件的静态链接。我们知道静态链接下，链接器会将需要的代码和数据都合并到可执行文件当中，因此需要确定代码和数据的最终位置。而对于动态链接库来说情况则有所不同，动态链接库可以同时被多个进程使用，如果动态链接库的机器指令中不可以存在引用变量的最终位置，否则在被多个进程使用时会出现一个进程中使用的数据被其它进程修改。因此动态库下的机器指令都是PIC代码，即位置无关代码(Position-Independent Code)。关于PIC的机制原理就不在这里阐述了，对此感兴趣的同学可以关注微信公众号，码农的荒岛求生，我会在那里来讲解。</p>
+<p>问题：为什么链接器能确定运行时地址</p>
+<p>我们知道只有把可执行文件加载到内存当中程序才可以开始运行。不同的程序会被加载到内存的不同位置。我们从前两节的过程中可以看出，链接器完全没有考虑不同的程序会被加载不同的内存位置被执行。比如对于一个可执行文件我们分别运行两次，如下图所示，因为两个程序数据段变量的地址是一样的，那么程序一的数据会不会被程序二修改呢？</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730101648.png" alt="image-20210730101648724"></p>
+<p>如果你去试一试的话就会发现显然不会有这种问题的。而当可执行文件加载到内存的时候也不会根据程序加载的起始地址再去修改可执行文件中变量的地址(这样就启动速度就太慢了)，那么操作系统又是如何能做到基于同一个可执行文件的两个程序能在各自的内存空间中运行而不相互干扰呢，链接器在可执行文件中确定的到底是不是程序最终的运行地址呢，我会在后面的文章当中给出答案，欢迎同学们关注微信公共账号码农的荒岛求生获取更多内容。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/7173be3f.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="跑跑的技术笔记">
+      <meta itemprop="description" content="努力">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 跑跑的技术笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/posts/7173be3f.html" class="post-title-link" itemprop="url">搞懂链接器2：库与可执行文件的生成</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-29 21:31:12" itemprop="dateCreated datePublished" datetime="2021-07-29T21:31:12+08:00">2021-07-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2021-08-14 13:20:19" itemprop="dateModified" datetime="2021-08-14T13:20:19+08:00">2021-08-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E8%AF%91%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">编译器</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Changyan：</span>
+    
+    <a title="搞懂链接器2：库与可执行文件的生成" href="/posts/7173be3f.html#SOHUCS" itemprop="discussionUrl">
+      <span id="sourceId::6244018f66c957e5d37dcf615fadcca2" class="cy_cmt_count" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>8.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>链接器可以操作的最小单元为目标文件，也就是说无论是静态库、动态库、可执行文件，都是基于目标文件构建出来的。目标文件就好比乐高积木中最小的零部件。</p>
+<p>给定目标文件以及链接选项，链接器可以生成两种库，分别是静态库以及动态库，如图所示，给定同样的目标文件，链接器可以生成两种不同类型的库，接下来我们分别介绍。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730085852.png" alt="库生成示意图"></p>
+<h2 id="静态库"><a href="#静态库" class="headerlink" title="静态库"></a>静态库</h2><p>假设这样一个应用场景，基础设计团队设计了好多实用并且功能强大的工具函数，业务团队需要用到里面的各种函数。每次新添加其中一个函数，业务团队都要去找相应的实现文件并修改链接选项。使用静态库就可以解决这个问题。静态库在Windows下是以.lib为后缀的文件，Linux下是以.a为后缀的文件。</p>
+<p>为解决上述问题，基础设计团队可以提前将工具函数集合打包编译链接成为静态库提供给业务团队使用，业务团队在使用时只要链接该静态库就可以了，每次新使用一个工具函数的时候，只要该函数在此静态库中就无需进行任何修改。</p>
+<p>你可以简单的将静态库理解为由一堆目标文件打包而成， 使用者只需要使用其中的函数而无需关注该函数来自哪个目标文件（找到函数实现所在的目标文件是链接器来完成的，从这里也可以看出，不是所有静态库中的目标文件都会用到，而是用到哪个链接器就链接哪个）。静态库极大方便了对其它团队所写代码的使用。</p>
+<h2 id="静态连接"><a href="#静态连接" class="headerlink" title="静态连接"></a>静态连接</h2><p>静态库是链接器通过静态链接将其和其它目标文件合并生成可执行文件的，如下图一所示，而静态库只不过是将多个目标文件进行了打包，在链接时只取静态库中所用到的目标文件，因此，你可以将静态链接想象成如下图2所示的过程。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730090423.png" alt="image-20210730090423254"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730090432.png" alt="image-20210730090431921"></p>
+<p>静态库是使用库的最简单的方法，如果你想使用别人的代码，找到这些代码的静态库并简单的和你的程序链接就可以了。静态链接生成的可执行文件在运行时不依赖任何其它代码，要理解这句话，我们需要知道静态链接下，可执行文件是如何生成的。</p>
+<h2 id="静态链接下可执行文件的生成"><a href="#静态链接下可执行文件的生成" class="headerlink" title="静态链接下可执行文件的生成"></a>静态链接下可执行文件的生成</h2><p>在上一节中我们知道，可以将静态链接简单的理解为链接器将使用到的目标文件集合进行拼装，拼装之后就生成了可执行文件，同时我们在目标文件里有什么这一节中知道，目标文件分成了三段，代码段，数据段，符号表，那么在静态链接下可执行文件的生成过程如图所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730090553.png" alt="image-20210730090553480"></p>
+<p>从上图中我们可以看到可执行文件的特点：</p>
+<ul>
+<li>可执行文件和目标文件一样，也是由代码段和数据段组成。</li>
+<li>每个目标文件中的数据段都合并到了可执行文件的数据段，每个目标文件当中的代码段都合并到了可执行文件的代码段。</li>
+<li>目标文件当中的符号表并没有合并到可执行文件当中，因为可执行文件不需要这些字段。</li>
+</ul>
+<p>可执行文件和目标文件没有什么本质的不同，可执行文件区别于目标文件的地方在于，可执行文件有一个入口函数，这个函数也就是我们在C语言当中定义的main函数，main函数在执行过程中会用到所有可执行文件当中的代码和数据。而这个main函数是被谁调用执行的呢，答案就是操作系统(Operating System)，这也是后面文章当中要重点介绍的内容。</p>
+<p>现在你应该对可执行文件有一个比较形象的认知了吧。你可以把可执行文件生成的过程想象成装订一本书，一本书中通常有好多章节，这些章节是你自己写的，且一本书不可避免的要引用其它著作。静态链接这个过程就好比不但要装订你自己写的文章，而且也把你引用的其它人的著作也直接装订进了你的书里，这里不考虑版权问题 :)，这些工作完成后，只需要按一下订书器，一本书就制作完成啦。</p>
+<p>在这个比喻中，你写的各个章节就好比你写的代码，引用的其它人的著作就好比使用其它人的静态库，装订成一本书就好比可执行文件的生成。</p>
+<p>静态链接是使用库的最简单最直观的形式， 从静态链接生成可执行文件的过程中可以看到，静态链接会将用到的目标文件直接合并到可执行文件当中，想象一下，如果有这样的一种静态库，几乎所有的程序都要使用到，也就是说，生成的所有可执行文件当中都有一份一模一样的代码和数据，这将是对硬盘和内存的极大浪费，假设一个静态库为2M，那么500个可执行文件就有1G的数据是重复的。如何解决这个问题呢，答案就是使用动态库。</p>
+<h2 id="动态库"><a href="#动态库" class="headerlink" title="动态库"></a>动态库</h2><p>在前三小节中我们了解了静态库、静态链接以及使用静态链接下可执行文件是如何生成的。接下来我们讲解一下动态库，那么什么是动态库？</p>
+<p><code>动态库(Dynamic Library)</code>，又叫<code>共享库(Shared Library)</code>，动态链接库等，在Windows下就是我们常见的大名鼎鼎的DLL文件了，Windows系统下大量使用了动态库。在Linux下动态库是以.so为后缀的文件，同时以lib为前缀，比如进行数字计算的动态库Math，编译链接后产生的动态库就叫做libMath.so。从名字中我们知道动态库也是库，本质上动态库同样包含我们已经熟悉的代码段、数据段、符号表。只不过动态库的使用方式以及使用时间和静态库不太一样。</p>
+<p>在前面几个小节中我们知道，使用静态库时，静态库的代码段和数据段都会直接打包copy到可执行文件当中，使用静态库无疑会增大可执行文件的大小，同时如果程序都需要某种类型的静态库，比如libc，使用静态链接的话，每个可执行文件当中都会有一份同样的libc代码和数据的拷贝，如图所示，动态库的出现解决了此类问题。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730090957.png" alt="image-20210730090956928"></p>
+<p>动态库允许使用该库的可执行文件仅仅包含对动态库的引用而无需将该库拷贝到可执行文件当中。也就是说，同静态库进行整体拷贝的方式不同，对于动态库的使用仅仅需要可执行文件当中包含必要的信息即可，为了方便理解，你可以将可执行文件当中保存的必要信息仅仅理解为需要记录动态库的名字就可以了，如图所示，同静态库相比，动态库的使用减少了可执行文件的大小。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730091106.png" alt="image-20210730091106648"></p>
+<p>从上面这张图中可以看出，动态库的使用解决了静态链接当中可执行文件过大的问题。我们在前几节中将静态链接生成可执行文件的过程比作了装订一本书，静态链接将引用的其它人的著作也装订到了书里，而动态链接可以想象成作者仅仅在引用的地方写了一句话，比如引用了《码农的荒岛求生》，那么作者就在引用的地方写上“此处参考《码农的荒岛求生》”，那么读者在读到这里的时候会自己去找到码农的荒岛求生这本书并查找相应的内容，其实这个过程就是动态链接的基本思想了。</p>
+<p>到这里我们就可以回答之前提到过的问题了，helloworld程序中的printf函数到底是在哪里定义的，答案就是该函数是在libc.so当中定义的，Linux下编译链接生成可执行文件时会默认动态链接libc.so(Windows下也是同样的道理)，使用ldd命令就会发现每个可执行文件都依赖libc.so。因此虽然你从没有看到过printf的定义也可以正确的使用这个函数。</p>
+<h2 id="动态链接。"><a href="#动态链接。" class="headerlink" title="动态链接。"></a>动态链接。</h2><p>我们知道静态库在编译链接期间就被打包copy到了可执行文件，也就是说静态库其实是在编译期间(Compile time)链接使用的，那么动态库又是在什么时候才链接使用的呢，动态链接可以在两种情况下被链接使用，分别是load-time dynamic linking(加载时动态链接) 以及 run-time dynamic linking(运行时动态链接)，接下来我们分别讲解一下。</p>
+<ul>
+<li>load-time dynamic linking(加载时动态链接)</li>
+</ul>
+<p>首先可能有的同学会问，什么是load-time呢，load_time翻译过来也就是加载时，那么什么又是加载呢？</p>
+<p>我们大家都玩过游戏，当我们打开游戏的时候经常会跳出来一句话：“加载中，请稍后。。。”和这里的加载意思差不多。这里的加载指的是程序的加载，而所谓程序的加载就是把可执行文件从磁盘搬到内存的过程，因为程序最终都是在内存中被执行的。至于这个过程的详解内容我会在接下来的文章《加载器与可执行文件》一文中给大家详细讲解。在这里我们只需要简单的把加载理解为程序从磁盘复制到内存的过程，加载时动态链接就出现在这个过程。</p>
+<p>当把可执行文件复制到内存后，且在程序开始运行之前，操作系统会查找可执行文件依赖的动态库信息(主要是动态库的名字以及存放路径)，找到该动态库后就将该动态库从磁盘搬到内存，并进行符号决议，如果这个过程没有问题，那么一切准备工作就绪，程序就可以开始执行了，如果找不到相应的动态库或者符号决议失败，那么会有相应的错误信息报告为用户，程序运行失败。比如Windows下比较常见的启动错误问题，就是因为没有找到依赖的动态库。Linux下同样会有类似信息提示用户程序启动失败。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730101021.png" alt="image-20210730101021256"></p>
+<p>到这里，同学们应该对加载时动态链接应该有一个比较清晰的了解了。从总体上看，加载时动态链接可以分为两个阶段：阶段一，将动态库信息写入可执行文件；阶段二，加载可执行文件时依据动态库信息进行动态链接。</p>
+<p><em>阶段一，将动态库信息写入可执行文件</em></p>
+<p>在编译链接生成可执行文件时，需要将使用的动态库加入到链接选项当中，比如在Linux下引用libMath.so，就需要将libMath.so加入到链接选项当中（比如libMath.so放到了&#x2F;usr&#x2F;lib下，那么使用命令 gcc … -lMath -L&#x2F;user&#x2F;lib … 进行编译链接），所以使用这种方式生成的可执行文件中保存了依赖的动态库信息，在Linux可使用一个简单的命令ldd来查看。</p>
+<p><em>阶段二：加载可执行文件时依据动态库信息进行动态链接</em></p>
+<p>由于在阶段一生成的可执行文件中保存了动态库信息，当可执行文件加载完成后，就可以依据此信息进行中动态库的查找以及符号决议了。</p>
+<p>通过这个过程也可以清楚的看到静态库和动态库的区别，使用动态库的可执行文件当中仅仅保留相应信息，动态库的链接过程被推迟到了程序启动加载时。</p>
+<p>为加深你对加载时动态链接这个过程的理解，我们用一个类比来结束本小节，沿用前几节读书的例子，我们正在读的书中引用了《码农的荒岛求生》以及其它著作，那么加载时动态链接就好比，读者开始准备读这本书的时候（还没有真正的读）就把所有该书当中引用的资料著作都找齐放到一旁准备查看，当我们真正看到引用其它文献的地方时就可以直接在一旁找到该著作啦。在这个类比当中，开始读书前的准备工作就好比加载时动态链接。</p>
+<p>接下来我们讲解第二种动态链接，run-time dynamic linking(运行时动态链接) 。</p>
+<ul>
+<li>run-time dynamic linking(运行时动态链接)</li>
+</ul>
+<p>上一小节中我们看到如果我们想使用加载时动态链接，那么在编译链接生成可执行文件阶段时需要告诉编译器所依赖的动态库信息，而run-time dynamic linking 运行时动态链接则不需要在编译链接时提供动态库信息，也就是说，在可执行文件被启动运行之前，可执行文件对所依赖的动态库信息一无所知，只有当程序运行到需要调用动态库所提供的代码时才会启动动态链接过程。</p>
+<p>我们在上一节中介绍了load-time，也就是程序加载时，那么程序加载完成后就开始程序执行了，那么所谓run-time(运行时)指的就是从程序开始被CPU执行到程序执行完成退出的这段时间。</p>
+<p>所以运行时动态链接这种方式对于“动态链接”阐释的更加淋漓尽致，因为可执行文件在启动运行之前都不知道需要依赖哪些动态库，只在运行时根据代码的需要再进行动态链接。同加载时动态链接相比，运行时动态链接将链接这个过程再次推迟往后推迟，推迟到了程序运行时。</p>
+<p>由于在编译链接生成可执行文件的过程中没有提供所依赖的动态库信息，因此这项任务就留给了程序员，在代码当中如果需要使用某个动态库所提供的函数，我们可以使用特定的API来运行时加载动态库，在Windows下通过LoadLibrary或者LoadLibraryEx，在Linux下通过使用dlopen、dlsym、dlclose这样一组函数在运行时链接动态库。当这些API被调用后，同样是首先去找这些动态库，将其从磁盘copy到内存，然后查找程序依赖的函数是否在动态库中定义。这些过程完成后动态库中的代码就可以被正常使用了。</p>
+<p>相对于加载时动态链接，运行时动态链接更加灵活，同时将动态链接过程推迟到运行时可以加快程序的启动速度。</p>
+<p>为了和加载时动态链接作比对，我们继续使用上一小节当中读书的例子，加载时动态链接就好比在开始准备读一本书之前，将该书中所有引用到的资料文献找齐全，而运行时动态链接则不需要这个过程，运行时动态链接就好比直接拿起一本书开始看，看到有引用的参考文献时再去找该资料，找到后查看该文献然后继续读我们的书。从这个例子当中运行时动态链接更像是我们平时读书时的样子。</p>
+<p>至此，两种动态链接的形式我们就都已经清楚了，接下来我们看一下动态链接下生成的可执行文件。</p>
+<p>动态链接下可执行文件的生成</p>
+<p>在静态链接下，链接器通过将各个目标文件的代码段和数据段合并拷贝到可执行文件，因此静态链接下可执行文件当中包含了所依赖的所有代码和数据，而与之对比的动态链接下可执行文件又是什么样的呢？</p>
+<p>其实我们在动态库这一节中已经了解了动态链接下可执行文件的生成，即，在动态链接下，链接器并不是将动态库中的代码和数据拷贝到可执行文件中，而是将动态库的必要信息写入了可执行文件，这样当可执行文件在加载时就可以根据此信息进行动态链接了。为方便理解，我们将该信息仅仅认为是动态库都名字，真实情况当然要更复杂一点，这里我们以Linux下可执行文件即ELF文件为例（这一系列的文章重点关注最本质的原理思想，所以这里讨论的同样适合Windows下的可执行文件即exe文件）。</p>
+<p>在前几节中我们将可执行文件简单的划分为了两段，数据段和代码段，在这里我们继续丰富可执行文件中的内容，如图所示，在动态链接下，可执行文件当中会新增两段，即dynamic段以及GOT（Global offset table）段，这两段内容就是是我们之前所说的必要信息。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730101148.png" alt="image-20210730101148719"></p>
+<p>dynamic段中保存了可执行文件依赖哪些动态库，动态链接符号表的位置以及重定位表的位置等信息。关于dynamic以及GOT段的作用限于篇幅就不重点阐述了。如果你对GOT段的具体作用很好奇的话，欢迎关注微信公共账号，码农的荒岛求生。</p>
+<p>当加载可执行文件时，操作系统根据dynamic段中的信息即可找到使用的动态库，从而完成动态链接。</p>
+<p>这里需要强调一点，在编译链接过程中，可以同时使用动态库以及静态库。这两种库的使用并不冲突，那么在这种情况下生成的可执行文件中，可执行文件中包含了静态库的数据和代码，以及动态库的必要信息。</p>
+<p>至此，关于静态库，静态链接，动态库，动态链接就讲述到这，那么接下来的问题就是静态库和动态库都有什么样的优缺点。</p>
+<h2 id="动态库vs静态库"><a href="#动态库vs静态库" class="headerlink" title="动态库vs静态库"></a>动态库vs静态库</h2><p>在计算机的历史当中，最开始程序只能静态链接，但是人们很快发现，静态链接生成的可执行文件存在磁盘空间浪费问题，因为对于每个程序都需要依赖的libc库，在静态链接下每个可执行文件当中都有一份libc代码和数据的拷贝，为解决该问题才提出动态库。</p>
+<p>在前几节我们知道，动态链接下可执行文件当中仅仅保留动态库的必要信息，因此解决了静态链接下磁盘浪费问题。动态库的强大之处不仅仅于此，我们知道对于现代计算机系统，比如PC，通常会运行成百上千个程序（进程），且程序只有被加载到内存中才可以使用，如果使用静态链接那么在内存中就会有成百上千份同样的libc代码，这对于宝贵的内存资源同样是极大的浪费，而使用动态链接，内存中只需要有一份libc代码，所有的程序（进程）共享这一份代码，因此极大的节省了内存资源，这也是为什么动态库又叫共享库。</p>
+<p>动态库还有另外一个强大之处，那就是如果我们修改了动态库的代码，我们只需要重新编译动态库就可以了而无需重新新编译我们自己的程序，因为可执行文件当中仅仅保留了动态库的必要信息，重新编译动态库后这些必要都信息是不会改变的（只要不修改动态库的名字和动态库导出的供可执行文件使用的函数），编译好新的动态库后只需要简单的替换原有动态库，下一次运行程序时就可以使用新的动态库了，因此动态库的这种特性极大的方便了程序升级和bug修复。我们平时使用都客户端程序，比如我们常用QQ，输入法，播放器，都利用了动态库的这一优点，原因就在于方便升级以bug修复，只需要更新相应的动态库就可以了。</p>
+<p>动态库的优点不止于此，我们知道动态链接可以出现在运行时（run-time dynamic link），动态链接的这种特性可以用于扩展程序能力，那么如何扩展呢？你肯定听说过一样神器，没错，就是插件。你有没有想过插件是怎么实现的？实现插件时，我们只需要实现几个规定好的几个函数，我们的插件就可以运行了，可这是怎么做到的呢，答案就在于运行时动态链接，可以将插件以动态的都方式实现。我们知道使用运行时动态链接无需在编译链接期间告诉链接器所使用的动态库信息，可执行文件对此一无所知，只有当运行时才知道使用什么动态库，以及使用了动态库中哪些函数，但是在编译链接可执行文件时又怎么知道插件中定义了哪些函数呢，因此所有的插件实现函数必须都有一个统一的格式，程序在运行时需要加载所有插件（动态库），然后调用所有插件的入口函数（统一的格式），这样我们写的插件就可以被执行起来了。</p>
+<p>动态库都强大优势还体现在多语言编程上。我们知道使用Python可以快速进行开发，但Python的性能无法同C&#x2F;C++相比(因为Python是解释型语言，至于什么是解释型语言我会在后面码农的荒岛求生系列文章当中给大家详细讲解)，有没有办法可以兼具Python的快速开发能力以及C&#x2F;C++的高性能呢，答案是可以的，我们可以将C&#x2F;C++代码编译链接成动态库，这样python就可以直接调用动态库中的函数了。不但Python，Perl以及Java等都可以通过动态库的形式调用C&#x2F;C++代码。动态库的使用使得同一个项目不同语言混合编程成为可能，而且动态库的使用更大限度的实现了代码复用。</p>
+<p>了解了动态库的这么多优点，那么动态库就没有缺点吗，当然是有的。</p>
+<p>首先由于动态库是程序加载时或运行是才进行链接的，因此同静态链接相比，使用动态链接的程序在性能上要稍弱于静态链接，这时因为对于加载时动态链接，这无疑会减慢程序都启动速度，而对于运行时链接，当首次调用到动态库的函数时，程序会被暂停，当链接过程结束后才可以继续进行。且动态库中的代码是地址无关代码（Position-Idependent Code，PIC），之所以动态库中的代码是地址无关代码是因为动态库又被成为共享库，所有的程序都可以调用动态库中的代码，因此在使用动态库中的代码时程序要多做一些工作，这里我们不再具体展开讲解到底程序多做了哪些工作，对此感兴趣当同学可以参考CSAPP（深入理解计算机系统）。这里我们说动态链接的程序性能相比静态链接稍弱，但是这里的性能损失是微乎其微的，同动态库可以带来的好处相比，我们可以完全忽略这里的性能损失，同学们可以放心的使用动态库。</p>
+<p>动态库的一个优点其实也是它的缺点，即动态链接下的可执行文件不可以被独立运行（这里讨论的是加载时动态链接，load-time dynamic link），换句话说就是，如果没有提供所依赖的动态库或者所提供的动态库版本和可执行文件所依赖的不兼容，程序是无法启动的。动态库的依赖问题会给程序的安装部署带来麻烦，在Linux环境下尤其严重，以笔者曾参与开发维护的一个虚拟桌面系统为例，我们在开发过程中依赖的一些比较有名的第三方库默认不会随着安装包发布，这就会导致用户在较低版本Linux中安装时经常会出现程序无法启动的问题，原因就在于我们编译链接使用都动态库和用户Linux系统中都动态库不兼容。解决这个问题的方法通常有两种，一个是用户升级系统中都动态库，另一个是我们讲需要都第三方库随安装包一起发布，当然这是在取得许可的情况下。</p>
+<p>在了解了动态库的优缺点后，接下来我们来看一下静态库。</p>
+<p>静态链接是最古老也是最简单的链接技术。静态链接都最大优点就是使用简单，编译好的可执行文件是完备的，即静态链接下的可执行文件不需要依赖任何其它的库，因为静态链接下，链接器将所有依赖的代码和数据都写入到了最终的可执行文件当中，这就消除了动态链接下的库依赖问题，没有了库都依赖问题就意味着程序都安装部署都得到了极大都简化。请大家不要小看这一点，这对当今那些拥有海量用户的后端系统来说至关重要，比如类似微信这种量级的系统，其后端会部署在成千上万台机器上，这么多的机器其系统的安装部署以及升级会给运维带来极大挑战，而静态链接下的可执行文件由于不依赖任何库，因为部署非常方便，仅仅用一个新的可执行文件进行覆盖就可以了，因此极大的简化了系统部署以及升级。笔者之前所在的某电商广告后端系统就完全使用静态链接来简化部署升级。</p>
+<p>而静态库的缺点相信大家都已经清楚了，那就是静态链接会导致可执行文件过大，且多个程序静态链接同一个静态库的话会导致磁盘浪费的问题。</p>
+<p>到这里关于静态库和动态库的讨论就告一段落了，相信大家对于这两种链接类型都有了清晰都认知。接下来让我们稍作休息，开始链接器的下一个重要功能，重定位。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/600f79ea.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="跑跑的技术笔记">
+      <meta itemprop="description" content="努力">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 跑跑的技术笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/posts/600f79ea.html" class="post-title-link" itemprop="url">搞懂链接器1：链接器定义和符号决议</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-29 21:31:01" itemprop="dateCreated datePublished" datetime="2021-07-29T21:31:01+08:00">2021-07-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2021-08-14 13:20:23" itemprop="dateModified" datetime="2021-08-14T13:20:23+08:00">2021-08-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E8%AF%91%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">编译器</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Changyan：</span>
+    
+    <a title="搞懂链接器1：链接器定义和符号决议" href="/posts/600f79ea.html#SOHUCS" itemprop="discussionUrl">
+      <span id="sourceId::af13d909a999444a07cca9d6a1a099ff" class="cy_cmt_count" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="什么是链接器-Linker"><a href="#什么是链接器-Linker" class="headerlink" title="什么是链接器 (Linker)"></a>什么是链接器 (Linker)</h2><p>维基百科的定义为：</p>
+<blockquote>
+<p><code>链接器</code> （英语：Linker），是一个程序，将一个或多个由编译器或汇编器生成的目标文件外加库，链接为一个可执行文件。</p>
+</blockquote>
+<blockquote>
+<p>在Unix-like系统上常用的链接器是GNU ld。目标文件是包括机器码和链接器可用信息的程序模块。简单的讲，链接器的工作就是解析未定义的符号引用，将目标文件中的占位符替换为符号的地址。链接器还要完成程序中各目标文件的地址空间的组织，这可能涉及重定位工作。大多数现代操作系统都提供动态链接和静态链接两种形式。</p>
+</blockquote>
+<p>为便于理解，可将链接器的定义分解成如下三点：</p>
+<ul>
+<li>首先是链接器的本质，链接器本质上也是一个程序，和我们经常使用的普通程序没什么不同。</li>
+<li>接器的输入是编译器编译好的目标文件（object file）。</li>
+<li>链接器的输出，链接器在将目标文件打包处理后，生成或者可执行文件，或者库，或者目标文件。</li>
+</ul>
+<p>从这个定义中能够看出，链接器的作用有点类似于我们经常使用的压缩软WinRAR (Linux下是tar)，压缩软件将一堆文件打包压缩成一个压缩文件，而链接器和压缩软件的区别在于链接器是将多个目标文件打包成一个文件而不进行压缩。</p>
+<h2 id="符号决议-Symbol-Resolution"><a href="#符号决议-Symbol-Resolution" class="headerlink" title="符号决议 (Symbol Resolution)"></a>符号决议 (Symbol Resolution)</h2><p>所有的应用程序都是链接器将所需要的一个个简单的目标文件汇集起来形成的，可以将这个过程想象成拼图游戏，每个拼块就是一个简单的目标文件：</p>
+<img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729223235.jpg" alt="拼图" style="zoom: 33%;" />
+
+<p>1、拼图游戏当中的每个拼块都依赖于其它拼块提供的拼接口，这就好比我们写的程序模块依赖于其它模块提供的编程接口，比如我们在list.c中实现了一种特定的链表数据结构，其它模块需要使用这种链表，这就是模块间的依赖。而链接器其中一项任务就是要确保提供给链接器进行链接的目标文件集合之间依赖是成立的（也就是说，不会出现在被依赖的模块中链接器找不到需要的接口），这就是要讲到的<code>符号决议</code>(Symbol Resolution)。</p>
+<p>2、我们在拼图游戏当中通常都是将一整幅图按组成部位一部分一部分拼接好，然后将这些比较完整的大的组成部分拼接成最后一整幅图。这就好比链接器会首先将程序每个模块当中目标文件集合链接成库，然后再将各个库进行链接最终形成可执行程序。这就是可执行程序的生成过程。</p>
+<p>3，链接器还有一项任务是无法用这个拼图游戏来类比的，但是这项重要的任务对程序员不可见，作为程序员几乎不会在这个过程遇到问题，这项任务就是<code>重定位</code>。</p>
+<h3 id="链接器的工作过程"><a href="#链接器的工作过程" class="headerlink" title="链接器的工作过程"></a>链接器的工作过程</h3><p>通过拼图这个游戏的类比，我们给出链接器的工作过程：</p>
+<ol>
+<li>首先，链接器对给定的目标文件或库的集合进行符号决议以确保模块间的依赖是正确的。</li>
+<li>其次，链接器将给定的目标文件集合进行拼接打包成需要的库或最终可执行文件。</li>
+<li>最后，链接器对链接好的库或可执行文件进行重定位。</li>
+</ol>
+<p>接下来详细的讲解下每一个过程。首先讲解链接器的符号决议过程。在这个过程当中，链接器需要做的工作就是确保所有目标文件中的符号引用都有唯一的定义。要想理解这句话我们首先来看看一个典型的c文件里都有些什么。</p>
+<h3 id="c源文件中都有什么"><a href="#c源文件中都有什么" class="headerlink" title="c源文件中都有什么"></a>c源文件中都有什么</h3><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729220137.png" alt="c程序示例图"></p>
+<p>如图所示是一个典型的c源文件，该文件中的变量可以划分为两类：</p>
+<ul>
+<li><p>全局变量：比如x_global_uninit，x_global_init，fn_c。只要程序没有结束运行，全局变量都可以随时使用。注意，用static修饰的全局变量比如y_global_uninit，其生命周期也等同于程序的运行周期，只是这种全局变量只能在所被定义的文件当中使用，对其它文件不可见。</p>
+</li>
+<li><p>局部变量：比如y_local_uninit，y_local_init，局部局部变量的生命周期和全局变量不同，局部变量变量只能在相应的函数内部使用，当函数调用完成后该函数中的局部变量也就无法使用了。因为局部变量只存在于函数运行时的栈帧当中，函数调用完成后相应的栈帧被自动回收(该内容涉及到程序运行时的内存模型)。</p>
+</li>
+</ul>
+<h3 id="目标文件里有什么"><a href="#目标文件里有什么" class="headerlink" title="目标文件里有什么"></a>目标文件里有什么</h3><p>编译器的任务就是把人类可以理解的代码转换成机器可以执行的机器指令，源文件编译后形成对应的目标文件。源文件被编译后生成的目标文件中本质上只有两部分：</p>
+<ul>
+<li><p>代码部分：你可能会想，一个源文件中不都是代码吗，这里的代码指的是计算机可以执行的机器指令，也就是源文件中定义的所有函数。比如上图中定义的函数fn_b以及fn_c。</p>
+</li>
+<li><p>数据部分：源文件中定义的全局变量。如果是已经初始化后的全局变量，该全局变量的值也存在于数据部分。</p>
+</li>
+</ul>
+<p>到目前为止，可以把一个目标文件简单的理解为由两部分组成，代码部分中保存的是CPU可以执行的机器指令，这些机器指令来自程序员所定义的函数，编译器将这些定义的函数翻译成机器指令并存放在目标文件的代码部分。数据部分存放的是机器指令所操作的数据。因此目前，可以简单的将目标文件理解为一个只有两部分的文件，如图所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729220213.png" alt="目标文件组成示意图"></p>
+<p>你可能会好奇函数中定义的局部变量为什么没有放到目标文件的数据段当中，这是因为局部变量是函数私有的，局部变量只能在该函数内部使用而全局变量时没有这个限制的，所以函数私有的局部变量被放在了代码段中，作为机器指令的操作数。</p>
+<p>编译器在编译过程中遇到外部定义的全局变量或函数时，只要编译器能找到相应的变量声明就会在心里默念“all is well， all is well(一切顺利)“，从这里可以看出编译器的要求还是很低的，至于所使用变量的定义编译器是不会费力去四处搜索，而是愉快的继续接下来的编译。注意，这里再次强调一下，编译器在遇到外部定义的全局变量或者函数时只要能在当前文件找到其声明，编译器就认为编译正确。而寻找使用变量定义的这项任务就被留给了链接器。链接器的其中一项任务就是要确定所使用的变量要有其唯一的定义。虽然编译器给链接器留了一项任务，但为了让链接器工作的轻松一点编译器还是多做了一点工作的，这部分工作就是符号表(Symbol table)。</p>
+<h3 id="什么是符号表-Symbol-table"><a href="#什么是符号表-Symbol-table" class="headerlink" title="什么是符号表 (Symbol table)"></a>什么是符号表 (Symbol table)</h3><p>之前提到，虽然编译器很不厚道的给链接器留了一项任务，但是编译器为了链接器工作的轻松一点还是做了一点事情，这就是<code>符号表</code>。那符号表中保存的是什么呢，符号表中保存的信息有两部分：</p>
+<ul>
+<li>该目标文件中引用的全局变量以及函数</li>
+<li>该目标文件中定义的全局变量以及函数</li>
+</ul>
+<p>以上图中的代码为例，编译器在编译过程中每次遇到一个全局变量或者函数名都会在符号表中添加一项，最终编译器会统计出如下所示的一张符号表：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729220247.png" alt="符号表示意图"></p>
+<ul>
+<li>z_global以及fn_a是未定义的，因为在当前文件中，这两个变量仅仅是声明，编译器并没有找到其定义。剩余的变量编译器都可以在当前文件中找到其定义。</li>
+<li>fn_b以及fn_c为当前文件定义的函数，因为在代码段。</li>
+<li>剩余的符号都是全局变量，因此放在了数据段。</li>
+</ul>
+<p>有同学可能会问，为什么全局变量y_global_uninit ，y_global_init以及函数fn_b不可被其它目标文件引用，这是因为这些变量用static修饰过了，在C语言中经static修饰过的函数的函数以及变量都是当前文件私有的，对外部不可见，这里一定要注意。所以static这个关键字的用法就是，如果你认为一个变量只应该被当前文件使用而不暴露给外部，那么你就可以使用<code>static关键字</code>修饰一下。 </p>
+<p>本质上整个符号表只是想表达两件事：</p>
+<ul>
+<li>我能提供给其它文件使用的符号</li>
+<li>我需要其它文件提供给我使用的符号</li>
+</ul>
+<p>这里还有一个问题就是，编译器将统计的这张符号表放在哪里了呢？</p>
+<h3 id="符号表存放在哪里"><a href="#符号表存放在哪里" class="headerlink" title="符号表存放在哪里"></a>符号表存放在哪里</h3><p>在目标文件里有什么这一小节中，我们将一个目标文件简单的划分了两段，数据段和代码段，现在我们要向目标文件中再添加一段，而符号表也被编译器很贴心的放在目标文件中，因此一个目标文件可以理解为如图所示的三段，而符号表中的内容就是上一节当中编译器统计的表格。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729220335.png" alt="image-20210729220335315"></p>
+<p>有了符号表，链接器就可以进行符号决议了。</p>
+<h3 id="符号决议的过程"><a href="#符号决议的过程" class="headerlink" title="符号决议的过程"></a>符号决议的过程</h3><p>在上一节符号表中，我们知道符号表给链接器提供了两种信息，一个是当前目标文件可以提供给其它目标文件使用的符号，另一个其它目标文件需要提供给当前目标文件使用的符号。有了这些信息链接器就可以进行符号决议了。如图所示，假设链接器需要链接三个目标文件：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729220420.png" alt="链接三个目标文件示意图"></p>
+<p>链接器会依次扫描每一个给定的目标文件，同时链接器还维护了两个集合，一个是已定义符号集合D，另一个是未定义符合集合U，下面是链接器进行符合决议的过程：</p>
+<p>1，对于当前目标文件，查找其符号表，并将已定义的符号并添加到已定义符号集合D中。</p>
+<p>2，对于当前目标文件，查找其符号表，将每一个当前目标文件引用的符号与已定义符号集合D进行对比，如果该符号不在集合D中则将其添加到未定义符合集合U中。</p>
+<p>3，当所有文件都扫描完成后，如果为定义符号集合U不为空，则说明当前输入的目标文件集合中有未定义错误，链接器报错，整个编译过程终止。</p>
+<p>上面的过程看似复杂，其实用一句话概括就是只要每个目标文件所引用变量都能在其它目标文件中找到唯一的定义，整个链接过程就是正确的。</p>
+<p>如果你觉得上面的解释比较晦涩的话，你也可以将链接符号决议这个过程想象成如下的游戏：</p>
+<p>新学期开学后，幼儿园的小朋友们都带了礼物要和其它的小朋友们分享，同时每个小朋友也有自己的心愿单，每个小朋友都可以依照自己的心愿单去其它的小朋友那里拿礼物，整个过程结束后，每个小朋友都能拿到自己想要的礼物。</p>
+<p>在这个游戏当中，小朋友就好比目标文件，每个小朋友自己带的礼物就好比每个目标文件的已定义符号集合，心愿单就好比每个目标文件中未定义符号的集合。</p>
+<h3 id="举例说明-undefined-reference"><a href="#举例说明-undefined-reference" class="headerlink" title="举例说明 undefined reference"></a>举例说明 undefined reference</h3><p>假设我们写了一个math.c的数字计算程序，其中定义了一个add函数，该函数在main.c中被引用到，那么很简单，我们只需要在main.c中include写好的math.h头文件就可以使用add函数了，如图所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729221716.png" alt="引用示意图"></p>
+<p>但是由于粗心大意，一不小心把math.c中的add函数给注释掉了，当你在写完main.c、打算很潇洒的编译一下时，出现了很经典的undefined reference to <code>add(int, int)</code>错误，如图所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729221746.png" alt="引用报错示意图"></p>
+<p>这个错误其实是这样产生的：</p>
+<ol>
+<li>链接器发现了你写的代码math.o中引用了外部定义的add函数(不要忘了，这是通过检查目标文件math.o中的符号表得到的信息)，所以链接器开始查找add函数到底是在哪里定义的。</li>
+<li>链接器转而去目标文件math.o的目标文件符号表中查找，没有找到add函数的定义。</li>
+<li>链接器转而去其它目标文件符号表中查找，同样没有找到add函数的定义。</li>
+<li>链接器在查找了所有目标文件的符号表后都没有找到add函数，因此链接器停止工作并报出错误undefined reference to &#96;add(int, int)’，如上图所示。</li>
+</ol>
+<p>因此如果你很清楚链接器符号决议这个过程的话就会进行如下排查：</p>
+<ol>
+<li>main.c中对add函数的函数名有没有写正确。</li>
+<li>链接命令中有没有包含math.o，如果没有添加上该目标文件。</li>
+<li>如果链接命令没有问题，查看math.c中定义的add函数定义是否有问题。</li>
+<li>如果是C和C++混合编程时，确保相应的位置添加了extern “C”。</li>
+</ol>
+<p>一般情况下经过这几个步骤的排查基本能够解决问题。</p>
+<p>所以当你再次看到undefined reference这样的错误的是时候，你就应该可以很从容的去解决这类问题了。</p>
+<blockquote>
+<p>参考资料来自于公众号《码农的荒岛求生》，此处整理仅供个人学习。</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/df8d5ad8.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="跑跑的技术笔记">
+      <meta itemprop="description" content="努力">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 跑跑的技术笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/posts/df8d5ad8.html" class="post-title-link" itemprop="url">计算机基础知识-软硬件和汇编</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-07-17 17:07:50 / 修改时间：17:19:12" itemprop="dateCreated datePublished" datetime="2021-07-17T17:07:50+08:00">2021-07-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">计算机基础知识</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Changyan：</span>
+    
+    <a title="计算机基础知识-软硬件和汇编" href="/posts/df8d5ad8.html#SOHUCS" itemprop="discussionUrl">
+      <span id="sourceId::386a08ddee2f500e469ae3f0ce9929d2" class="cy_cmt_count" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>449</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="三大原则"><a href="#三大原则" class="headerlink" title="三大原则"></a>三大原则</h2><ol>
+<li>计算机是执行<code>输入、运算、输出</code>的机器</li>
+<li>程序是<code>指令</code>和<code>数据</code>的集合</li>
+<li>计算机处理方式有时和人类思维习惯不同</li>
+</ol>
+<h3 id="计算机只会输入、运算、输出"><a href="#计算机只会输入、运算、输出" class="headerlink" title="计算机只会输入、运算、输出"></a>计算机只会输入、运算、输出</h3><p>计算机由大量的IC（集成电路）组成，每块IC上都有很多引脚，用于输入和输出。IC将输入的信息进行运算，并把运算结果输出。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210717161912.png" alt="image-20210717161906146"></p>
+<h3 id="软件是指令和数据的集合"><a href="#软件是指令和数据的集合" class="headerlink" title="软件是指令和数据的集合"></a>软件是指令和数据的集合</h3><p>指令就是控制计算机进行输入、运算、输出的命令，把向计算机发出的命令一条条记录下来就构成了程序。程序执行的过程就是计算机依次执行这些指令的过程。把一组指令取个名字就叫做函数了。</p>
+<p>数据就是在程序运行过程中需要的内容，比如变量。</p>
+<h3 id="计算机认为一切都是数字"><a href="#计算机认为一切都是数字" class="headerlink" title="计算机认为一切都是数字"></a>计算机认为一切都是数字</h3><p>比如人们所说的颜色，计算机都用数字编码来表示，如用“0，0，255”表示蓝色。</p>
+<h2 id="计算机硬件组成"><a href="#计算机硬件组成" class="headerlink" title="计算机硬件组成"></a>计算机硬件组成</h2><p>计算机硬件有三个基本要素：</p>
+<ul>
+<li>CPU：负责解释、执行指令，从而执行程序。从内存或I&#x2F;O输入数据，在内部进行运算，再把运算结果输出到内存或I&#x2F;O。</li>
+<li>内存：存放程序，程序又是指令和数据和集合。</li>
+<li>I&#x2F;O：临时存放着用于和周边设备进行输入输出的数据。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210717165118.png" alt="image-20210717165117971"></p>
+<blockquote>
+<p>参考资料《计算机是怎样跑起来的》</p>
+</blockquote>
+<hr>
+
+      
+    </div>
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/37407.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="跑跑的技术笔记">
+      <meta itemprop="description" content="努力">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 跑跑的技术笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/posts/37407.html" class="post-title-link" itemprop="url">mount命令-挂载磁盘</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-03 14:12:25" itemprop="dateCreated datePublished" datetime="2021-07-03T14:12:25+08:00">2021-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2021-07-14 22:43:07" itemprop="dateModified" datetime="2021-07-14T22:43:07+08:00">2021-07-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Changyan：</span>
+    
+    <a title="mount命令-挂载磁盘" href="/posts/37407.html#SOHUCS" itemprop="discussionUrl">
+      <span id="sourceId::0250bef772d2831677cf8b1b2e0d92a4" class="cy_cmt_count" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>322</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="mount命令介绍"><a href="#mount命令介绍" class="headerlink" title="mount命令介绍"></a>mount命令介绍</h2><p>用于加载文件系统到指定的加载点。此命令的最常用于挂载cdrom，使我们可以访问cdrom中的数据，因为你将光盘插入cdrom中，Linux并不会自动挂载，必须使用Linux mount命令来手动完成挂载。</p>
+<h2 id="mount命令常用参数"><a href="#mount命令常用参数" class="headerlink" title="mount命令常用参数"></a>mount命令常用参数</h2><table>
+<thead>
+<tr>
+<th>-t</th>
+<th>指定挂载类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-a</td>
+<td>加载文件“&#x2F;etc&#x2F;fstab”中描述的所有文件系统</td>
+</tr>
+</tbody></table>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>挂载 &#x2F;dev&#x2F;cdrom 到 &#x2F;mnt：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@linuxcool ~]# mount /dev/cdrom /mnt</span><br></pre></td></tr></table></figure>
+
+<p>启动所有挂载：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@linuxcool ~]# mount -a</span><br></pre></td></tr></table></figure>
+
+<p>挂载nfs格式文件系统：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@linuxcool ~]# mount -t nfs /123 /mnt  </span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/22729.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="跑跑的技术笔记">
+      <meta itemprop="description" content="努力">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 跑跑的技术笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/posts/22729.html" class="post-title-link" itemprop="url">df命令-显示磁盘空间</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-03 14:12:17" itemprop="dateCreated datePublished" datetime="2021-07-03T14:12:17+08:00">2021-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2021-07-14 22:43:07" itemprop="dateModified" datetime="2021-07-14T22:43:07+08:00">2021-07-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Changyan：</span>
+    
+    <a title="df命令-显示磁盘空间" href="/posts/22729.html#SOHUCS" itemprop="discussionUrl">
+      <span id="sourceId::e403b058175c74b6fa297deea31aa302" class="cy_cmt_count" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="df命令介绍"><a href="#df命令介绍" class="headerlink" title="df命令介绍"></a>df命令介绍</h2><p>df命令的英文全称即<code>Disk Free</code>，顾名思义功能是用于显示系统上可使用的磁盘空间。默认显示单位为KB，建议使用“df -h”的参数组合，根据磁盘容量自动变换合适的单位，更利于人性化阅读。</p>
+<p>日常普遍用该命令可以查看磁盘被占用了多少空间、还剩多少空间等信息。</p>
+<h2 id="df命令常用参数"><a href="#df命令常用参数" class="headerlink" title="df命令常用参数"></a>df命令常用参数</h2><table>
+<thead>
+<tr>
+<th>-a</th>
+<th>显示所有系统文件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-h</td>
+<td>以容易阅读的方式显示</td>
+</tr>
+</tbody></table>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><h3 id="df默认选项"><a href="#df默认选项" class="headerlink" title="df默认选项"></a><code>df</code>默认选项</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@paopao ~]# df</span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">devtmpfs          347636       0    347636   0% /dev</span><br><span class="line">tmpfs             362780       0    362780   0% /dev/shm</span><br><span class="line">tmpfs             362780   41188    321592  12% /run</span><br><span class="line">tmpfs             362780       0    362780   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1       20510332 1610056  17835368   9% /</span><br><span class="line">tmpfs              72556       0     72556   0% /run/user/0</span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
+<h3 id="df-h便于人性化阅读"><a href="#df-h便于人性化阅读" class="headerlink" title="df -h便于人性化阅读"></a><code>df -h</code>便于人性化阅读</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@paopao ~]# df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
+<h3 id="df-ah显示全部文件系统"><a href="#df-ah显示全部文件系统" class="headerlink" title="df -ah显示全部文件系统"></a><code>df -ah</code>显示全部文件系统</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">[root@paopao ~]# df -ah</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">sysfs              0     0     0    - /sys</span><br><span class="line">proc               0     0     0    - /proc</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">securityfs         0     0     0    - /sys/kernel/security</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">devpts             0     0     0    - /dev/pts</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/systemd</span><br><span class="line">pstore             0     0     0    - /sys/fs/pstore</span><br><span class="line">bpf                0     0     0    - /sys/fs/bpf</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/memory</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpu,cpuacct</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/net_cls,net_prio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/hugetlb</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpuset</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/freezer</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/perf_event</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/devices</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/pids</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/blkio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/rdma</span><br><span class="line">none               0     0     0    - /sys/kernel/tracing</span><br><span class="line">configfs           0     0     0    - /sys/kernel/config</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">mqueue             0     0     0    - /dev/mqueue</span><br><span class="line">hugetlbfs          0     0     0    - /dev/hugepages</span><br><span class="line">debugfs            0     0     0    - /sys/kernel/debug</span><br><span class="line">systemd-1          -     -     -    - /proc/sys/fs/binfmt_misc</span><br><span class="line">binfmt_misc        0     0     0    - /proc/sys/fs/binfmt_misc</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]#      </span><br></pre></td></tr></table></figure>
+<h3 id="df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况"><a href="#df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况" class="headerlink" title="df  目录 指定目录下的文件’指定文件所在分区的磁盘使用情况"></a><code>df  目录</code> 指定目录下的文件’指定文件所在分区的磁盘使用情况</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@paopao ~]# df /root/.bashrc </span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">/dev/vda1       20510332 1610068  17835356   9% /</span><br><span class="line">[root@paopao ~]# </span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 </div>
@@ -1697,7 +1927,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">66k</span>
+    <span title="站点总字数">67k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
