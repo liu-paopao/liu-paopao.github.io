@@ -427,9 +427,7 @@
   <entry>
     <title>将git信息编译进可执行程序</title>
     <url>/posts/50c08953.html</url>
-    <content><![CDATA[<span id="more"></span>
-
-<h2 id="脚本build-sh"><a href="#脚本build-sh" class="headerlink" title="脚本build.sh"></a>脚本build.sh</h2><p>运行build.sh 脚本会生成最新的头文件，其包含git信息：</p>
+    <content><![CDATA[<h2 id="脚本build-sh"><a href="#脚本build-sh" class="headerlink" title="脚本build.sh"></a>脚本build.sh</h2><p>运行build.sh 脚本会生成最新的头文件，其包含git信息：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">commit_ts=`git log -1 --format=&quot;%ct&quot;`</span><br><span class="line">commit_time=`date -d@$commit_ts +&quot;%Y-%m-%d %H:%M:%S&quot;`</span><br><span class="line">current_time=`date +&quot;%Y-%m-%d %H:%M:%S&quot;`</span><br><span class="line">git_version=`git log -1 --format=&quot;%h&quot;`</span><br><span class="line">sed  s/MYVERSION/&quot;version: $git_version commit: $commit_time build: $current_time&quot;/g version.h.tmp &gt; version.h</span><br><span class="line">make clean</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
 
 <p>将脚本内容保存为 build.sh 每次提交源码之后，直接运行build.sh 脚本即会生成最新的头文件，该头文件被编译到程序中，可以看到版本信息包含了最新的版本号，提交时间，编译时间。</p>
@@ -572,6 +570,36 @@
       </categories>
   </entry>
   <entry>
+    <title>df命令-显示磁盘空间</title>
+    <url>/posts/22729.html</url>
+    <content><![CDATA[<h2 id="df命令介绍"><a href="#df命令介绍" class="headerlink" title="df命令介绍"></a>df命令介绍</h2><p>df命令的英文全称即<code>Disk Free</code>，顾名思义功能是用于显示系统上可使用的磁盘空间。默认显示单位为KB，建议使用“df -h”的参数组合，根据磁盘容量自动变换合适的单位，更利于人性化阅读。</p>
+<p>日常普遍用该命令可以查看磁盘被占用了多少空间、还剩多少空间等信息。</p>
+<h2 id="df命令常用参数"><a href="#df命令常用参数" class="headerlink" title="df命令常用参数"></a>df命令常用参数</h2><table>
+<thead>
+<tr>
+<th>-a</th>
+<th>显示所有系统文件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-h</td>
+<td>以容易阅读的方式显示</td>
+</tr>
+</tbody></table>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><h3 id="df默认选项"><a href="#df默认选项" class="headerlink" title="df默认选项"></a><code>df</code>默认选项</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df</span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">devtmpfs          347636       0    347636   0% /dev</span><br><span class="line">tmpfs             362780       0    362780   0% /dev/shm</span><br><span class="line">tmpfs             362780   41188    321592  12% /run</span><br><span class="line">tmpfs             362780       0    362780   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1       20510332 1610056  17835368   9% /</span><br><span class="line">tmpfs              72556       0     72556   0% /run/user/0</span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
+<h3 id="df-h便于人性化阅读"><a href="#df-h便于人性化阅读" class="headerlink" title="df -h便于人性化阅读"></a><code>df -h</code>便于人性化阅读</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
+<h3 id="df-ah显示全部文件系统"><a href="#df-ah显示全部文件系统" class="headerlink" title="df -ah显示全部文件系统"></a><code>df -ah</code>显示全部文件系统</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df -ah</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">sysfs              0     0     0    - /sys</span><br><span class="line">proc               0     0     0    - /proc</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">securityfs         0     0     0    - /sys/kernel/security</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">devpts             0     0     0    - /dev/pts</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/systemd</span><br><span class="line">pstore             0     0     0    - /sys/fs/pstore</span><br><span class="line">bpf                0     0     0    - /sys/fs/bpf</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/memory</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpu,cpuacct</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/net_cls,net_prio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/hugetlb</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpuset</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/freezer</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/perf_event</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/devices</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/pids</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/blkio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/rdma</span><br><span class="line">none               0     0     0    - /sys/kernel/tracing</span><br><span class="line">configfs           0     0     0    - /sys/kernel/config</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">mqueue             0     0     0    - /dev/mqueue</span><br><span class="line">hugetlbfs          0     0     0    - /dev/hugepages</span><br><span class="line">debugfs            0     0     0    - /sys/kernel/debug</span><br><span class="line">systemd-1          -     -     -    - /proc/sys/fs/binfmt_misc</span><br><span class="line">binfmt_misc        0     0     0    - /proc/sys/fs/binfmt_misc</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]#      </span><br></pre></td></tr></table></figure>
+<h3 id="df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况"><a href="#df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况" class="headerlink" title="df  目录 指定目录下的文件’指定文件所在分区的磁盘使用情况"></a><code>df  目录</code> 指定目录下的文件’指定文件所在分区的磁盘使用情况</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df /root/.bashrc </span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">/dev/vda1       20510332 1610068  17835356   9% /</span><br><span class="line">[root@paopao ~]# </span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux命令</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>mount命令-挂载磁盘</title>
     <url>/posts/37407.html</url>
     <content><![CDATA[<h2 id="mount命令介绍"><a href="#mount命令介绍" class="headerlink" title="mount命令介绍"></a>mount命令介绍</h2><p>用于加载文件系统到指定的加载点。此命令的最常用于挂载cdrom，使我们可以访问cdrom中的数据，因为你将光盘插入cdrom中，Linux并不会自动挂载，必须使用Linux mount命令来手动完成挂载。</p>
@@ -595,36 +623,6 @@
 
 <p>挂载nfs格式文件系统：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@linuxcool ~]# mount -t nfs /123 /mnt  </span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux命令</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>df命令-显示磁盘空间</title>
-    <url>/posts/22729.html</url>
-    <content><![CDATA[<h2 id="df命令介绍"><a href="#df命令介绍" class="headerlink" title="df命令介绍"></a>df命令介绍</h2><p>df命令的英文全称即<code>Disk Free</code>，顾名思义功能是用于显示系统上可使用的磁盘空间。默认显示单位为KB，建议使用“df -h”的参数组合，根据磁盘容量自动变换合适的单位，更利于人性化阅读。</p>
-<p>日常普遍用该命令可以查看磁盘被占用了多少空间、还剩多少空间等信息。</p>
-<h2 id="df命令常用参数"><a href="#df命令常用参数" class="headerlink" title="df命令常用参数"></a>df命令常用参数</h2><table>
-<thead>
-<tr>
-<th>-a</th>
-<th>显示所有系统文件</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>-h</td>
-<td>以容易阅读的方式显示</td>
-</tr>
-</tbody></table>
-<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><h3 id="df默认选项"><a href="#df默认选项" class="headerlink" title="df默认选项"></a><code>df</code>默认选项</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df</span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">devtmpfs          347636       0    347636   0% /dev</span><br><span class="line">tmpfs             362780       0    362780   0% /dev/shm</span><br><span class="line">tmpfs             362780   41188    321592  12% /run</span><br><span class="line">tmpfs             362780       0    362780   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1       20510332 1610056  17835368   9% /</span><br><span class="line">tmpfs              72556       0     72556   0% /run/user/0</span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
-<h3 id="df-h便于人性化阅读"><a href="#df-h便于人性化阅读" class="headerlink" title="df -h便于人性化阅读"></a><code>df -h</code>便于人性化阅读</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
-<h3 id="df-ah显示全部文件系统"><a href="#df-ah显示全部文件系统" class="headerlink" title="df -ah显示全部文件系统"></a><code>df -ah</code>显示全部文件系统</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df -ah</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">sysfs              0     0     0    - /sys</span><br><span class="line">proc               0     0     0    - /proc</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">securityfs         0     0     0    - /sys/kernel/security</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">devpts             0     0     0    - /dev/pts</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/systemd</span><br><span class="line">pstore             0     0     0    - /sys/fs/pstore</span><br><span class="line">bpf                0     0     0    - /sys/fs/bpf</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/memory</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpu,cpuacct</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/net_cls,net_prio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/hugetlb</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpuset</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/freezer</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/perf_event</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/devices</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/pids</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/blkio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/rdma</span><br><span class="line">none               0     0     0    - /sys/kernel/tracing</span><br><span class="line">configfs           0     0     0    - /sys/kernel/config</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">mqueue             0     0     0    - /dev/mqueue</span><br><span class="line">hugetlbfs          0     0     0    - /dev/hugepages</span><br><span class="line">debugfs            0     0     0    - /sys/kernel/debug</span><br><span class="line">systemd-1          -     -     -    - /proc/sys/fs/binfmt_misc</span><br><span class="line">binfmt_misc        0     0     0    - /proc/sys/fs/binfmt_misc</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]#      </span><br></pre></td></tr></table></figure>
-<h3 id="df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况"><a href="#df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况" class="headerlink" title="df  目录 指定目录下的文件’指定文件所在分区的磁盘使用情况"></a><code>df  目录</code> 指定目录下的文件’指定文件所在分区的磁盘使用情况</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df /root/.bashrc </span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">/dev/vda1       20510332 1610068  17835356   9% /</span><br><span class="line">[root@paopao ~]# </span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
-
 ]]></content>
       <categories>
         <category>Linux</category>
@@ -1168,9 +1166,7 @@
   <entry>
     <title>vim中可视模式下添加或取消多行注释</title>
     <url>/posts/8377.html</url>
-    <content><![CDATA[<span id="more"></span>
-
-<h2 id="vim中可视模式下多行添加注释和取消注释"><a href="#vim中可视模式下多行添加注释和取消注释" class="headerlink" title="vim中可视模式下多行添加注释和取消注释"></a>vim中可视模式下多行添加注释和取消注释</h2><p><strong>正常模式 –&gt; 可视模式：</strong></p>
+    <content><![CDATA[<h2 id="vim中可视模式下多行添加注释和取消注释"><a href="#vim中可视模式下多行添加注释和取消注释" class="headerlink" title="vim中可视模式下多行添加注释和取消注释"></a>vim中可视模式下多行添加注释和取消注释</h2><p><strong>正常模式 –&gt; 可视模式：</strong></p>
 <table>
 <thead>
 <tr>
@@ -1205,9 +1201,7 @@
   <entry>
     <title>vim中同一窗口操作多个文件</title>
     <url>/posts/f3677974.html</url>
-    <content><![CDATA[<span id="more"></span>
-
-<h2 id="1、vim-同时打开两个文件并分割窗口"><a href="#1、vim-同时打开两个文件并分割窗口" class="headerlink" title="1、vim 同时打开两个文件并分割窗口"></a>1、vim 同时打开两个文件并分割窗口</h2><p>上下分割：</p>
+    <content><![CDATA[<h2 id="1、vim-同时打开两个文件并分割窗口"><a href="#1、vim-同时打开两个文件并分割窗口" class="headerlink" title="1、vim 同时打开两个文件并分割窗口"></a>1、vim 同时打开两个文件并分割窗口</h2><p>上下分割：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ vim -o filename1 filename2  </span><br></pre></td></tr></table></figure>
 <p>左右分割：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ vim -O filename1 filename2</span><br></pre></td></tr></table></figure>
@@ -1241,9 +1235,7 @@
   <entry>
     <title>vim中统计字符串出现的次数</title>
     <url>/posts/dcedac78.html</url>
-    <content><![CDATA[<span id="more"></span>
-
-<p>vim中统计字符串出现的次数</p>
+    <content><![CDATA[<p>vim中统计字符串出现的次数</p>
 <p><strong>关键命令：</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:%s/pattern//gn</span><br></pre></td></tr></table></figure>
 
@@ -1275,9 +1267,7 @@
   <entry>
     <title>vim速查图_中英文版</title>
     <url>/posts/6c0adc53.html</url>
-    <content><![CDATA[<span id="more"></span>
-
-<h2 id="中文翻译版"><a href="#中文翻译版" class="headerlink" title="中文翻译版"></a>中文翻译版</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202203181645094.jpg" alt="vim速查图_中文版"></p>
+    <content><![CDATA[<h2 id="中文翻译版"><a href="#中文翻译版" class="headerlink" title="中文翻译版"></a>中文翻译版</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202203181645094.jpg" alt="vim速查图_中文版"></p>
 <h2 id="英文原版"><a href="#英文原版" class="headerlink" title="英文原版"></a>英文原版</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202203181645480.jpg" alt="vim速查图_英文版"></p>
 ]]></content>
       <categories>
@@ -1290,9 +1280,7 @@
   <entry>
     <title>解决vim中鼠标选中不能复制</title>
     <url>/posts/bc41595b.html</url>
-    <content><![CDATA[<span id="more"></span>
-
-<h2 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h2><p>vim中鼠标选中不能复制并进入可视模式，习惯了在vim中鼠标选中即复制的效果，对此问题从网上查了下发现是vim的默认配置导致的。</p>
+    <content><![CDATA[<h2 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h2><p>vim中鼠标选中不能复制并进入可视模式，习惯了在vim中鼠标选中即复制的效果，对此问题从网上查了下发现是vim的默认配置导致的。</p>
 <h2 id="解决方法："><a href="#解决方法：" class="headerlink" title="解决方法："></a>解决方法：</h2><ol>
 <li><p>修改 vim 的默认配置文件</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /usr/share/vim/vim81/defaults.vim</span><br></pre></td></tr></table></figure></li>
@@ -1471,61 +1459,6 @@
       </tags>
   </entry>
   <entry>
-    <title>v2ray多用户配置</title>
-    <url>/posts/21a98812.html</url>
-    <content><![CDATA[<h1 id="v2ray多用户配置"><a href="#v2ray多用户配置" class="headerlink" title="v2ray多用户配置"></a>v2ray多用户配置</h1><blockquote>
-<p>本文转载自：<a href="https://v2raytech.com/v2ray-multiple-users/%EF%BC%8C%E5%A6%82%E6%96%87%E4%B8%AD%E5%86%85%E5%AE%B9%E6%9C%89%E9%94%99%E8%AF%AF%E8%AF%B7%E5%88%B0%E5%8E%9F%E6%96%87%E6%9F%A5%E7%9C%8B%E5%8E%9F%E5%A7%8B%E7%89%88(%E6%9C%80%E6%96%B0%E7%89%88)">https://v2raytech.com/v2ray-multiple-users/，如文中内容有错误请到原文查看原始版(最新版)</a></p>
-</blockquote>
-<blockquote>
-<p>如有问题，欢迎到 <a href="https://hijk.club/">网络跳越论坛</a> 或 TG群组 <a href="https://t.me/hijkclub">https://t.me/hijkclub</a> 交流</p>
-</blockquote>
-<p>部分网友自行搭建好v2ray科学上网环境后，不好意思拒绝朋友的分享请求，所以想设置一个不同的端口或者id再分享。类似的需求v2ray都是支持的，配置起来也不算麻烦。本文就v2ray普通版、伪装版分别介绍v2ray多用户配置。</p>
-<p>注意：自行更改配置文件需要用到 vi&#x2F;vim&#x2F;nano 等编辑器，或者把配置文件下载到本地修改，修改完再上传到服务端。下载和上传教程请参考：<a href="https://v2xtls.org/bitvise%E8%BF%9E%E6%8E%A5linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%99%E7%A8%8B/">Bitvise连接Linux服务器教程</a>(Windows用户)、<a href="https://v2xtls.org/mac%E7%94%B5%E8%84%91%E8%BF%9E%E6%8E%A5linux%E6%95%99%E7%A8%8B/">Mac电脑连接Linux教程</a>(Mac用户)。</p>
-<h2 id="普通版多用户配置"><a href="#普通版多用户配置" class="headerlink" title="普通版多用户配置"></a>普通版多用户配置</h2><p><a href="https://v2xtls.org/v2ray%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC/">v2ray一键脚本</a> 运行完后，会输出配置文件路径，默认是 <code>/etc/v2ray/config.json</code>，其内容类似这样：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;loglevel&quot;: &quot;info&quot;,</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [&#123;</span><br><span class="line">    &quot;port&quot;: 12345,</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;6be0aa25-09c1-4d8b-a96f-75cd3485021f&quot;,</span><br><span class="line">          &quot;level&quot;: 1,</span><br><span class="line">          &quot;alterId&quot;: 53</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  &quot;outbounds&quot;: [&#123;</span><br><span class="line">    &quot;protocol&quot;: &quot;freedom&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;&#125;</span><br><span class="line">  &#125;,&#123;</span><br><span class="line">    &quot;protocol&quot;: &quot;blackhole&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;&#125;,</span><br><span class="line">    &quot;tag&quot;: &quot;blocked&quot;</span><br><span class="line">  &#125;],</span><br><span class="line">  &quot;routing&quot;: &#123;</span><br><span class="line">    &quot;rules&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;type&quot;: &quot;field&quot;,</span><br><span class="line">        &quot;ip&quot;: [&quot;geoip:private&quot;],</span><br><span class="line">        &quot;outboundTag&quot;: &quot;blocked&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>下文教程的修改都是参考这个文件，如果出现问题，请注意与原来文件的差异。</p>
-<p>v2ray多用户分成两种：同端口不同id，不同端口不同id。v2ray两种类型都支持，接下来分别做介绍。</p>
-<h3 id="同端口不同id"><a href="#同端口不同id" class="headerlink" title="同端口不同id"></a>同端口不同id</h3><p>这是最简单的配置多用户方式。方法是编辑 <code>/etc/v2ray/config.json</code> 文件，在”<strong>clients</strong>“一节中增加新增用户配置。例如在上面配置基础上增加一个用户：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;loglevel&quot;: &quot;info&quot;,</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [&#123;</span><br><span class="line">    &quot;port&quot;: 12345,</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;6be0aa25-09c1-4d8b-a96f-75cd3485021f&quot;,</span><br><span class="line">          &quot;level&quot;: 1,</span><br><span class="line">          &quot;alterId&quot;: 53</span><br><span class="line">        &#125;, # 逗号不能少</span><br><span class="line">        # 下面是新增的内容</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;2a1292fd-07be-37e7-af20-57668b4a546a&quot;,  # id可以用 /usr/bin/v2ray/v2ctl uuid生成</span><br><span class="line">          &quot;level&quot;: 1, # 这个不用改</span><br><span class="line">          &quot;alterId&quot;: 63 # 建议50-150之间的一个整数</span><br><span class="line">        &#125;</span><br><span class="line">        # 新增内容结束</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  # 下面的内容保持不变</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意：</strong>“#”和后面的东西都不能出现在配置文件中，上面只是为了解释说明。</p>
-<p>编辑好文件后，重启 v2ray：<code>systemctl restart v2ray</code>。如果命令失败，或者 <code>netstat -nltp | grep v2ray</code> 输出为空，说明配置文件有错误，请仔细检查，改好后再重启。</p>
-<p>接下来就可以用新的id和alterId配置客户端，其余信息保持不变。</p>
-<h3 id="不同端口不同id"><a href="#不同端口不同id" class="headerlink" title="不同端口不同id"></a>不同端口不同id</h3><p>如果希望端口也不一样，请按照如下步骤做：</p>
-<p>\1. 首先编辑 <code>/etc/v2ray/config.json</code> 文件，按照”<strong>inbounds</strong>“格式新增入口和用户。例如新增一个端口和用户后，配置文件变成：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;loglevel&quot;: &quot;info&quot;,</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [&#123;</span><br><span class="line">    &quot;port&quot;: 12345,</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;6be0aa25-09c1-4d8b-a96f-75cd3485021f&quot;,</span><br><span class="line">          &quot;level&quot;: 1,</span><br><span class="line">          &quot;alterId&quot;: 53</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, # 逗号不能省，原来这里是&quot;&#125;],&quot;</span><br><span class="line">  # 以下是新增的配置</span><br><span class="line">  &#123;</span><br><span class="line">    &quot;port&quot;: 54321, # 端口是1000-65535之间的一个整数</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;, # 也可以改成其他协议，如果你知道怎么配置的话</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;24813255-228d-b0e0-c3fa-e5d4c9defda1&quot;, # id可以用 /usr/bin/v2ray/v2ctl uuid生成</span><br><span class="line">          &quot;level&quot;: 1, # 0或1都可以</span><br><span class="line">          &quot;alterId&quot;: 57 # 建议50-150之间的一个整数</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  # 新增内容结束</span><br><span class="line">  # 下面的内容保持不变</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意：</strong>“#”和后面的东西都不能出现在配置文件中，上面只是为了解释说明。</p>
-<p>编辑好文件后，重启 v2ray：<code>systemctl restart v2ray</code>。如果命令失败，或者 <code>netstat -nltp | grep v2ray</code> 输出为空，说明配置文件有错误，请仔细检查，改好后再重启。</p>
-<p>\2. 设置防火墙放行新增的端口。CentOS系统命令是：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">firewall-cmd --permanent --add-port=54321/tcp # 注意：54321要改成你的端口号</span><br><span class="line">firewall-cmd --permanent --add-port=54321/udp # 注意：54321要改成你的端口号</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
-
-<p>Ubuntu系统命令是：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ufw allow 54321/tcp # 注意：54321要改成你的端口</span><br><span class="line">ufw allow 54321/udp # 注意：54321要改成你的端口</span><br></pre></td></tr></table></figure>
-
-<p>接下来用新的端口、id和alterId配置客户端，其余信息保持不变。</p>
-<h2 id="带伪装多用户配置"><a href="#带伪装多用户配置" class="headerlink" title="带伪装多用户配置"></a>带伪装多用户配置</h2><p><strong>同端口不同id的配置和普通版操作方法一样</strong>，配置好后重启v2ray就行了，这里不再重复。</p>
-<p>接下来说说不同端口不同id的情形。伪装有了Nginx的介入，所以有多种情况，这里只介绍最简单的一种实现方式。</p>
-<ol>
-<li><p>编辑 <code>/etc/v2ray/config.json</code> 文件，按照 <a href="https://v2xtls.org/v2ray%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE/#single_port">普通版同端口不同id</a> 中的方法添加用户；</p>
-</li>
-<li><p>编辑 <code>/etc/nginx/conf.d/你的域名.conf</code> 文件，找到 “**listen 443 ssl http2;**” 这一行，在这行下面添加“listen 新的端口号 ssl http2;”一行（新的端口号要改成整数，例如8443，不能是443）。然后保存文件， <code>nginx -t</code> 检查配置有没有错误，没有错误的话重启Nginx：<code>systemctl restart nginx</code>；</p>
-</li>
-<li><p>设置防火墙放行端口，请参考 <a href="https://v2xtls.org/v2ray%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE/#set_firewall">普通版设置防火墙</a> 中的命令。</p>
-</li>
-</ol>
-<p>接下来用新的端口、id和alterId配置客户端，其余信息保持不变。</p>
-<p>如果你想添加多个端口或多个用户，重复上面的过程就可以了。</p>
-]]></content>
-      <categories>
-        <category>其他</category>
-      </categories>
-      <tags>
-        <tag>V2Ray</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>V2Ray配置教程</title>
     <url>/posts/39483.html</url>
     <content><![CDATA[<h1 id="V2Ray-配置教程"><a href="#V2Ray-配置教程" class="headerlink" title="V2Ray 配置教程"></a>V2Ray 配置教程</h1><p>V2Ray 是继 Shadowsocks(R)后又一个体验很棒、功能非常强大的科学上网工具，近年来受到网友的广泛关注和喜爱。敏感时期，基本上只有 <a href="https://tlanyan.pp.ua/v2ray-traffic-mask/">V2ray 伪装</a> 或 <a href="https://tlanyan.pp.ua/trojan-tutorial/">trojan</a> 能提供十分稳的服务，推荐使用。</p>
@@ -1644,6 +1577,61 @@
 <p><a href="https://v2xtls.org/wp-content/uploads/2020/11/v2rayNG%E5%85%A8%E5%B1%80%E8%AE%BE%E7%BD%AE-576x1024-1.jpeg"><img src="https://v2xtls.org/wp-content/uploads/2020/11/v2rayNG%E5%85%A8%E5%B1%80%E8%AE%BE%E7%BD%AE-576x1024-1.jpeg" alt="v2rayNG全局设置"></a></p>
 <p>v2rayNG 全局设置</p>
 <p>配置好且服务端没有问题的话，打开浏览器应该能正常访问 google、youtube 等网站了。</p>
+]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>V2Ray</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>v2ray多用户配置</title>
+    <url>/posts/21a98812.html</url>
+    <content><![CDATA[<h1 id="v2ray多用户配置"><a href="#v2ray多用户配置" class="headerlink" title="v2ray多用户配置"></a>v2ray多用户配置</h1><blockquote>
+<p>本文转载自：<a href="https://v2raytech.com/v2ray-multiple-users/%EF%BC%8C%E5%A6%82%E6%96%87%E4%B8%AD%E5%86%85%E5%AE%B9%E6%9C%89%E9%94%99%E8%AF%AF%E8%AF%B7%E5%88%B0%E5%8E%9F%E6%96%87%E6%9F%A5%E7%9C%8B%E5%8E%9F%E5%A7%8B%E7%89%88(%E6%9C%80%E6%96%B0%E7%89%88)">https://v2raytech.com/v2ray-multiple-users/，如文中内容有错误请到原文查看原始版(最新版)</a></p>
+</blockquote>
+<blockquote>
+<p>如有问题，欢迎到 <a href="https://hijk.club/">网络跳越论坛</a> 或 TG群组 <a href="https://t.me/hijkclub">https://t.me/hijkclub</a> 交流</p>
+</blockquote>
+<p>部分网友自行搭建好v2ray科学上网环境后，不好意思拒绝朋友的分享请求，所以想设置一个不同的端口或者id再分享。类似的需求v2ray都是支持的，配置起来也不算麻烦。本文就v2ray普通版、伪装版分别介绍v2ray多用户配置。</p>
+<p>注意：自行更改配置文件需要用到 vi&#x2F;vim&#x2F;nano 等编辑器，或者把配置文件下载到本地修改，修改完再上传到服务端。下载和上传教程请参考：<a href="https://v2xtls.org/bitvise%E8%BF%9E%E6%8E%A5linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%99%E7%A8%8B/">Bitvise连接Linux服务器教程</a>(Windows用户)、<a href="https://v2xtls.org/mac%E7%94%B5%E8%84%91%E8%BF%9E%E6%8E%A5linux%E6%95%99%E7%A8%8B/">Mac电脑连接Linux教程</a>(Mac用户)。</p>
+<h2 id="普通版多用户配置"><a href="#普通版多用户配置" class="headerlink" title="普通版多用户配置"></a>普通版多用户配置</h2><p><a href="https://v2xtls.org/v2ray%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC/">v2ray一键脚本</a> 运行完后，会输出配置文件路径，默认是 <code>/etc/v2ray/config.json</code>，其内容类似这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;loglevel&quot;: &quot;info&quot;,</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [&#123;</span><br><span class="line">    &quot;port&quot;: 12345,</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;6be0aa25-09c1-4d8b-a96f-75cd3485021f&quot;,</span><br><span class="line">          &quot;level&quot;: 1,</span><br><span class="line">          &quot;alterId&quot;: 53</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  &quot;outbounds&quot;: [&#123;</span><br><span class="line">    &quot;protocol&quot;: &quot;freedom&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;&#125;</span><br><span class="line">  &#125;,&#123;</span><br><span class="line">    &quot;protocol&quot;: &quot;blackhole&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;&#125;,</span><br><span class="line">    &quot;tag&quot;: &quot;blocked&quot;</span><br><span class="line">  &#125;],</span><br><span class="line">  &quot;routing&quot;: &#123;</span><br><span class="line">    &quot;rules&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;type&quot;: &quot;field&quot;,</span><br><span class="line">        &quot;ip&quot;: [&quot;geoip:private&quot;],</span><br><span class="line">        &quot;outboundTag&quot;: &quot;blocked&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下文教程的修改都是参考这个文件，如果出现问题，请注意与原来文件的差异。</p>
+<p>v2ray多用户分成两种：同端口不同id，不同端口不同id。v2ray两种类型都支持，接下来分别做介绍。</p>
+<h3 id="同端口不同id"><a href="#同端口不同id" class="headerlink" title="同端口不同id"></a>同端口不同id</h3><p>这是最简单的配置多用户方式。方法是编辑 <code>/etc/v2ray/config.json</code> 文件，在”<strong>clients</strong>“一节中增加新增用户配置。例如在上面配置基础上增加一个用户：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;loglevel&quot;: &quot;info&quot;,</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [&#123;</span><br><span class="line">    &quot;port&quot;: 12345,</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;6be0aa25-09c1-4d8b-a96f-75cd3485021f&quot;,</span><br><span class="line">          &quot;level&quot;: 1,</span><br><span class="line">          &quot;alterId&quot;: 53</span><br><span class="line">        &#125;, # 逗号不能少</span><br><span class="line">        # 下面是新增的内容</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;2a1292fd-07be-37e7-af20-57668b4a546a&quot;,  # id可以用 /usr/bin/v2ray/v2ctl uuid生成</span><br><span class="line">          &quot;level&quot;: 1, # 这个不用改</span><br><span class="line">          &quot;alterId&quot;: 63 # 建议50-150之间的一个整数</span><br><span class="line">        &#125;</span><br><span class="line">        # 新增内容结束</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  # 下面的内容保持不变</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong>“#”和后面的东西都不能出现在配置文件中，上面只是为了解释说明。</p>
+<p>编辑好文件后，重启 v2ray：<code>systemctl restart v2ray</code>。如果命令失败，或者 <code>netstat -nltp | grep v2ray</code> 输出为空，说明配置文件有错误，请仔细检查，改好后再重启。</p>
+<p>接下来就可以用新的id和alterId配置客户端，其余信息保持不变。</p>
+<h3 id="不同端口不同id"><a href="#不同端口不同id" class="headerlink" title="不同端口不同id"></a>不同端口不同id</h3><p>如果希望端口也不一样，请按照如下步骤做：</p>
+<p>\1. 首先编辑 <code>/etc/v2ray/config.json</code> 文件，按照”<strong>inbounds</strong>“格式新增入口和用户。例如新增一个端口和用户后，配置文件变成：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;loglevel&quot;: &quot;info&quot;,</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [&#123;</span><br><span class="line">    &quot;port&quot;: 12345,</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;6be0aa25-09c1-4d8b-a96f-75cd3485021f&quot;,</span><br><span class="line">          &quot;level&quot;: 1,</span><br><span class="line">          &quot;alterId&quot;: 53</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, # 逗号不能省，原来这里是&quot;&#125;],&quot;</span><br><span class="line">  # 以下是新增的配置</span><br><span class="line">  &#123;</span><br><span class="line">    &quot;port&quot;: 54321, # 端口是1000-65535之间的一个整数</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;, # 也可以改成其他协议，如果你知道怎么配置的话</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;24813255-228d-b0e0-c3fa-e5d4c9defda1&quot;, # id可以用 /usr/bin/v2ray/v2ctl uuid生成</span><br><span class="line">          &quot;level&quot;: 1, # 0或1都可以</span><br><span class="line">          &quot;alterId&quot;: 57 # 建议50-150之间的一个整数</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  # 新增内容结束</span><br><span class="line">  # 下面的内容保持不变</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong>“#”和后面的东西都不能出现在配置文件中，上面只是为了解释说明。</p>
+<p>编辑好文件后，重启 v2ray：<code>systemctl restart v2ray</code>。如果命令失败，或者 <code>netstat -nltp | grep v2ray</code> 输出为空，说明配置文件有错误，请仔细检查，改好后再重启。</p>
+<p>\2. 设置防火墙放行新增的端口。CentOS系统命令是：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">firewall-cmd --permanent --add-port=54321/tcp # 注意：54321要改成你的端口号</span><br><span class="line">firewall-cmd --permanent --add-port=54321/udp # 注意：54321要改成你的端口号</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<p>Ubuntu系统命令是：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ufw allow 54321/tcp # 注意：54321要改成你的端口</span><br><span class="line">ufw allow 54321/udp # 注意：54321要改成你的端口</span><br></pre></td></tr></table></figure>
+
+<p>接下来用新的端口、id和alterId配置客户端，其余信息保持不变。</p>
+<h2 id="带伪装多用户配置"><a href="#带伪装多用户配置" class="headerlink" title="带伪装多用户配置"></a>带伪装多用户配置</h2><p><strong>同端口不同id的配置和普通版操作方法一样</strong>，配置好后重启v2ray就行了，这里不再重复。</p>
+<p>接下来说说不同端口不同id的情形。伪装有了Nginx的介入，所以有多种情况，这里只介绍最简单的一种实现方式。</p>
+<ol>
+<li><p>编辑 <code>/etc/v2ray/config.json</code> 文件，按照 <a href="https://v2xtls.org/v2ray%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE/#single_port">普通版同端口不同id</a> 中的方法添加用户；</p>
+</li>
+<li><p>编辑 <code>/etc/nginx/conf.d/你的域名.conf</code> 文件，找到 “**listen 443 ssl http2;**” 这一行，在这行下面添加“listen 新的端口号 ssl http2;”一行（新的端口号要改成整数，例如8443，不能是443）。然后保存文件， <code>nginx -t</code> 检查配置有没有错误，没有错误的话重启Nginx：<code>systemctl restart nginx</code>；</p>
+</li>
+<li><p>设置防火墙放行端口，请参考 <a href="https://v2xtls.org/v2ray%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE/#set_firewall">普通版设置防火墙</a> 中的命令。</p>
+</li>
+</ol>
+<p>接下来用新的端口、id和alterId配置客户端，其余信息保持不变。</p>
+<p>如果你想添加多个端口或多个用户，重复上面的过程就可以了。</p>
 ]]></content>
       <categories>
         <category>其他</category>
