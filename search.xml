@@ -27,28 +27,6 @@
       </tags>
   </entry>
   <entry>
-    <title>龙芯服务器重装UOS系统+搭建本地仓库源</title>
-    <url>/posts/e8c622c9.html</url>
-    <content><![CDATA[<h1 id="龙芯服务器重装UOS系统-搭建本地仓库源"><a href="#龙芯服务器重装UOS系统-搭建本地仓库源" class="headerlink" title="龙芯服务器重装UOS系统+搭建本地仓库源"></a>龙芯服务器重装UOS系统+搭建本地仓库源</h1><h2 id="一、安装mips64el架构UOS系统"><a href="#一、安装mips64el架构UOS系统" class="headerlink" title="一、安装mips64el架构UOS系统"></a>一、安装mips64el架构UOS系统</h2><p>1、进入统信UOS官网—&gt; 生态社区—&gt;资源中心—&gt;镜像下载页面，选择服务器版，下载MIPS64镜像（直达网址：<a href="https://www.chinauos.com/resource/download-server%EF%BC%89%E3%80%82">https://www.chinauos.com/resource/download-server）。</a></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110260942455.png" alt="img"></p>
-<p>2、通过UltraISO软件将下载的ISO刻录到U盘里，制作一个U盘启动盘。</p>
-<p>3、修改龙芯服务器BIOS启动项，把U盘启动改成第一启动项就进入了系统安装环境，大约要等半小时才能安装成功。</p>
-<h2 id="二、配置本地仓库源"><a href="#二、配置本地仓库源" class="headerlink" title="二、配置本地仓库源"></a>二、配置本地仓库源</h2><p>如何使用统信UOS镜像搭建本地源？（直达网址：<a href="https://www.xtuos.com/817.html%EF%BC%89">https://www.xtuos.com/817.html）</a></p>
-<p>1、将对应版本的server iso镜像挂在到&#x2F;mnt目录下</p>
-<p><code>sudo mount uniontechos-server-20-1040d-mips64el.iso /mnt</code></p>
-<p>2、修改源地址。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/apt/source.list</span><br><span class="line"></span><br><span class="line">deb [trusted=yes] file:///mnt eagle main</span><br></pre></td></tr></table></figure>
-
-<p>（我这里根据镜像信息，把eagle对应改成了fou：deb [trusted&#x3D;yes] file:&#x2F;&#x2F;&#x2F;mnt fou main）</p>
-<p>3、更新源。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apt update //注意如果宿主机是桌面版需要关闭商店源和打印机源，不然update会报错</span><br></pre></td></tr></table></figure>
-<p>（我这里服务器版也必须关闭商店源和打印机源：进入&#x2F;etc&#x2F;apt&#x2F;source.list.d，打开appstore.list和printer.list两个文件，注释掉里面的在线仓库网址）</p>
-]]></content>
-      <categories>
-        <category>其他</category>
-      </categories>
-  </entry>
-  <entry>
     <title>学习笔记1：单片机最小系统设计</title>
     <url>/posts/56027b49.html</url>
     <content><![CDATA[<h2 id="1、单片机概念"><a href="#1、单片机概念" class="headerlink" title="1、单片机概念"></a>1、单片机概念</h2><p>单片机：一种集成电路芯片，是单片微型计算机的简称。单片机由微处理器CPU、存储器ROM和RAM、输入输出IO接口电路组成，构成了一个既小巧又完善的计算机硬件系统。</p>
@@ -95,6 +73,28 @@
 <p>指令周期&#x3D;机器周期的1<del>4倍&#x3D;2</del>8us</p>
 <p>（2）复位电路</p>
 <p>主要分为两种：上电复位和按键复位电路。</p>
+]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>龙芯服务器重装UOS系统+搭建本地仓库源</title>
+    <url>/posts/e8c622c9.html</url>
+    <content><![CDATA[<h1 id="龙芯服务器重装UOS系统-搭建本地仓库源"><a href="#龙芯服务器重装UOS系统-搭建本地仓库源" class="headerlink" title="龙芯服务器重装UOS系统+搭建本地仓库源"></a>龙芯服务器重装UOS系统+搭建本地仓库源</h1><h2 id="一、安装mips64el架构UOS系统"><a href="#一、安装mips64el架构UOS系统" class="headerlink" title="一、安装mips64el架构UOS系统"></a>一、安装mips64el架构UOS系统</h2><p>1、进入统信UOS官网—&gt; 生态社区—&gt;资源中心—&gt;镜像下载页面，选择服务器版，下载MIPS64镜像（直达网址：<a href="https://www.chinauos.com/resource/download-server%EF%BC%89%E3%80%82">https://www.chinauos.com/resource/download-server）。</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110260942455.png" alt="img"></p>
+<p>2、通过UltraISO软件将下载的ISO刻录到U盘里，制作一个U盘启动盘。</p>
+<p>3、修改龙芯服务器BIOS启动项，把U盘启动改成第一启动项就进入了系统安装环境，大约要等半小时才能安装成功。</p>
+<h2 id="二、配置本地仓库源"><a href="#二、配置本地仓库源" class="headerlink" title="二、配置本地仓库源"></a>二、配置本地仓库源</h2><p>如何使用统信UOS镜像搭建本地源？（直达网址：<a href="https://www.xtuos.com/817.html%EF%BC%89">https://www.xtuos.com/817.html）</a></p>
+<p>1、将对应版本的server iso镜像挂在到&#x2F;mnt目录下</p>
+<p><code>sudo mount uniontechos-server-20-1040d-mips64el.iso /mnt</code></p>
+<p>2、修改源地址。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/apt/source.list</span><br><span class="line"></span><br><span class="line">deb [trusted=yes] file:///mnt eagle main</span><br></pre></td></tr></table></figure>
+
+<p>（我这里根据镜像信息，把eagle对应改成了fou：deb [trusted&#x3D;yes] file:&#x2F;&#x2F;&#x2F;mnt fou main）</p>
+<p>3、更新源。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apt update //注意如果宿主机是桌面版需要关闭商店源和打印机源，不然update会报错</span><br></pre></td></tr></table></figure>
+<p>（我这里服务器版也必须关闭商店源和打印机源：进入&#x2F;etc&#x2F;apt&#x2F;source.list.d，打开appstore.list和printer.list两个文件，注释掉里面的在线仓库网址）</p>
 ]]></content>
       <categories>
         <category>其他</category>
