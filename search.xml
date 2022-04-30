@@ -407,24 +407,6 @@
       </tags>
   </entry>
   <entry>
-    <title>读书笔记-《编码：隐匿在计算机软硬件背后的语言》</title>
-    <url>/posts/36fffd2c.html</url>
-    <content><![CDATA[<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202112161937656.jpg" alt="书封面"></p>
-<h3 id="第1章-至密亲友"><a href="#第1章-至密亲友" class="headerlink" title="第1章 至密亲友"></a>第1章 至密亲友</h3><p>编码：一种用来在机器和人之间传递信息的方式，编码就是交流。可以通过不同事物的组合表示出特定的信息，最常见的是通过两种事物的组合，如：</p>
-<ul>
-<li>手电筒的<strong>快闪</strong>和<strong>慢闪</strong>组合</li>
-<li>摩尔斯电码的<strong>点</strong>和<strong>划</strong>组合</li>
-</ul>
-<h3 id="第2章-编码与组合"><a href="#第2章-编码与组合" class="headerlink" title="第2章 编码与组合"></a>第2章 编码与组合</h3><p>通过<strong>点</strong>和<strong>划</strong>组合而成的摩尔斯电码表：<br><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202112161954230.png" alt="image-20211216195448024"><br>这样就可以表示不同的字母，达到信息传递的作用。摩尔斯码又称作二进制码，因为其组合方式</p>
-]]></content>
-      <categories>
-        <category>计算机基础知识</category>
-      </categories>
-      <tags>
-        <tag>底层架构</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>将git信息编译进可执行程序</title>
     <url>/posts/50c08953.html</url>
     <content><![CDATA[<h2 id="脚本build-sh"><a href="#脚本build-sh" class="headerlink" title="脚本build.sh"></a>脚本build.sh</h2><p>运行build.sh 脚本会生成最新的头文件，其包含git信息：</p>
@@ -444,6 +426,24 @@
       </categories>
       <tags>
         <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>读书笔记-《编码：隐匿在计算机软硬件背后的语言》</title>
+    <url>/posts/36fffd2c.html</url>
+    <content><![CDATA[<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202112161937656.jpg" alt="书封面"></p>
+<h3 id="第1章-至密亲友"><a href="#第1章-至密亲友" class="headerlink" title="第1章 至密亲友"></a>第1章 至密亲友</h3><p>编码：一种用来在机器和人之间传递信息的方式，编码就是交流。可以通过不同事物的组合表示出特定的信息，最常见的是通过两种事物的组合，如：</p>
+<ul>
+<li>手电筒的<strong>快闪</strong>和<strong>慢闪</strong>组合</li>
+<li>摩尔斯电码的<strong>点</strong>和<strong>划</strong>组合</li>
+</ul>
+<h3 id="第2章-编码与组合"><a href="#第2章-编码与组合" class="headerlink" title="第2章 编码与组合"></a>第2章 编码与组合</h3><p>通过<strong>点</strong>和<strong>划</strong>组合而成的摩尔斯电码表：<br><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202112161954230.png" alt="image-20211216195448024"><br>这样就可以表示不同的字母，达到信息传递的作用。摩尔斯码又称作二进制码，因为其组合方式</p>
+]]></content>
+      <categories>
+        <category>计算机基础知识</category>
+      </categories>
+      <tags>
+        <tag>底层架构</tag>
       </tags>
   </entry>
   <entry>
