@@ -20,7 +20,9 @@
 <li>窗口1：启动 a.out<br>通过 qemu-aarch64 运行交叉编译的 a.out, 并指定 gdb 调试端口号为1234，然后等待 gdb 远程连接。</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ qemu-aarch64 -g 1234 ./a.out</span><br><span class="line">Hello World !</span><br></pre></td></tr></table></figure>
-
+<blockquote>
+<p>-g port：该选项表示QEMU_GDB环境变量取值，即 等待gdb连接的端口号。</p>
+</blockquote>
 <ul>
 <li>窗口2：gdb 远程调试<br>通过 gdb-multiarch 启动 a.out，这里 a.out 用于读取和远程端一致的调试符号信息。连接上远程端口号后，便可以进行设断点、查看寄存器、反汇编等一系列调试操作。</li>
 </ul>

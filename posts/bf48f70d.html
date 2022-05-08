@@ -31,7 +31,7 @@
 <meta property="og:description" content="需求有时候身边只有 x86 架构的硬件环境，却想学习和测试 arm、mips 等其他架构特性，此时怎么办呢？众所周知，VMware 只能模拟同架构不同操作系统，对此可以通过 qemu 实现跨架构模拟。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-05-08T06:59:28.000Z">
-<meta property="article:modified_time" content="2022-05-08T07:41:56.424Z">
+<meta property="article:modified_time" content="2022-05-08T09:04:43.920Z">
 <meta property="article:author" content="paopao">
 <meta property="article:tag" content="GDB">
 <meta name="twitter:card" content="summary">
@@ -271,7 +271,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2022-05-08 14:59:28 / 修改时间：15:41:56" itemprop="dateCreated datePublished" datetime="2022-05-08T14:59:28+08:00">2022-05-08</time>
+      <time title="创建时间：2022-05-08 14:59:28 / 修改时间：17:04:43" itemprop="dateCreated datePublished" datetime="2022-05-08T14:59:28+08:00">2022-05-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -327,7 +327,9 @@
 <li>窗口1：启动 a.out<br>通过 qemu-aarch64 运行交叉编译的 a.out, 并指定 gdb 调试端口号为1234，然后等待 gdb 远程连接。</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ qemu-aarch64 -g 1234 ./a.out</span><br><span class="line">Hello World !</span><br></pre></td></tr></table></figure>
-
+<blockquote>
+<p>-g port：该选项表示QEMU_GDB环境变量取值，即 等待gdb连接的端口号。</p>
+</blockquote>
 <ul>
 <li>窗口2：gdb 远程调试<br>通过 gdb-multiarch 启动 a.out，这里 a.out 用于读取和远程端一致的调试符号信息。连接上远程端口号后，便可以进行设断点、查看寄存器、反汇编等一系列调试操作。</li>
 </ul>
