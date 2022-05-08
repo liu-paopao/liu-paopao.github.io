@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>通过qemu+gdb实现跨架构调试</title>
+    <url>/posts/bf48f70d.html</url>
+    <content><![CDATA[<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>有时候身边只有 x86 架构的硬件环境，却想学习和测试 arm、mips 等其他架构特性，此时怎么办呢？众所周知，VMware 只能模拟同架构不同操作系统，对此可以通过 qemu 实现跨架构模拟。</p>
+<span id="more"></span>
+
+<h2 id="安装-qemu-user"><a href="#安装-qemu-user" class="headerlink" title="安装 qemu-user"></a>安装 qemu-user</h2><p>qemu 是一个支持跨平台虚拟化的虚拟机，有 user mode 和 system mode 两种配置方式。其中qemu 在system mode配置下模拟出整个计算机，可以在qemu之上运行一个操作系统。qemu 的system mode与常见的VMware和Virtualbox等虚拟机比较相似，但是qemu 的优势是可以跨指令集。例如，VMware和Virtualbox之类的工具通常只能在x86计算机上虚拟出一个x86计算机，而qemu 支持在x86上虚拟出一个ARM计算机。qemu在user mode配置下，可以运行跟当前平台指令集不同的平台可执行程序。例如可以用qemu在x86上运行ARM的可执行程序，但是两个平台必须是同一种操作系统，比如Linux。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install qemu-user</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装-gdb-multiarch"><a href="#安装-gdb-multiarch" class="headerlink" title="安装 gdb-multiarch"></a>安装 gdb-multiarch</h2><p>gdb-multiarch 是一个经过交叉编译后的、支持多架构版本的 gdb。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install gdb-multiarch</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装-aarch64-编译工具链"><a href="#安装-aarch64-编译工具链" class="headerlink" title="安装 aarch64 编译工具链"></a>安装 aarch64 编译工具链</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install gcc-aarch64-linux-gnu</span><br></pre></td></tr></table></figure>
+
+<h2 id="交叉编译测试用例"><a href="#交叉编译测试用例" class="headerlink" title="交叉编译测试用例"></a>交叉编译测试用例</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ ls</span><br><span class="line">hello.c</span><br><span class="line">lhx@ubuntu:~/test/qemu$ cat hello.c </span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">void hello()</span><br><span class="line">&#123;</span><br><span class="line">  printf(&quot;Hello World !\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">  hello();</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br><span class="line">lhx@ubuntu:~/test/qemu$ aarch64-linux-gnu-gcc -g -static hello.c </span><br><span class="line">lhx@ubuntu:~/test/qemu$ ls</span><br><span class="line">a.out  hello.c</span><br><span class="line">lhx@ubuntu:~/test/qemu$ file a.out </span><br><span class="line">a.out: ELF 64-bit LSB executable, ARM aarch64, version 1 (GNU/Linux), statically linked, BuildID[sha1]=e1fe3c59cad06eff9cab2729a00233bc10d763ce, for GNU/Linux 3.7.0, with debug_info, not stripped</span><br><span class="line">lhx@ubuntu:~/test/qemu$ qemu-aarch64 ./a.out </span><br><span class="line">Hello World !</span><br></pre></td></tr></table></figure>
+
+<h2 id="开始qemu-gdb跨架构调试"><a href="#开始qemu-gdb跨架构调试" class="headerlink" title="开始qemu+gdb跨架构调试"></a>开始qemu+gdb跨架构调试</h2><ul>
+<li>窗口1：启动 a.out<br>通过 qemu-aarch64 运行交叉编译的 a.out, 并指定 gdb 调试端口号为1234，然后等待 gdb 远程连接。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ qemu-aarch64 -g 1234 ./a.out</span><br><span class="line">Hello World !</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>窗口2：gdb 远程调试<br>通过 gdb-multiarch 启动 a.out，这里 a.out 用于读取和远程端一致的调试符号信息。连接上远程端口号后，便可以进行设断点、查看寄存器、反汇编等一系列调试操作。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ ls</span><br><span class="line">a.out  hello.c</span><br><span class="line">lhx@ubuntu:~/test/qemu$ gdb-multiarch -q a.out </span><br><span class="line">Reading symbols from a.out...</span><br><span class="line">(gdb) target remote localhost:1234</span><br><span class="line">Remote debugging using localhost:1234</span><br><span class="line">0x0000000000400558 in _start ()</span><br><span class="line">(gdb) b main</span><br><span class="line">Breakpoint 1 at 0x4006d4: file hello.c, line 10.</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Breakpoint 1, main () at hello.c:10</span><br><span class="line">10	  hello();</span><br><span class="line">(gdb) s</span><br><span class="line">hello () at hello.c:5</span><br><span class="line">5	  printf(&quot;Hello World !\n&quot;);</span><br><span class="line">(gdb) n</span><br><span class="line">6	&#125;</span><br><span class="line">(gdb) info registers </span><br><span class="line">x0             0xe                 14</span><br><span class="line">x1             0x1                 1</span><br><span class="line">x2             0x0                 0</span><br><span class="line">x3             0x48bf00            4767488</span><br><span class="line">x4             0xfbad2a84          4222429828</span><br><span class="line">x5             0x21a               538</span><br><span class="line">x6             0x10                16</span><br><span class="line">x7             0x7f7f7f7f7f7f7f7f  9187201950435737471</span><br><span class="line">x8             0x40                64</span><br><span class="line">x9             0x3fffffff          1073741823</span><br><span class="line">x10            0x20000000          536870912</span><br><span class="line">x11            0x10000             65536</span><br><span class="line">x12            0x48b000            4763648</span><br><span class="line">x13            0x410               1040</span><br><span class="line">x14            0x0                 0</span><br><span class="line">x15            0x48c738            4769592</span><br><span class="line">x16            0x40b998            4241816</span><br><span class="line">x17            0x416fc0            4288448</span><br><span class="line">x18            0x0                 0</span><br><span class="line">x19            0x400db8            4197816</span><br><span class="line">x20            0x400e80            4198016</span><br><span class="line">x21            0x0                 0</span><br><span class="line">x22            0x400280            4194944</span><br><span class="line">x23            0x489030            4755504</span><br><span class="line">x24            0x18                24</span><br><span class="line">x25            0x48b000            4763648</span><br><span class="line">x26            0x48b000            4763648</span><br><span class="line">x27            0x451000            4526080</span><br><span class="line">x28            0x0                 0</span><br><span class="line">x29            0x4000800260        274886296160</span><br><span class="line">x30            0x4006c0            4196032</span><br><span class="line">sp             0x4000800260        0x4000800260</span><br><span class="line">pc             0x4006c0            0x4006c0 &lt;hello+20&gt;</span><br><span class="line">cpsr           0x60000000          1610612736</span><br><span class="line">fpsr           0x0                 0</span><br><span class="line">fpcr           0x0                 0</span><br><span class="line"></span><br><span class="line">(gdb) bt</span><br><span class="line">#0  hello () at hello.c:6</span><br><span class="line">#1  0x00000000004006d8 in main () at hello.c:10</span><br><span class="line">(gdb) disassemble hello</span><br><span class="line">Dump of assembler code for function hello:</span><br><span class="line">   0x00000000004006ac &lt;+0&gt;:	stp	x29, x30, [sp, #-16]!</span><br><span class="line">   0x00000000004006b0 &lt;+4&gt;:	mov	x29, sp</span><br><span class="line">   0x00000000004006b4 &lt;+8&gt;:	adrp	x0, 0x451000 &lt;_nl_locale_subfreeres+552&gt;</span><br><span class="line">   0x00000000004006b8 &lt;+12&gt;:	add	x0, x0, #0x3e8</span><br><span class="line">   0x00000000004006bc &lt;+16&gt;:	bl	0x407350 &lt;puts&gt;</span><br><span class="line">   0x00000000004006c0 &lt;+20&gt;:	nop</span><br><span class="line">   0x00000000004006c4 &lt;+24&gt;:	ldp	x29, x30, [sp], #16</span><br><span class="line">   0x00000000004006c8 &lt;+28&gt;:	ret</span><br><span class="line">End of assembler dump.</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line">[Inferior 1 (process 1) exited normally]</span><br><span class="line">(gdb) </span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>调试器</category>
+      </categories>
+      <tags>
+        <tag>GDB</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>gcc编译选项汇总</title>
     <url>/posts/ec6fe1fe.html</url>
     <content><![CDATA[<p>-shared； Create a shared library &#x2F;* 创建共享库时需要添加的编译选项 *&#x2F;<br>因为共享库的代码都是位置无关的，所以通常还需要添加编译选项-fPIC。</p>
@@ -122,6 +156,28 @@
       </categories>
   </entry>
   <entry>
+    <title>龙芯服务器重装UOS系统+搭建本地仓库源</title>
+    <url>/posts/e8c622c9.html</url>
+    <content><![CDATA[<h1 id="龙芯服务器重装UOS系统-搭建本地仓库源"><a href="#龙芯服务器重装UOS系统-搭建本地仓库源" class="headerlink" title="龙芯服务器重装UOS系统+搭建本地仓库源"></a>龙芯服务器重装UOS系统+搭建本地仓库源</h1><h2 id="一、安装mips64el架构UOS系统"><a href="#一、安装mips64el架构UOS系统" class="headerlink" title="一、安装mips64el架构UOS系统"></a>一、安装mips64el架构UOS系统</h2><p>1、进入统信UOS官网—&gt; 生态社区—&gt;资源中心—&gt;镜像下载页面，选择服务器版，下载MIPS64镜像（直达网址：<a href="https://www.chinauos.com/resource/download-server%EF%BC%89%E3%80%82">https://www.chinauos.com/resource/download-server）。</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110260942455.png" alt="img"></p>
+<p>2、通过UltraISO软件将下载的ISO刻录到U盘里，制作一个U盘启动盘。</p>
+<p>3、修改龙芯服务器BIOS启动项，把U盘启动改成第一启动项就进入了系统安装环境，大约要等半小时才能安装成功。</p>
+<h2 id="二、配置本地仓库源"><a href="#二、配置本地仓库源" class="headerlink" title="二、配置本地仓库源"></a>二、配置本地仓库源</h2><p>如何使用统信UOS镜像搭建本地源？（直达网址：<a href="https://www.xtuos.com/817.html%EF%BC%89">https://www.xtuos.com/817.html）</a></p>
+<p>1、将对应版本的server iso镜像挂在到&#x2F;mnt目录下</p>
+<p><code>sudo mount uniontechos-server-20-1040d-mips64el.iso /mnt</code></p>
+<p>2、修改源地址。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/apt/source.list</span><br><span class="line"></span><br><span class="line">deb [trusted=yes] file:///mnt eagle main</span><br></pre></td></tr></table></figure>
+
+<p>（我这里根据镜像信息，把eagle对应改成了fou：deb [trusted&#x3D;yes] file:&#x2F;&#x2F;&#x2F;mnt fou main）</p>
+<p>3、更新源。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apt update //注意如果宿主机是桌面版需要关闭商店源和打印机源，不然update会报错</span><br></pre></td></tr></table></figure>
+<p>（我这里服务器版也必须关闭商店源和打印机源：进入&#x2F;etc&#x2F;apt&#x2F;source.list.d，打开appstore.list和printer.list两个文件，注释掉里面的在线仓库网址）</p>
+]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+  </entry>
+  <entry>
     <title>如何在Ubuntu20.04上安装和配置Nextcloud</title>
     <url>/posts/b53da12e.html</url>
     <content><![CDATA[<h2 id="前提条件"><a href="#前提条件" class="headerlink" title="前提条件"></a>前提条件</h2><ol>
@@ -181,28 +237,6 @@
       <tags>
         <tag>Nextcloud</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>龙芯服务器重装UOS系统+搭建本地仓库源</title>
-    <url>/posts/e8c622c9.html</url>
-    <content><![CDATA[<h1 id="龙芯服务器重装UOS系统-搭建本地仓库源"><a href="#龙芯服务器重装UOS系统-搭建本地仓库源" class="headerlink" title="龙芯服务器重装UOS系统+搭建本地仓库源"></a>龙芯服务器重装UOS系统+搭建本地仓库源</h1><h2 id="一、安装mips64el架构UOS系统"><a href="#一、安装mips64el架构UOS系统" class="headerlink" title="一、安装mips64el架构UOS系统"></a>一、安装mips64el架构UOS系统</h2><p>1、进入统信UOS官网—&gt; 生态社区—&gt;资源中心—&gt;镜像下载页面，选择服务器版，下载MIPS64镜像（直达网址：<a href="https://www.chinauos.com/resource/download-server%EF%BC%89%E3%80%82">https://www.chinauos.com/resource/download-server）。</a></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110260942455.png" alt="img"></p>
-<p>2、通过UltraISO软件将下载的ISO刻录到U盘里，制作一个U盘启动盘。</p>
-<p>3、修改龙芯服务器BIOS启动项，把U盘启动改成第一启动项就进入了系统安装环境，大约要等半小时才能安装成功。</p>
-<h2 id="二、配置本地仓库源"><a href="#二、配置本地仓库源" class="headerlink" title="二、配置本地仓库源"></a>二、配置本地仓库源</h2><p>如何使用统信UOS镜像搭建本地源？（直达网址：<a href="https://www.xtuos.com/817.html%EF%BC%89">https://www.xtuos.com/817.html）</a></p>
-<p>1、将对应版本的server iso镜像挂在到&#x2F;mnt目录下</p>
-<p><code>sudo mount uniontechos-server-20-1040d-mips64el.iso /mnt</code></p>
-<p>2、修改源地址。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/apt/source.list</span><br><span class="line"></span><br><span class="line">deb [trusted=yes] file:///mnt eagle main</span><br></pre></td></tr></table></figure>
-
-<p>（我这里根据镜像信息，把eagle对应改成了fou：deb [trusted&#x3D;yes] file:&#x2F;&#x2F;&#x2F;mnt fou main）</p>
-<p>3、更新源。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apt update //注意如果宿主机是桌面版需要关闭商店源和打印机源，不然update会报错</span><br></pre></td></tr></table></figure>
-<p>（我这里服务器版也必须关闭商店源和打印机源：进入&#x2F;etc&#x2F;apt&#x2F;source.list.d，打开appstore.list和printer.list两个文件，注释掉里面的在线仓库网址）</p>
-]]></content>
-      <categories>
-        <category>其他</category>
-      </categories>
   </entry>
   <entry>
     <title>如何通过WebDAV将Nextcloud挂载到本地</title>
@@ -1342,6 +1376,159 @@
 <li>新建<code>a.sh</code>和<code>a.h</code>来测试效果：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ vim a.sh</span><br><span class="line"></span><br><span class="line">#!/bin/sh</span><br><span class="line"></span><br><span class="line">#================================================================</span><br><span class="line">#</span><br><span class="line">#  Author: paopao</span><br><span class="line">#  Date: 2022-04-30</span><br><span class="line">#  Description: </span><br><span class="line">#================================================================</span><br></pre></td></tr></table></figure>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ vim a.h</span><br><span class="line"></span><br><span class="line">/*================================================================</span><br><span class="line">*  Author: paopao</span><br><span class="line">*  Date: 2022-04-30</span><br><span class="line">*  Description: </span><br><span class="line">================================================================*/</span><br><span class="line"></span><br><span class="line">#ifndef _A_H</span><br><span class="line">#define _A_H</span><br><span class="line"></span><br><span class="line">#endif //A_H</span><br></pre></td></tr></table></figure></li>
 </ul>
+<h2 id="底部状态行显示绝对路径和行列信息"><a href="#底部状态行显示绝对路径和行列信息" class="headerlink" title="底部状态行显示绝对路径和行列信息"></a>底部状态行显示绝对路径和行列信息</h2><ol>
+<li>打开vim配置文件<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim ~/.vimrc</span><br></pre></td></tr></table></figure></li>
+<li>修改方法</li>
+</ol>
+<ul>
+<li>方法1：复制下面内容到配置文件最后面</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot; 状态栏</span><br><span class="line">set laststatus=2 &quot; 总是显示状态栏</span><br><span class="line">highlight StatusLine cterm=bold ctermfg=yellow ctermbg=blue</span><br><span class="line">&quot; 获取当前路径，将$HOME转化为~</span><br><span class="line">function! CurDir()</span><br><span class="line"> let curdir = substitute(getcwd(), $HOME, &quot;~&quot;, &quot;g&quot;)</span><br><span class="line"> return curdir</span><br><span class="line">endfunction</span><br><span class="line">set statusline=[%n]\ %f%m%r%h\ \|\ \ pwd:\ %&#123;CurDir()&#125;\ \ \|%=\|\ %l,%c\ %p%%\ \|\ ascii=%b,hex=%b%&#123;((&amp;fenc==\&quot;\&quot;)?\&quot;\&quot;:\&quot;\ \|\ \&quot;.&amp;fenc)&#125;\ \|\ %&#123;$USER&#125;\ @\ %&#123;hostname()&#125;\</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>方法2：复制下面内容到配置文件最后面</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%] &quot;显示文件名：总行数，总的字符数</span><br><span class="line">set ruler &quot;在编辑过程中，在右下角显示光标位置的状态行</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>参数列表</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%{n}*</td>
+<td>%对其余的行使用高亮显示组Usern，直到另一个%n*。数字n必须从1到9。用%<em>或%0</em>可以恢复正常的高亮显示。</td>
+</tr>
+<tr>
+<td>%&lt;</td>
+<td>如果状态行过长，在何处换行。缺省是在开头。</td>
+</tr>
+<tr>
+<td>%&#x3D;</td>
+<td>左对齐和右对齐项目之间的分割点。</td>
+</tr>
+<tr>
+<td>%</td>
+<td>字符%</td>
+</tr>
+<tr>
+<td>%B</td>
+<td>光标下字符的十六进制形式</td>
+</tr>
+<tr>
+<td>%F</td>
+<td>缓冲区的文件完整路径</td>
+</tr>
+<tr>
+<td>%H</td>
+<td>如果为帮助缓冲区则显示为HLP</td>
+</tr>
+<tr>
+<td>%L</td>
+<td>缓冲区中的行数</td>
+</tr>
+<tr>
+<td>%M</td>
+<td>如果缓冲区修改过则显示为+</td>
+</tr>
+<tr>
+<td>%N</td>
+<td>打印机页号</td>
+</tr>
+<tr>
+<td>%O</td>
+<td>以十六进制方式显示文件中的字符偏移</td>
+</tr>
+<tr>
+<td>%P</td>
+<td>文件中光标前的%</td>
+</tr>
+<tr>
+<td>%R</td>
+<td>如果缓冲区只读则为RO</td>
+</tr>
+<tr>
+<td>%V</td>
+<td>列数。如果与%c相同则为空字符串</td>
+</tr>
+<tr>
+<td>%W</td>
+<td>如果窗口为预览窗口则为PRV</td>
+</tr>
+<tr>
+<td>%Y</td>
+<td>缓冲区的文件类型，如vim</td>
+</tr>
+<tr>
+<td>%a</td>
+<td>如果编辑多行文本，这个字行串就是({current} of {arguments})，例如：(5 of 18)。如果在命令行中只有一行，这个字符串为空</td>
+</tr>
+<tr>
+<td>%b</td>
+<td>光标下的字符的十进制表示形式</td>
+</tr>
+<tr>
+<td>%c</td>
+<td>列号</td>
+</tr>
+<tr>
+<td>%f</td>
+<td>缓冲区的文件路径</td>
+</tr>
+<tr>
+<td>%h</td>
+<td>如果为帮助缓冲区显示为[Help]</td>
+</tr>
+<tr>
+<td>%l</td>
+<td>行号</td>
+</tr>
+<tr>
+<td>%m</td>
+<td>如果缓冲区已修改则表示为[+]</td>
+</tr>
+<tr>
+<td>%n</td>
+<td>缓冲区号</td>
+</tr>
+<tr>
+<td>%o</td>
+<td>在光标前的字符数（包括光标下的字符）</td>
+</tr>
+<tr>
+<td>%p</td>
+<td>文件中所在行的百分比</td>
+</tr>
+<tr>
+<td>%r</td>
+<td>如果缓冲区为只读则表示为[RO]</td>
+</tr>
+<tr>
+<td>%t</td>
+<td>文件名(无路径)</td>
+</tr>
+<tr>
+<td>%v</td>
+<td>虚列号</td>
+</tr>
+<tr>
+<td>%w</td>
+<td>如果为预览窗口则显示为[Preview]</td>
+</tr>
+<tr>
+<td>%y</td>
+<td>缓冲区的文件类型，如[vim]</td>
+</tr>
+<tr>
+<td>%{expr}</td>
+<td>表达式的结果</td>
+</tr>
+</tbody></table>
 ]]></content>
       <categories>
         <category>Vim</category>
