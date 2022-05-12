@@ -526,6 +526,94 @@
       </tags>
   </entry>
   <entry>
+    <title>本地电脑同时关联GitHub和Gitee</title>
+    <url>/posts/1f76836b.html</url>
+    <content><![CDATA[<h2 id="清除git全局设置"><a href="#清除git全局设置" class="headerlink" title="清除git全局设置"></a>清除git全局设置</h2><p>若之前没有设置过全局的可以跳过这一步，若之前对git 设置过全局的 user.name 和 user.email，进行过如下操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git config --global user.name &quot;你的名字&quot;</span><br><span class="line">git config --global user.email  &quot;你的邮箱&quot;</span><br></pre></td></tr></table></figure>
+
+<p>要先进行清除操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git config --global --unset user.name &quot;你的名字&quot;</span><br><span class="line">git config --global --unset user.email &quot;你的邮箱&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="生成GitHub和Gitee独立的-ssh-key"><a href="#生成GitHub和Gitee独立的-ssh-key" class="headerlink" title="生成GitHub和Gitee独立的 ssh key"></a>生成GitHub和Gitee独立的 ssh key</h2><p>在命令行窗口依次输入下面命令来生成 ssh key，这里要将<code>name@email.com</code>改为自己指定的邮箱。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -f ~/.ssh/id_rsa.github -C &quot;name@email.com&quot;</span><br><span class="line">ssh-keygen -t rsa -f ~/.ssh/id_rsa.gitee -C &quot;name@email.com&quot;</span><br></pre></td></tr></table></figure>
+
+<p>ssh-keygen 命令用于为“ssh”生成、管理和转换认证密钥，它支持 RSA 和 DSA 两种认证密钥。<br>ssh-keygen  常用参数：</p>
+<table>
+<thead>
+<tr>
+<th>-b</th>
+<th>指定密钥长度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-e</td>
+<td>读取openssh的私钥或者公钥文件</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>指定用来保存密钥的文件名</td>
+</tr>
+<tr>
+<td>-t</td>
+<td>指定要创建的密钥类型</td>
+</tr>
+<tr>
+<td>-C</td>
+<td>添加注释</td>
+</tr>
+</tbody></table>
+<p>然后，每次命令需要敲三次回车，就生成 SSH 公钥和私钥：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -f ~/.ssh/id_rsa.github -C &quot;liupaopao520@163.com&quot;</span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Passphrases do not match.  Try again.</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /c/Users/Administrator/.ssh/id_rsa.github</span><br><span class="line">Your public key has been saved in /c/Users/Administrator/.ssh/id_rsa.github.pub</span><br><span class="line"></span><br><span class="line">Administrator@DESKTOP-4IPRNUP MINGW64 ~/.ssh</span><br><span class="line">$ ssh-keygen -t rsa -f ~/.ssh/id_rsa.gitee -C &quot;liupaopao520@163.com&quot;</span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /c/Users/Administrator/.ssh/id_rsa.gitee</span><br><span class="line">Your public key has been saved in /c/Users/Administrator/.ssh/id_rsa.gitee.pub</span><br></pre></td></tr></table></figure>
+
+<p>随后，会在 ~&#x2F;.ssh 文件夹下出现 GitHub 和 Gitee 独立的公钥和私钥：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ls</span><br><span class="line">id_rsa.gitee  id_rsa.gitee.pub  id_rsa.github  id_rsa.github.pub  known_hosts</span><br></pre></td></tr></table></figure>
+
+<h2 id="将GitHub和Gitee私钥添加到-SSH-agent"><a href="#将GitHub和Gitee私钥添加到-SSH-agent" class="headerlink" title="将GitHub和Gitee私钥添加到 SSH agent"></a>将GitHub和Gitee私钥添加到 SSH agent</h2><p>因为默认只读取 id_rsa，为了让 SSH 识别新的私钥，需要将新的私钥加入到 SSH agent 中：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ssh-agent bash</span><br><span class="line"></span><br><span class="line">$ ssh-add ~/.ssh/id_rsa.github</span><br><span class="line">Identity added: /c/Users/Administrator/.ssh/id_rsa.github (liupaopao520@163.com)</span><br><span class="line"></span><br><span class="line">Administrator@DESKTOP-4IPRNUP MINGW64 ~/.ssh</span><br><span class="line">$ ssh-add ~/.ssh/id_rsa.gitee</span><br><span class="line">Identity added: /c/Users/Administrator/.ssh/id_rsa.gitee (liupaopao520@163.com)</span><br></pre></td></tr></table></figure>
+
+<h2 id="将公钥添加到GitHub和Gitee网站"><a href="#将公钥添加到GitHub和Gitee网站" class="headerlink" title="将公钥添加到GitHub和Gitee网站"></a>将公钥添加到GitHub和Gitee网站</h2><p>进入 GitHub 网站，点击右上角头像，进入 Settings –&gt; SSH and GPG keys –&gt; SSH keys  –&gt; New SSH keys，填写 Title 并粘贴 id_rsa.github.pub 里的内容。</p>
+<p>进入 Gitee 网站，点击右上角头像，进入设置 –&gt; SSH 公钥 –&gt; 添加公钥，填写标题并粘贴 id_rsa.gitee.pub 里的内容。</p>
+<h2 id="配置ssh-config文件"><a href="#配置ssh-config文件" class="headerlink" title="配置ssh config文件"></a>配置ssh config文件</h2><p>在~&#x2F;.ssh文件夹下新建一个config文件，里面的内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Host github.com</span><br><span class="line">HostName github.com</span><br><span class="line">PreferredAuthentications publickey</span><br><span class="line">IdentityFile ~/.ssh/id_rsa.github</span><br><span class="line"></span><br><span class="line">Host gitee.com</span><br><span class="line">HostName gitee.com</span><br><span class="line">PreferredAuthentications publickey</span><br><span class="line">IdentityFile ~/.ssh/id_rsa.gitee</span><br></pre></td></tr></table></figure>
+
+<h2 id="验证是否关联成功"><a href="#验证是否关联成功" class="headerlink" title="验证是否关联成功"></a>验证是否关联成功</h2><p>打开 git bash，依次输入下面命令，验证是否关联成功。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br><span class="line">ssh -T git@gitee.com</span><br></pre></td></tr></table></figure>
+
+<p>当看到信息“You’ve successfully authenticated……”，则说明已成功关联 GitHub 和 Gitee。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ssh -T git@github.com</span><br><span class="line">Hi HanxuLiu! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br><span class="line"></span><br><span class="line">$ ssh -T git@gitee.com</span><br><span class="line">Hi 刘跑跑! You&#x27;ve successfully authenticated, but GITEE.COM does not provide shell access.</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>GitHub</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>重装系统后重新关联GitHub</title>
+    <url>/posts/df1ca536.html</url>
+    <content><![CDATA[<p>重装系统后， 系统盘文件都会被清空，会删除 .ssh 目录下绑定好的 ssh 公钥和私钥，此时 git push 本地仓库，便会报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ git push</span><br><span class="line">git@github.com: Permission denied (publickey).</span><br><span class="line">fatal: Could not read from remote repository.</span><br><span class="line"></span><br><span class="line">Please make sure you have the correct access rights</span><br><span class="line">and the repository exists.</span><br></pre></td></tr></table></figure>
+
+<p>对此，需要本地重新关联 GitHub 账号，才能继续 push 本地仓库。</p>
+<h2 id="本地创建-ssh-key"><a href="#本地创建-ssh-key" class="headerlink" title="本地创建 ssh key"></a>本地创建 ssh key</h2><p>在命令行窗口输入<code>ssh-keygen -t rsa -C &quot;your_email@youremail.com&quot;</code>，这里要将<code>your_email@youremail.com</code>改为自己指定的邮箱。然后，敲三次回车，就生成了 ssh key。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -C &quot;liupaopao520@163.com&quot;</span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/c/Users/Administrator/.ssh/id_rsa):</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /c/Users/Administrator/.ssh/id_rsa</span><br><span class="line">Your public key has been saved in /c/Users/Administrator/.ssh/id_rsa.pub</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:v9WQpeyCOJKOJG2vKrCbFfKnIo7tbFnZ4Qnp8LVSU2E liupaopao520@163.com</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 3072]----+</span><br><span class="line">|        E.       |</span><br><span class="line">|       ..        |</span><br><span class="line">|     . .      .  |</span><br><span class="line">|  . o =    . +   |</span><br><span class="line">|*Oo* . .   +     |</span><br><span class="line">|OBB.o     .      |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
+
+<p>生成的 ssh key 文件位于<code>C:\Users\Administrator\.ssh</code>目录下，打开 id_rsa.pub，复制里面的公钥。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ pwd</span><br><span class="line">/c/Users/Administrator/.ssh</span><br><span class="line"></span><br><span class="line">$ ls</span><br><span class="line">id_rsa  id_rsa.pub  known_hosts</span><br><span class="line"></span><br><span class="line">$ cat id_rsa.pub</span><br><span class="line">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDEy......l8xl8s8VEc= liupaopao520@163.com</span><br></pre></td></tr></table></figure>
+
+<h2 id="GitHub添加ssh-key"><a href="#GitHub添加ssh-key" class="headerlink" title="GitHub添加ssh key"></a>GitHub添加ssh key</h2><p>进入 GitHub 网站，进入Account Settings，左边选择 SSH and GPG keys，然后在 SSH keys 分类里，点击 New SSH keys，Title 随便填，粘贴刚才复制的 Key。</p>
+<p>打开 git bash，输入<code>ssh -T git@github.com</code>，验证是否关联成功。看到如下信息，则说明已成功关联 GitHub。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ssh -T git@github.com</span><br><span class="line">Hi HanxuLiu! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>GitHub</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Next主题美化修改记录（一）</title>
     <url>/posts/d87f7e0c.html</url>
     <content><![CDATA[<p>基于 Next 主题 V8.10.1，第一波美化修改记录。</p>
