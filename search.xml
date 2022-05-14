@@ -37,6 +37,34 @@
       </tags>
   </entry>
   <entry>
+    <title>Linux和Windows下查看文件哈希值</title>
+    <url>/posts/b6b9c575.html</url>
+    <content><![CDATA[<h2 id="哈希值介绍"><a href="#哈希值介绍" class="headerlink" title="哈希值介绍"></a>哈希值介绍</h2><p>哈希值是文件内容经过哈希函数的计算，返回的一个独一无二的字符串。哪怕原始内容只改动一个字节，哈希码也会完全不同。用户下载软件后，只要计算一下哈希码，再跟作者给出的哈希码比较一下，就会知道软件有没有被改动。</p>
+<p>目前，常用的三种哈希函数是 MD5、SHA1 和 SHA256。安全性：SHA256 &gt; SHA1 &gt; MD5。</p>
+<h2 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h2><ul>
+<li>md5sum 文件名</li>
+<li>sha1sum 文件名</li>
+<li>sha256sum 文件名</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ md5sum a.txt </span><br><span class="line">905138a85e85e74344e90d25dba7299e  a.txt</span><br><span class="line"></span><br><span class="line">$ sha1sum a.txt </span><br><span class="line">b1fda0e52e8099d2aeb80f57bb91548cace3093f  a.txt</span><br><span class="line"></span><br><span class="line">$ sha256sum a.txt </span><br><span class="line">a4bf1f6be616bf6a0de2ff6264de43a64bb768d38c783ec2bc74b5d4dcf5f889  a.txt</span><br></pre></td></tr></table></figure>
+
+<h2 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h2><ul>
+<li>certutil -hashfile 文件名  MD5</li>
+<li>certutil -hashfile 文件名  SHA1</li>
+<li>certutil -hashfile 文件名  SHA256</li>
+</ul>
+<blockquote>
+<p>【certutil 用法】<br>  CertUtil [选项] -hashfile InFile [HashAlgorithm]   通过文件生成并显示加密哈希<br>  哈希算法（大小写都可以）: MD2 MD4 MD5 SHA1 SHA256 SHA384 SHA512</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&gt; certutil -hashfile a.txt md5</span><br><span class="line">MD5 的 a.txt 哈希:</span><br><span class="line">905138a85e85e74344e90d25dba7299e</span><br><span class="line">CertUtil: -hashfile 命令成功完成。</span><br><span class="line"></span><br><span class="line">&gt; certutil -hashfile a.txt sha1</span><br><span class="line">SHA1 的 a.txt 哈希:</span><br><span class="line">b1fda0e52e8099d2aeb80f57bb91548cace3093f</span><br><span class="line">CertUtil: -hashfile 命令成功完成。</span><br><span class="line"></span><br><span class="line">&gt; certutil -hashfile a.txt sha256</span><br><span class="line">SHA256 的 a.txt 哈希:</span><br><span class="line">a4bf1f6be616bf6a0de2ff6264de43a64bb768d38c783ec2bc74b5d4dcf5f889</span><br><span class="line">CertUtil: -hashfile 命令成功完成。</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>gcc编译选项汇总</title>
     <url>/posts/ec6fe1fe.html</url>
     <content><![CDATA[<p>-shared； Create a shared library &#x2F;* 创建共享库时需要添加的编译选项 *&#x2F;<br>因为共享库的代码都是位置无关的，所以通常还需要添加编译选项-fPIC。</p>
@@ -614,36 +642,6 @@
       </tags>
   </entry>
   <entry>
-    <title>df命令-显示磁盘空间</title>
-    <url>/posts/22729.html</url>
-    <content><![CDATA[<h2 id="df命令介绍"><a href="#df命令介绍" class="headerlink" title="df命令介绍"></a>df命令介绍</h2><p>df命令的英文全称即<code>Disk Free</code>，顾名思义功能是用于显示系统上可使用的磁盘空间。默认显示单位为KB，建议使用“df -h”的参数组合，根据磁盘容量自动变换合适的单位，更利于人性化阅读。</p>
-<p>日常普遍用该命令可以查看磁盘被占用了多少空间、还剩多少空间等信息。</p>
-<h2 id="df命令常用参数"><a href="#df命令常用参数" class="headerlink" title="df命令常用参数"></a>df命令常用参数</h2><table>
-<thead>
-<tr>
-<th>-a</th>
-<th>显示所有系统文件</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>-h</td>
-<td>以容易阅读的方式显示</td>
-</tr>
-</tbody></table>
-<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><h3 id="df默认选项"><a href="#df默认选项" class="headerlink" title="df默认选项"></a><code>df</code>默认选项</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df</span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">devtmpfs          347636       0    347636   0% /dev</span><br><span class="line">tmpfs             362780       0    362780   0% /dev/shm</span><br><span class="line">tmpfs             362780   41188    321592  12% /run</span><br><span class="line">tmpfs             362780       0    362780   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1       20510332 1610056  17835368   9% /</span><br><span class="line">tmpfs              72556       0     72556   0% /run/user/0</span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
-<h3 id="df-h便于人性化阅读"><a href="#df-h便于人性化阅读" class="headerlink" title="df -h便于人性化阅读"></a><code>df -h</code>便于人性化阅读</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
-<h3 id="df-ah显示全部文件系统"><a href="#df-ah显示全部文件系统" class="headerlink" title="df -ah显示全部文件系统"></a><code>df -ah</code>显示全部文件系统</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df -ah</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">sysfs              0     0     0    - /sys</span><br><span class="line">proc               0     0     0    - /proc</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">securityfs         0     0     0    - /sys/kernel/security</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">devpts             0     0     0    - /dev/pts</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/systemd</span><br><span class="line">pstore             0     0     0    - /sys/fs/pstore</span><br><span class="line">bpf                0     0     0    - /sys/fs/bpf</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/memory</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpu,cpuacct</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/net_cls,net_prio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/hugetlb</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpuset</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/freezer</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/perf_event</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/devices</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/pids</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/blkio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/rdma</span><br><span class="line">none               0     0     0    - /sys/kernel/tracing</span><br><span class="line">configfs           0     0     0    - /sys/kernel/config</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">mqueue             0     0     0    - /dev/mqueue</span><br><span class="line">hugetlbfs          0     0     0    - /dev/hugepages</span><br><span class="line">debugfs            0     0     0    - /sys/kernel/debug</span><br><span class="line">systemd-1          -     -     -    - /proc/sys/fs/binfmt_misc</span><br><span class="line">binfmt_misc        0     0     0    - /proc/sys/fs/binfmt_misc</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]#      </span><br></pre></td></tr></table></figure>
-<h3 id="df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况"><a href="#df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况" class="headerlink" title="df  目录 指定目录下的文件’指定文件所在分区的磁盘使用情况"></a><code>df  目录</code> 指定目录下的文件’指定文件所在分区的磁盘使用情况</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df /root/.bashrc </span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">/dev/vda1       20510332 1610068  17835356   9% /</span><br><span class="line">[root@paopao ~]# </span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux命令</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>RPM介绍</title>
     <url>/posts/22588541.html</url>
     <content><![CDATA[<h1 id="RPM-命令"><a href="#RPM-命令" class="headerlink" title="RPM 命令"></a>RPM 命令</h1><p><strong>一、RPM 介绍</strong></p>
@@ -739,6 +737,36 @@
       <categories>
         <category>Linux</category>
       </categories>
+  </entry>
+  <entry>
+    <title>df命令-显示磁盘空间</title>
+    <url>/posts/22729.html</url>
+    <content><![CDATA[<h2 id="df命令介绍"><a href="#df命令介绍" class="headerlink" title="df命令介绍"></a>df命令介绍</h2><p>df命令的英文全称即<code>Disk Free</code>，顾名思义功能是用于显示系统上可使用的磁盘空间。默认显示单位为KB，建议使用“df -h”的参数组合，根据磁盘容量自动变换合适的单位，更利于人性化阅读。</p>
+<p>日常普遍用该命令可以查看磁盘被占用了多少空间、还剩多少空间等信息。</p>
+<h2 id="df命令常用参数"><a href="#df命令常用参数" class="headerlink" title="df命令常用参数"></a>df命令常用参数</h2><table>
+<thead>
+<tr>
+<th>-a</th>
+<th>显示所有系统文件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-h</td>
+<td>以容易阅读的方式显示</td>
+</tr>
+</tbody></table>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><h3 id="df默认选项"><a href="#df默认选项" class="headerlink" title="df默认选项"></a><code>df</code>默认选项</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df</span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">devtmpfs          347636       0    347636   0% /dev</span><br><span class="line">tmpfs             362780       0    362780   0% /dev/shm</span><br><span class="line">tmpfs             362780   41188    321592  12% /run</span><br><span class="line">tmpfs             362780       0    362780   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1       20510332 1610056  17835368   9% /</span><br><span class="line">tmpfs              72556       0     72556   0% /run/user/0</span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
+<h3 id="df-h便于人性化阅读"><a href="#df-h便于人性化阅读" class="headerlink" title="df -h便于人性化阅读"></a><code>df -h</code>便于人性化阅读</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
+<h3 id="df-ah显示全部文件系统"><a href="#df-ah显示全部文件系统" class="headerlink" title="df -ah显示全部文件系统"></a><code>df -ah</code>显示全部文件系统</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df -ah</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">sysfs              0     0     0    - /sys</span><br><span class="line">proc               0     0     0    - /proc</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">securityfs         0     0     0    - /sys/kernel/security</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">devpts             0     0     0    - /dev/pts</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/systemd</span><br><span class="line">pstore             0     0     0    - /sys/fs/pstore</span><br><span class="line">bpf                0     0     0    - /sys/fs/bpf</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/memory</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpu,cpuacct</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/net_cls,net_prio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/hugetlb</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpuset</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/freezer</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/perf_event</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/devices</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/pids</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/blkio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/rdma</span><br><span class="line">none               0     0     0    - /sys/kernel/tracing</span><br><span class="line">configfs           0     0     0    - /sys/kernel/config</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">mqueue             0     0     0    - /dev/mqueue</span><br><span class="line">hugetlbfs          0     0     0    - /dev/hugepages</span><br><span class="line">debugfs            0     0     0    - /sys/kernel/debug</span><br><span class="line">systemd-1          -     -     -    - /proc/sys/fs/binfmt_misc</span><br><span class="line">binfmt_misc        0     0     0    - /proc/sys/fs/binfmt_misc</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]#      </span><br></pre></td></tr></table></figure>
+<h3 id="df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况"><a href="#df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况" class="headerlink" title="df  目录 指定目录下的文件’指定文件所在分区的磁盘使用情况"></a><code>df  目录</code> 指定目录下的文件’指定文件所在分区的磁盘使用情况</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df /root/.bashrc </span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">/dev/vda1       20510332 1610068  17835356   9% /</span><br><span class="line">[root@paopao ~]# </span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux命令</tag>
+      </tags>
   </entry>
   <entry>
     <title>mount命令-挂载磁盘</title>

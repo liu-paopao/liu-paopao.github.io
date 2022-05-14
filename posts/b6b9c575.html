@@ -23,25 +23,28 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.10.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="努力">
-<meta property="og:type" content="website">
-<meta property="og:title" content="跑跑的技术笔记">
-<meta property="og:url" content="https://liu-paopao.github.io/archives/2022/index.html">
+    <meta name="description" content="三种常用的文件hash值算法：MD5、SHA1、SHA256">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux和Windows下查看文件哈希值">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/b6b9c575.html">
 <meta property="og:site_name" content="跑跑的技术笔记">
-<meta property="og:description" content="努力">
+<meta property="og:description" content="三种常用的文件hash值算法：MD5、SHA1、SHA256">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-05-14T03:25:56.000Z">
+<meta property="article:modified_time" content="2022-05-14T08:32:50.729Z">
 <meta property="article:author" content="paopao">
+<meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://liu-paopao.github.io/archives/2022/">
+<link rel="canonical" href="https://liu-paopao.github.io/posts/b6b9c575.html">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"archives/2022/index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/b6b9c575.html","path":"posts/b6b9c575.html","title":"Linux和Windows下查看文件哈希值"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>归档⏳ | 跑跑的技术笔记</title>
+<title>Linux和Windows下查看文件哈希值 | 跑跑的技术笔记</title>
   
 
 
@@ -71,7 +74,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">跑跑的技术笔记</h1>
+      <p class="site-title">跑跑的技术笔记</p>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -130,7 +133,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -143,6 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%E5%80%BC%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">哈希值介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux"><span class="nav-number">2.</span> <span class="nav-text">Linux</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Windows"><span class="nav-number">3.</span> <span class="nav-text">Windows</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -226,233 +230,148 @@
 </noscript>
 
 
-    <div class="main-inner archive posts-collapse">
+    <div class="main-inner post posts-expand">
 
 
   
+
+
+<div class="post-block">
   
   
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/b6b9c575.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="跑跑的技术笔记">
+      <meta itemprop="description" content="努力">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux和Windows下查看文件哈希值 | 跑跑的技术笔记">
+      <meta itemprop="description" content="三种常用的文件hash值算法：MD5、SHA1、SHA256">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux和Windows下查看文件哈希值
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-05-14 11:25:56 / 修改时间：16:32:50" itemprop="dateCreated datePublished" datetime="2022-05-14T11:25:56+08:00">2022-05-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+    </span>
+
+  
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>949</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+          <!--  <div class="post-description">三种常用的文件hash值算法：MD5、SHA1、SHA256</div> -->
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="哈希值介绍"><a href="#哈希值介绍" class="headerlink" title="哈希值介绍"></a>哈希值介绍</h2><p>哈希值是文件内容经过哈希函数的计算，返回的一个独一无二的字符串。哪怕原始内容只改动一个字节，哈希码也会完全不同。用户下载软件后，只要计算一下哈希码，再跟作者给出的哈希码比较一下，就会知道软件有没有被改动。</p>
+<p>目前，常用的三种哈希函数是 MD5、SHA1 和 SHA256。安全性：SHA256 &gt; SHA1 &gt; MD5。</p>
+<h2 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h2><ul>
+<li>md5sum 文件名</li>
+<li>sha1sum 文件名</li>
+<li>sha256sum 文件名</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ md5sum a.txt </span><br><span class="line">905138a85e85e74344e90d25dba7299e  a.txt</span><br><span class="line"></span><br><span class="line">$ sha1sum a.txt </span><br><span class="line">b1fda0e52e8099d2aeb80f57bb91548cace3093f  a.txt</span><br><span class="line"></span><br><span class="line">$ sha256sum a.txt </span><br><span class="line">a4bf1f6be616bf6a0de2ff6264de43a64bb768d38c783ec2bc74b5d4dcf5f889  a.txt</span><br></pre></td></tr></table></figure>
+
+<h2 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h2><ul>
+<li>certutil -hashfile 文件名  MD5</li>
+<li>certutil -hashfile 文件名  SHA1</li>
+<li>certutil -hashfile 文件名  SHA256</li>
+</ul>
+<blockquote>
+<p>【certutil 用法】<br>  CertUtil [选项] -hashfile InFile [HashAlgorithm]   通过文件生成并显示加密哈希<br>  哈希算法（大小写都可以）: MD2 MD4 MD5 SHA1 SHA256 SHA384 SHA512</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt; certutil -hashfile a.txt md5</span><br><span class="line">MD5 的 a.txt 哈希:</span><br><span class="line">905138a85e85e74344e90d25dba7299e</span><br><span class="line">CertUtil: -hashfile 命令成功完成。</span><br><span class="line"></span><br><span class="line">&gt; certutil -hashfile a.txt sha1</span><br><span class="line">SHA1 的 a.txt 哈希:</span><br><span class="line">b1fda0e52e8099d2aeb80f57bb91548cace3093f</span><br><span class="line">CertUtil: -hashfile 命令成功完成。</span><br><span class="line"></span><br><span class="line">&gt; certutil -hashfile a.txt sha256</span><br><span class="line">SHA256 的 a.txt 哈希:</span><br><span class="line">a4bf1f6be616bf6a0de2ff6264de43a64bb768d38c783ec2bc74b5d4dcf5f889</span><br><span class="line">CertUtil: -hashfile 命令成功完成。</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+        <!--<div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　<i class="fa fa-heartbeat"></i>　步履不止　　-------------</div>-->
+<br>
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　👣　步履不止　　-------------</div>
+<br>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
+          </div>
+
         
-        <span class="collection-header">还行! 目前共计 33 篇日志。 继续努力。</span>
-      </div>
 
-      
-    <div class="collection-year">
-      <span class="collection-header">2022</span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-05-14T11:25:56+08:00"
-              content="2022-05-14">
-          05-14
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/posts/b6b9c575.html" itemprop="url">
-            <span itemprop="name">Linux和Windows下查看文件哈希值</span>
-          </a>
-      </div>
-
-      
-    </header>
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/df1ca536.html" rel="prev" title="重装系统后重新关联GitHub">
+                  <i class="fa fa-chevron-left"></i> 重装系统后重新关联GitHub
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
   </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-05-12T12:19:18+08:00"
-              content="2022-05-12">
-          05-12
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/posts/df1ca536.html" itemprop="url">
-            <span itemprop="name">重装系统后重新关联GitHub</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-05-12T12:15:23+08:00"
-              content="2022-05-12">
-          05-12
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/posts/1f76836b.html" itemprop="url">
-            <span itemprop="name">本地电脑同时关联GitHub和Gitee</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-05-08T14:59:28+08:00"
-              content="2022-05-08">
-          05-08
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/posts/bf48f70d.html" itemprop="url">
-            <span itemprop="name">通过qemu+gdb实现跨架构调试</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-04-30T17:04:33+08:00"
-              content="2022-04-30">
-          04-30
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/posts/ec6fe1fe.html" itemprop="url">
-            <span itemprop="name">gcc编译选项汇总</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-04-09T18:26:06+08:00"
-              content="2022-04-09">
-          04-09
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/posts/2732b274.html" itemprop="url">
-            <span itemprop="name">Linux一行执行多条命令</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-04-07T16:42:57+08:00"
-              content="2022-04-07">
-          04-07
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/posts/102383ca.html" itemprop="url">
-            <span itemprop="name">vim学习笔记</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-04-01T17:16:35+08:00"
-              content="2022-04-01">
-          04-01
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/posts/d87f7e0c.html" itemprop="url">
-            <span itemprop="name">Next主题美化修改记录（一）</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-03-18T16:29:32+08:00"
-              content="2022-03-18">
-          03-18
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/posts/6c0adc53.html" itemprop="url">
-            <span itemprop="name">vim速查图_中英文版</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-01-24T15:42:01+08:00"
-              content="2022-01-24">
-          01-24
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/posts/50c08953.html" itemprop="url">
-            <span itemprop="name">将git信息编译进可执行程序</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
+</div>
 
 
-    </div>
-  </div>
-  
-  
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/2022/page/2/">2</a><a class="extend next" rel="next" href="/archives/2022/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
-  </nav>
+
+
+
 
 </div>
   </main>
