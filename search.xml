@@ -601,30 +601,6 @@
       </tags>
   </entry>
   <entry>
-    <title>重装系统后重新关联GitHub</title>
-    <url>/posts/df1ca536.html</url>
-    <content><![CDATA[<p>重装系统后， 系统盘文件都会被清空，会删除 .ssh 目录下绑定好的 ssh 公钥和私钥，此时 git push 本地仓库，便会报错：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ git push</span><br><span class="line">git@github.com: Permission denied (publickey).</span><br><span class="line">fatal: Could not read from remote repository.</span><br><span class="line"></span><br><span class="line">Please make sure you have the correct access rights</span><br><span class="line">and the repository exists.</span><br></pre></td></tr></table></figure>
-
-<p>对此，需要本地重新关联 GitHub 账号，才能继续 push 本地仓库。</p>
-<h2 id="本地创建-ssh-key"><a href="#本地创建-ssh-key" class="headerlink" title="本地创建 ssh key"></a>本地创建 ssh key</h2><p>在命令行窗口输入<code>ssh-keygen -t rsa -C &quot;your_email@youremail.com&quot;</code>，这里要将<code>your_email@youremail.com</code>改为自己指定的邮箱。然后，敲三次回车，就生成了 ssh key。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -C &quot;liupaopao520@163.com&quot;</span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/c/Users/Administrator/.ssh/id_rsa):</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /c/Users/Administrator/.ssh/id_rsa</span><br><span class="line">Your public key has been saved in /c/Users/Administrator/.ssh/id_rsa.pub</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:v9WQpeyCOJKOJG2vKrCbFfKnIo7tbFnZ4Qnp8LVSU2E liupaopao520@163.com</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 3072]----+</span><br><span class="line">|        E.       |</span><br><span class="line">|       ..        |</span><br><span class="line">|     . .      .  |</span><br><span class="line">|  . o =    . +   |</span><br><span class="line">|*Oo* . .   +     |</span><br><span class="line">|OBB.o     .      |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
-
-<p>生成的 ssh key 文件位于<code>C:\Users\Administrator\.ssh</code>目录下，打开 id_rsa.pub，复制里面的公钥。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ pwd</span><br><span class="line">/c/Users/Administrator/.ssh</span><br><span class="line"></span><br><span class="line">$ ls</span><br><span class="line">id_rsa  id_rsa.pub  known_hosts</span><br><span class="line"></span><br><span class="line">$ cat id_rsa.pub</span><br><span class="line">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDEy......l8xl8s8VEc= liupaopao520@163.com</span><br></pre></td></tr></table></figure>
-
-<h2 id="GitHub添加ssh-key"><a href="#GitHub添加ssh-key" class="headerlink" title="GitHub添加ssh key"></a>GitHub添加ssh key</h2><p>进入 GitHub 网站，进入Account Settings，左边选择 SSH and GPG keys，然后在 SSH keys 分类里，点击 New SSH keys，Title 随便填，粘贴刚才复制的 Key。</p>
-<p>打开 git bash，输入<code>ssh -T git@github.com</code>，验证是否关联成功。看到如下信息，则说明已成功关联 GitHub。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ssh -T git@github.com</span><br><span class="line">Hi HanxuLiu! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Git</category>
-      </categories>
-      <tags>
-        <tag>GitHub</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>本地电脑同时关联GitHub和Gitee</title>
     <url>/posts/1f76836b.html</url>
     <content><![CDATA[<h2 id="清除git全局设置"><a href="#清除git全局设置" class="headerlink" title="清除git全局设置"></a>清除git全局设置</h2><p>若之前没有设置过全局的可以跳过这一步，若之前对git 设置过全局的 user.name 和 user.email，进行过如下操作：</p>
@@ -686,6 +662,385 @@
       </categories>
       <tags>
         <tag>GitHub</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>重装系统后重新关联GitHub</title>
+    <url>/posts/df1ca536.html</url>
+    <content><![CDATA[<p>重装系统后， 系统盘文件都会被清空，会删除 .ssh 目录下绑定好的 ssh 公钥和私钥，此时 git push 本地仓库，便会报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ git push</span><br><span class="line">git@github.com: Permission denied (publickey).</span><br><span class="line">fatal: Could not read from remote repository.</span><br><span class="line"></span><br><span class="line">Please make sure you have the correct access rights</span><br><span class="line">and the repository exists.</span><br></pre></td></tr></table></figure>
+
+<p>对此，需要本地重新关联 GitHub 账号，才能继续 push 本地仓库。</p>
+<h2 id="本地创建-ssh-key"><a href="#本地创建-ssh-key" class="headerlink" title="本地创建 ssh key"></a>本地创建 ssh key</h2><p>在命令行窗口输入<code>ssh-keygen -t rsa -C &quot;your_email@youremail.com&quot;</code>，这里要将<code>your_email@youremail.com</code>改为自己指定的邮箱。然后，敲三次回车，就生成了 ssh key。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -C &quot;liupaopao520@163.com&quot;</span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/c/Users/Administrator/.ssh/id_rsa):</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /c/Users/Administrator/.ssh/id_rsa</span><br><span class="line">Your public key has been saved in /c/Users/Administrator/.ssh/id_rsa.pub</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:v9WQpeyCOJKOJG2vKrCbFfKnIo7tbFnZ4Qnp8LVSU2E liupaopao520@163.com</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 3072]----+</span><br><span class="line">|        E.       |</span><br><span class="line">|       ..        |</span><br><span class="line">|     . .      .  |</span><br><span class="line">|  . o =    . +   |</span><br><span class="line">|*Oo* . .   +     |</span><br><span class="line">|OBB.o     .      |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
+
+<p>生成的 ssh key 文件位于<code>C:\Users\Administrator\.ssh</code>目录下，打开 id_rsa.pub，复制里面的公钥。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ pwd</span><br><span class="line">/c/Users/Administrator/.ssh</span><br><span class="line"></span><br><span class="line">$ ls</span><br><span class="line">id_rsa  id_rsa.pub  known_hosts</span><br><span class="line"></span><br><span class="line">$ cat id_rsa.pub</span><br><span class="line">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDEy......l8xl8s8VEc= liupaopao520@163.com</span><br></pre></td></tr></table></figure>
+
+<h2 id="GitHub添加ssh-key"><a href="#GitHub添加ssh-key" class="headerlink" title="GitHub添加ssh key"></a>GitHub添加ssh key</h2><p>进入 GitHub 网站，进入Account Settings，左边选择 SSH and GPG keys，然后在 SSH keys 分类里，点击 New SSH keys，Title 随便填，粘贴刚才复制的 Key。</p>
+<p>打开 git bash，输入<code>ssh -T git@github.com</code>，验证是否关联成功。看到如下信息，则说明已成功关联 GitHub。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ssh -T git@github.com</span><br><span class="line">Hi HanxuLiu! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>GitHub</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RPM介绍</title>
+    <url>/posts/22588541.html</url>
+    <content><![CDATA[<h1 id="RPM-命令"><a href="#RPM-命令" class="headerlink" title="RPM 命令"></a>RPM 命令</h1><p><strong>一、RPM 介绍</strong></p>
+<p>1.什么是 rpm ？</p>
+<p>rpm 即 RedHat Package Management，是 RedHat 的发明之一</p>
+<p>2.为什么需要 rpm ？</p>
+<p>在一个操作系统下，需要安装实现各种功能的软件包。这些软件包一般都有各自的程序，<br>但是同时也有错综复杂的依赖关系。同时还需要 解决软件包的版本，以及安装，配置，<br>卸载的自动化问题。为了解决 这些问题，RedHat 针对自己的系统提出了一个较好的办法<br>来管理成千 上百的软件。这就是 RPM 管理系统。在系统中安装了 rpm 管理系统以后，<br>只要是符合 rpm 文件标准的打包程序都可以方便地安装、升级、卸载。</p>
+<p>3.是不是所有的 linux 都使用 rpm ？</p>
+<p>任何系统都需要包管理系统，因此很多 linux 都使用 rpm 系统。 rpm 系统是 Redhat Linux 和<br>Fedora Core 的软件包管理器，但是 Mandriva、SuSE 等 Linux 发行版也都使用 rpm。由于 rpm<br>的源程序可以在别的系统上进行编译，所以有可能在别的系统上也使用 rpm。除了 rpm，<br>其他一些系统也有自己的软件包管理程序， 例如 debian 的 deb 包。</p>
+<p>4.rpm 包的文件名为什么那么长 ？</p>
+<p>rpm 包的文件名中包含了这个软件包的版本信息，操作系统信息，硬件要求等等。<br>比如 mypackage-1.1-2RH.i386.rpm，其中 mypackage 是在系统中登记的软件包的名字 1.1<br>是软件的版本号，2 是发行号，RH 表示用于 RH 操作系统。i386 表示用于 intel x86 平台。</p>
+<p>5.软件包文件名中的 i386,i686 是什么意思</p>
+<p>rpm 软件包的文件名中，不仅包含了软件名称，版本信息，还包括了适用的硬件架构的信息。</p>
+<p>i386 指这个软件包适用于 intel 80386 以上的 x86 架构的计算机(AI32)<br>i686 指这个软件包适用于 intel 80686 以上(奔腾 pro 以上)的 x86 架构的计算机(IA32)<br>noarch 指这个软件包与硬件架构无关，可以通用。</p>
+<p>i686 软件包通常针对 CPU 进行了优化，现在通常配置的机器都可以使用 i686 软件包。</p>
+<p>6.不同操作系统发行的 rpm 包可否混用？</p>
+<p>对于已经编译成二进制的 rpm 包，由于操作系统环境不同，一般不能混用。<br>对于以 src.rpm 发行的软件包，由于需要安装时进行本地编译，所以通常可以在不同系统下安装。</p>
+<p><strong>二、RPM 包管理的用途</strong></p>
+<p>1、可以安装、删除、升级和管理以 rpm 包形式发布的软件；<br>2、可以查询某个 rpm 包中包含哪些文件，以及某个指定文件属于哪个 rpm 包；<br>3、可以在查询系统中的某个 rpm 包是否已安装以及其版本；<br>4、作为开发者可以把自己开发的软件打成 rpm 包发布；<br>5、依赖性的检查，查询安装某个 rpm 包时，需要哪些其它的 rpm 包。</p>
+<p>注：RPM 软件的安装、删除、更新只有 root 权限才能使用；<br>对于查询功能任何用户都可以操作。</p>
+<p><strong>三、rpm 的一点简单用法</strong></p>
+<p>rpm 的一般格式：</p>
+<p>rpm [选项] [rpm 软件包]</p>
+<p>1、初始化 rpm 数据库（可以省略）</p>
+<p>rpm –initdb<br>rpm –rebuilddb % 注：这个要花好长时间</p>
+<p>%注：有时 rpm 系统出了问题，不能安装和查询，大多是这里出了问题。</p>
+<p>2、RPM 软件包管理的查询功能：</p>
+<p>rpm -q [select-options] [query-options]</p>
+<p>RPM 的查询功能是极为强大，是极为重要的功能之一；这里举几个常用的例子，更为详细的具体的，请参考 man rpm</p>
+<p><em>对系统中已安装软件的查询</em></p>
+<p>1）查询系统已安装的软件</p>
+<p>语法：rpm -q 软件名</p>
+<p>例：rpm -q gaim<br>% -q 就是 –query，此选项表示询问系统是不是安装了 gaim 软件包；<br>% 如果已安装会有信息输出；如果没有安装，会输出 gaim 没有安装的信息；</p>
+<p>%查看系统中所有已经安装的包，要加 -a 参数<br>rpm -qa</p>
+<p>% 如果分页查看，再加一个管道 |和 more 命令<br>rpm -qa |more</p>
+<p>% 如果要查找某个软件包，可以用 grep 抽取出来<br>rpm -qa |grep mplayer</p>
+<p>2）查询一个已经安装的文件属于哪个软件包；</p>
+<p>语法: rpm -qf 文件名</p>
+<p>注：文件名所在的绝对路径要指出</p>
+<p>例：rpm -qf &#x2F;usr&#x2F;lib&#x2F;libacl.la</p>
+<p>3）查询已安装软件包都安装到何处；</p>
+<p>语法：rpm -ql 软件包名</p>
+<p>例：rpm -ql mplayer</p>
+<p>4）查询一个已安装软件包的信息</p>
+<p>语法： rpm -qi 软件包名</p>
+<p>例：rpm -qi mplayer</p>
+<p>5）查看一下已安装软件的配置文件；</p>
+<p>语法格式：rpm -qc 软件名</p>
+<p>例：rpm -qc mplayer</p>
+<p>6）查看一个已经安装软件的文档安装位置：</p>
+<p>语法格式： rpm -qd 软件名</p>
+<p>例：rpm -qd mplayer</p>
+<p>7）查看一下已安装软件所依赖的软件包及文件；</p>
+<p>语法格式： rpm -qR 软件名</p>
+<p>例：rpm -qR mplayer</p>
+<p><strong>注</strong>：可以把几个参数组合起来用，如 rpm -qil mplayer</p>
+<p><em>对于未安装的软件包的查看</em> :查看的前提是当前目录下已存在一个.rpm 文件。</p>
+<p>1）查看一个软件包的用途、版本等信息；</p>
+<p>语法： rpm -qpi file.rpm</p>
+<p>例：rpm -qpi mplayer-1.0pre7try2-2.i386.rpm</p>
+<p>2）查看一件软件包所包含的文件；</p>
+<p>语法： rpm -qpl file.rpm</p>
+<p>例：rpm -qpl mplayer-1.0pre7try2-2.i386.rpm</p>
+<p>3）查看软件包的文档所在的位置；</p>
+<p>语法： rpm -qpd file.rpm</p>
+<p>例：rpm -qpd mplayer-1.0pre7try2-2.i386.rpm</p>
+<p>4）查看一个软件包的配置文件；</p>
+<p>语法： rpm -qpc file.rpm</p>
+<p>例：rpm -qpc mplayer-1.0pre7try2-2.i386.rpm</p>
+<p>5）查看一个软件包的依赖关系</p>
+<p>语法： rpm -qpR file.rpm</p>
+<p>例：rpm -qpR mplayer-1.0pre7try2-2.i386.rpm</p>
+<p>3、软件包的安装、升级、删除等； <em>安装和升级一个 rpm 包</em></p>
+<p>语法：<br>rpm -ivh file.rpm % 这个是用来安装一个新的 rpm 包<br>rpm -Uvh file.rpm % 这是用来升级一个 rpm 包</p>
+<p>% 如果有依赖关系的，需解决依赖关系。<br>% 如果找不到依赖关系的包，可以用下面的命令强制安装：</p>
+<p>rpm -ivh –nodeps –force file.rpm<br>rpm -Uvh –nodeps –force file.rpm</p>
+<p>例：<br>rpm -ivh –test mplayer-1.0pre7try2-2.i386.rpm<br>% –test 表示测试，并不真正安装。</p>
+<p>rpm -ivh –relocate &#x2F;&#x3D;&#x2F;usr&#x2F;local&#x2F;mplayer mplayer-1.0pre7try2-2.i386.rpm<br>% 为软件包指定安装目录：要加 –relocate 参数<br>% 安装在指定目录中的程序如何调用呢？<br>% 通常可执行程序都放在安装目录下的 bin 或者 sbin 目录中。</p>
+<p><em>删除一个 rpm 包</em></p>
+<p>首先查出需要删除的 rpm 包，然后用下面的命令来卸载：</p>
+<p>rpm -e 软件包名</p>
+<p>例：rpm -e mplayer % 卸载 mplayer<br>% 如果有其它的 rpm 依赖于该 rpm 包，系统会出现警告。<br>% 如果一定要卸载，可以用选项 –nodeps 忽略依赖关系。但最好不要这么做。</p>
+<p><strong>四、RPM 管理包管理器支持网络安装和查询</strong></p>
+<p>rpm [选项] rpm 包的 http 或者 ftp 的地址</p>
+<p>比如我们想通过 Fedora Core 4.0 的一个镜像查询、安装软件包。</p>
+<p>rpm -qpi <a href="http://mirrors.kernel.org/.../RPMS/rsh-0.17-29.rpm">http://mirrors.kernel.org/.../RPMS/rsh-0.17-29.rpm</a><br>% 查询</p>
+<p>rpm -ivh <a href="http://mirrors.kernel.org/.../RPMS/rsh-0.17-29.rpm">http://mirrors.kernel.org/.../RPMS/rsh-0.17-29.rpm</a><br>% 安装</p>
+<p><strong>五、对已安装 rpm 包查询的一点补充</strong></p>
+<p>可以用 locate 来查询一些软件的安装位置，可能需要先运行 updatedb 来更新已安装软件库</p>
+<p><strong>六、从 rpm 软件包抽取文件</strong></p>
+<p>rpm2cpio xxx.rpm | cpio -idmv<br>% i 表示提取文件，v 表示指示执行进程<br>% d 表示根据包中文件原来的路径建立目录<br>% m 表示保持文件的更新时间</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>df命令-显示磁盘空间</title>
+    <url>/posts/22729.html</url>
+    <content><![CDATA[<h2 id="df命令介绍"><a href="#df命令介绍" class="headerlink" title="df命令介绍"></a>df命令介绍</h2><p>df命令的英文全称即<code>Disk Free</code>，顾名思义功能是用于显示系统上可使用的磁盘空间。默认显示单位为KB，建议使用“df -h”的参数组合，根据磁盘容量自动变换合适的单位，更利于人性化阅读。</p>
+<p>日常普遍用该命令可以查看磁盘被占用了多少空间、还剩多少空间等信息。</p>
+<h2 id="df命令常用参数"><a href="#df命令常用参数" class="headerlink" title="df命令常用参数"></a>df命令常用参数</h2><table>
+<thead>
+<tr>
+<th>-a</th>
+<th>显示所有系统文件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-h</td>
+<td>以容易阅读的方式显示</td>
+</tr>
+</tbody></table>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><h3 id="df默认选项"><a href="#df默认选项" class="headerlink" title="df默认选项"></a><code>df</code>默认选项</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df</span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">devtmpfs          347636       0    347636   0% /dev</span><br><span class="line">tmpfs             362780       0    362780   0% /dev/shm</span><br><span class="line">tmpfs             362780   41188    321592  12% /run</span><br><span class="line">tmpfs             362780       0    362780   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1       20510332 1610056  17835368   9% /</span><br><span class="line">tmpfs              72556       0     72556   0% /run/user/0</span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
+<h3 id="df-h便于人性化阅读"><a href="#df-h便于人性化阅读" class="headerlink" title="df -h便于人性化阅读"></a><code>df -h</code>便于人性化阅读</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
+<h3 id="df-ah显示全部文件系统"><a href="#df-ah显示全部文件系统" class="headerlink" title="df -ah显示全部文件系统"></a><code>df -ah</code>显示全部文件系统</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df -ah</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">sysfs              0     0     0    - /sys</span><br><span class="line">proc               0     0     0    - /proc</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">securityfs         0     0     0    - /sys/kernel/security</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">devpts             0     0     0    - /dev/pts</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/systemd</span><br><span class="line">pstore             0     0     0    - /sys/fs/pstore</span><br><span class="line">bpf                0     0     0    - /sys/fs/bpf</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/memory</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpu,cpuacct</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/net_cls,net_prio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/hugetlb</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpuset</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/freezer</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/perf_event</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/devices</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/pids</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/blkio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/rdma</span><br><span class="line">none               0     0     0    - /sys/kernel/tracing</span><br><span class="line">configfs           0     0     0    - /sys/kernel/config</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">mqueue             0     0     0    - /dev/mqueue</span><br><span class="line">hugetlbfs          0     0     0    - /dev/hugepages</span><br><span class="line">debugfs            0     0     0    - /sys/kernel/debug</span><br><span class="line">systemd-1          -     -     -    - /proc/sys/fs/binfmt_misc</span><br><span class="line">binfmt_misc        0     0     0    - /proc/sys/fs/binfmt_misc</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]#      </span><br></pre></td></tr></table></figure>
+<h3 id="df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况"><a href="#df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况" class="headerlink" title="df  目录 指定目录下的文件’指定文件所在分区的磁盘使用情况"></a><code>df  目录</code> 指定目录下的文件’指定文件所在分区的磁盘使用情况</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df /root/.bashrc </span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">/dev/vda1       20510332 1610068  17835356   9% /</span><br><span class="line">[root@paopao ~]# </span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux命令</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mount命令-挂载磁盘</title>
+    <url>/posts/37407.html</url>
+    <content><![CDATA[<h2 id="mount命令介绍"><a href="#mount命令介绍" class="headerlink" title="mount命令介绍"></a>mount命令介绍</h2><p>用于加载文件系统到指定的加载点。此命令的最常用于挂载cdrom，使我们可以访问cdrom中的数据，因为你将光盘插入cdrom中，Linux并不会自动挂载，必须使用Linux mount命令来手动完成挂载。</p>
+<h2 id="mount命令常用参数"><a href="#mount命令常用参数" class="headerlink" title="mount命令常用参数"></a>mount命令常用参数</h2><table>
+<thead>
+<tr>
+<th>-t</th>
+<th>指定挂载类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-a</td>
+<td>加载文件“&#x2F;etc&#x2F;fstab”中描述的所有文件系统</td>
+</tr>
+</tbody></table>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>挂载 &#x2F;dev&#x2F;cdrom 到 &#x2F;mnt：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@linuxcool ~]# mount /dev/cdrom /mnt</span><br></pre></td></tr></table></figure>
+
+<p>启动所有挂载：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@linuxcool ~]# mount -a</span><br></pre></td></tr></table></figure>
+
+<p>挂载nfs格式文件系统：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@linuxcool ~]# mount -t nfs /123 /mnt  </span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux命令</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>rz、sz命令-文件传输</title>
+    <url>/posts/42689.html</url>
+    <content><![CDATA[<h1 id="1-软件安装"><a href="#1-软件安装" class="headerlink" title="1. 软件安装"></a>1. 软件安装</h1><p>rz&#x2F;sz命令用来在xshell远程服务器和本地之间传输文件，主要有两种方式安装，yum安装或者编译安装。</p>
+<h2 id="1-1-yum包安装"><a href="#1-1-yum包安装" class="headerlink" title="1.1 yum包安装"></a>1.1 yum包安装</h2><p>root账号登陆后执行以下命令：</p>
+<blockquote>
+<p>yum install -y lrzsz</p>
+</blockquote>
+<h2 id="2-2-源码编译安装"><a href="#2-2-源码编译安装" class="headerlink" title="2.2 源码编译安装"></a>2.2 源码编译安装</h2><p>root账号登陆后，依次执行以下命令：</p>
+<blockquote>
+<p>cd &#x2F;tmp<br>wget <a href="http://www.ohse.de/uwe/releases/lrzsz-0.12.20.tar.gz">http://www.ohse.de/uwe/releases/lrzsz-0.12.20.tar.gz</a><br>tar zxvf lrzsz-0.12.20.tar.gz &amp;&amp; cd lrzsz-0.12.20<br>.&#x2F;configure &amp;&amp; make &amp;&amp; make install</p>
+</blockquote>
+<p>上面安装过程默认把lsz&#x2F;lrz安装到了&#x2F;usr&#x2F;local&#x2F;bin&#x2F;目录下，现在我们还不能使用sz&#x2F;rz命令，需要手动建立软链接：</p>
+<blockquote>
+<p>cd &#x2F;usr&#x2F;bin<br>ln -s &#x2F;usr&#x2F;local&#x2F;bin&#x2F;lsz sz<br>ln -s &#x2F;usr&#x2F;local&#x2F;bin&#x2F;lrz rz</p>
+</blockquote>
+<h1 id="2-使用说明"><a href="#2-使用说明" class="headerlink" title="2. 使用说明"></a>2. 使用说明</h1><h2 id="2-1-sz命令：发送文件到本地目录"><a href="#2-1-sz命令：发送文件到本地目录" class="headerlink" title="2.1 sz命令：发送文件到本地目录"></a>2.1 sz命令：发送文件到本地目录</h2><blockquote>
+<p>sz filename</p>
+</blockquote>
+<h2 id="2-2-rz命令：将本地文件上传到linux服务器"><a href="#2-2-rz命令：将本地文件上传到linux服务器" class="headerlink" title="2.2 rz命令：将本地文件上传到linux服务器"></a>2.2 rz命令：将本地文件上传到linux服务器</h2><blockquote>
+<p>rz</p>
+</blockquote>
+<p>执行此命令后，在弹出框中选择要上传的文件即可。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux命令</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>yum命令-RPM包管理器</title>
+    <url>/posts/29820.html</url>
+    <content><![CDATA[<h2 id="yum命令介绍"><a href="#yum命令介绍" class="headerlink" title="yum命令介绍"></a>yum命令介绍</h2><p>yum命令是在Fedora和RedHat以及SUSE中基于rpm的软件包管理器，它可以使系统管理人员交互和自动化地更新与管理RPM软件包，能够从指定的服务器自动下载RPM包并且安装，可以自动处理依赖性关系，并且一次安装所有依赖的软体包，无须繁琐地一次次下载、安装。</p>
+<h2 id="yum命令常用参数"><a href="#yum命令常用参数" class="headerlink" title="yum命令常用参数"></a>yum命令常用参数</h2><table>
+<thead>
+<tr>
+<th>-h</th>
+<th>显示帮助信息</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-y</td>
+<td>对所有的提问都回答“yes”</td>
+</tr>
+<tr>
+<td>install</td>
+<td>安装rpm软件包</td>
+</tr>
+<tr>
+<td>update</td>
+<td>更新rpm软件包</td>
+</tr>
+<tr>
+<td>check-update</td>
+<td>检查是否有可用的更新rpm软件包</td>
+</tr>
+<tr>
+<td>remove</td>
+<td>删除指定的rpm软件包</td>
+</tr>
+<tr>
+<td>list</td>
+<td>显示软件包的信息</td>
+</tr>
+<tr>
+<td>search</td>
+<td>检查软件包的信息</td>
+</tr>
+<tr>
+<td>info</td>
+<td>显示指定的rpm软件包的描述信息和概要信息</td>
+</tr>
+<tr>
+<td>clean</td>
+<td>清理yum过期的缓存</td>
+</tr>
+<tr>
+<td>resolvedep</td>
+<td>显示rpm软件包的依赖关系</td>
+</tr>
+<tr>
+<td>localinstall</td>
+<td>安装本地的rpm软件包</td>
+</tr>
+<tr>
+<td>localupdate</td>
+<td>显示本地rpm软件包进行更新</td>
+</tr>
+<tr>
+<td>deplist</td>
+<td>显示rpm软件包的所有依赖关系</td>
+</tr>
+</tbody></table>
+<h2 id="国内-yum-源"><a href="#国内-yum-源" class="headerlink" title="国内 yum 源"></a>国内 yum 源</h2><p>网易（163）yum源是国内最好的yum源之一 ，无论是速度还是软件版本，都非常的不错。</p>
+<p>将yum源设置为163 yum，可以提升软件包安装和更新的速度，同时避免一些常见软件版本无法找到。</p>
+<h3 id="yum源配置方法"><a href="#yum源配置方法" class="headerlink" title="yum源配置方法"></a>yum源配置方法</h3><p>首先备份&#x2F;etc&#x2F;yum.repos.d&#x2F;CentOS-Base.repo</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</span><br></pre></td></tr></table></figure>
+
+<p>下载对应版本 repo 文件, 放入 &#x2F;etc&#x2F;yum.repos.d&#x2F; (操作前请做好相应备份)</p>
+<ul>
+<li><a href="http://mirrors.163.com/.help/CentOS5-Base-163.repo">CentOS5</a> ：<a href="http://mirrors.163.com/.help/CentOS5-Base-163.repo">http://mirrors.163.com/.help/CentOS5-Base-163.repo</a></li>
+<li><a href="http://mirrors.163.com/.help/CentOS6-Base-163.repo">CentOS6</a> ：<a href="http://mirrors.163.com/.help/CentOS6-Base-163.repo">http://mirrors.163.com/.help/CentOS6-Base-163.repo</a></li>
+<li><a href="http://mirrors.163.com/.help/CentOS7-Base-163.repo">CentOS7</a> ：<a href="http://mirrors.163.com/.help/CentOS7-Base-163.repo">http://mirrors.163.com/.help/CentOS7-Base-163.repo</a></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">wget http://mirrors.163.com/.help/CentOS6-Base-163.repo</span><br><span class="line">mv CentOS6-Base-163.repo CentOS-Base.repo</span><br></pre></td></tr></table></figure>
+
+<p>运行以下命令生成缓存</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum clean all</span><br><span class="line">yum makecache</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux命令</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux一行执行多条命令</title>
+    <url>/posts/2732b274.html</url>
+    <content><![CDATA[<h3 id="分号"><a href="#分号" class="headerlink" title=";(分号)"></a>;(分号)</h3><p>被分号(;)所分隔的命令会连续的执行下去，就算是错误命令也会继续执行后面的命令.</p>
+<h3 id="amp-amp"><a href="#amp-amp" class="headerlink" title="&amp;&amp;"></a>&amp;&amp;</h3><p>如果命令被 &amp;&amp; 所分隔，那么命令也会一直执行下去，但是中间有错误的命令存在就不会执行后面的命令，没错就直行至完为止。</p>
+<h3 id=""><a href="#" class="headerlink" title="||"></a>||</h3><p>如果每个命令被双竖线 || 所分隔，那么一遇到可以执行成功的命令就会停止执行后面的命令，而不管后面的命令是否正确与否。如果执行到错误的命令就是继续执行后一个命令，一直执行到遇到正确的命令为止。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux下段错误生成core文件的相关配置</title>
+    <url>/posts/831131d.html</url>
+    <content><![CDATA[<h2 id="core-dump-介绍"><a href="#core-dump-介绍" class="headerlink" title="core dump 介绍"></a>core dump 介绍</h2><p>在 Linux 环境下调试 C&#x2F;C++ 程序时，经常会因为内存访问错误产生段错误（核心已转储），而在当前目录却找不到转储的 core 文件，此时需要检查系统 core dump 配置是否打开。</p>
+<p>如果打开系统 core dump 功能，那么在程序运行报段错误后，系统就会将程序的内存映像转储到硬盘，随后可以用 gdb 对生成的 core 文件进行分析，还原程序发生段错误时刻的堆栈调用信息。</p>
+<h2 id="查看系统-core-dump-配置"><a href="#查看系统-core-dump-配置" class="headerlink" title="查看系统 core dump 配置"></a>查看系统 core dump 配置</h2><p>通过<code>ulimit -a</code>命令查看系统 core 文件的大小限制，可以看到第一行 core file size 设置为0，即没有打开 core dump 开关。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ ulimit -a</span><br><span class="line">core file size          (blocks, -c) 0</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 0</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 31400</span><br><span class="line">max locked memory       (kbytes, -l) 65536</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 1024</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) 31400</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置系统生成的-core-文件大小"><a href="#设置系统生成的-core-文件大小" class="headerlink" title="设置系统生成的 core 文件大小"></a>设置系统生成的 core 文件大小</h2><p>使用<code>ulimit -c [kbytes]</code>命令设置系统允许生成的core文件大小。</p>
+<ul>
+<li>ulimit -c 0 ：不产生core文件</li>
+<li>ulimit -c 100 ：设置core文件最大为100kb</li>
+<li>ulimit -c unlimited ：不限制core文件大小</li>
+</ul>
+<p>通常会设置为 unlimited，即不限制文件大小。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ ulimit -c unlimited </span><br></pre></td></tr></table></figure>
+
+<p>然后，再查看下系统 core dump 配置，可以看到第一行 core file size 变为了 unlimited。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ ulimit -a</span><br><span class="line">core file size          (blocks, -c) unlimited</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 0</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 31400</span><br><span class="line">max locked memory       (kbytes, -l) 65536</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 1024</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) 31400</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置-core-文件保存路径"><a href="#配置-core-文件保存路径" class="headerlink" title="配置 core 文件保存路径"></a>配置 core 文件保存路径</h2><p>core 文件具体存放在哪个目录取决于系统参数kernel.core_pattern：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@ubuntu:# cat /proc/sys/kernel/core_pattern</span><br><span class="line">|/usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -- %E</span><br></pre></td></tr></table></figure>
+
+<p>修改<code>/proc/sys/kernel/core_pattern</code>设置格式化的 core 文件保存位置或文件名：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@ubuntu:# cat /proc/sys/kernel/core_pattern</span><br><span class="line">|/usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -- %E</span><br><span class="line"></span><br><span class="line">root@ubuntu:# echo &quot;/home/lhx/test/coredump/core-%e-%p-%t&quot; &gt; /proc/sys/kernel/core_pattern</span><br><span class="line"></span><br><span class="line">root@ubuntu:/home/lhx/test/coredump# cat /proc/sys/kernel/core_pattern</span><br><span class="line"><span class="meta prompt_">/home/lhx/test/coredump/core-%</span><span class="language-bash">e-%p-%t</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>%E：添加可执行程序的完整路径<br>%e：添加可执行程序名<br>%p：添加pid<br>%t：进程奔溃的时间戳<br>%s：添加导致产生core的信号<br>%u - 添加当前uid<br>%g - 添加当前gid</p>
+</blockquote>
+<p>然后重新设置ulimit，再测试一下，发现生成了对应的 core 文件：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@ubuntu:/home/lhx/test/coredump# ulimit -c unlimited</span><br><span class="line">root@ubuntu:/home/lhx/test/coredump# ./a.out </span><br><span class="line">段错误 (核心已转储)</span><br><span class="line">root@ubuntu:/home/lhx/test/coredump# ls</span><br><span class="line">a.out  core-a.out-9209-1653703102  coredump.c</span><br></pre></td></tr></table></figure>
+
+<h2 id="复杂情况处理"><a href="#复杂情况处理" class="headerlink" title="复杂情况处理"></a>复杂情况处理</h2><ol>
+<li><p>一般情况下，使用<code>ulimit -c unlimited</code>命令后，会默认在当前目录生成对应 core 文件。</p>
+</li>
+<li><p>如果当前目录没有找到 core 文件，使用命令<code>cat /proc/sys/kernel/core_pattern</code>却看到<code>/usr/share/apport/apport</code>类似的路径，注意这个并不是系统保存的路径！Ubuntu 下 coredump 会被  Apport 来处理。</p>
+</li>
+<li><p>此时建议进行格式化设置 core 文件路径和名称，然后，基本就能正常显示 core 文件。</p>
+</li>
+<li><p>如果还是找不到 core 文件，则使用下面的终极方法：</p>
+</li>
+</ol>
+<p>使用<code>cat /var/log/apport.log</code>查看日志：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@ubuntu:/usr/share/apport# cat /var/log/apport.log </span><br><span class="line">ERROR: apport (pid 3164) Fri May 27 22:29:20 2022: called for pid 3163, signal 11, core limit 18446744073709551615, dump mode 1</span><br><span class="line">ERROR: apport (pid 3164) Fri May 27 22:29:20 2022: ignoring implausibly big core limit, treating as unlimited</span><br><span class="line">ERROR: apport (pid 3164) Fri May 27 22:29:20 2022: executable: /home/lhx/test/coredump/a.out (command line &quot;./a.out&quot;)</span><br><span class="line">ERROR: apport (pid 3164) Fri May 27 22:29:20 2022: executable does not belong to a package, ignoring</span><br><span class="line">ERROR: apport (pid 3164) Fri May 27 22:29:20 2022: writing core dump to core._home_lhx_test_coredump_a_out.0.b0a0dac1-9489-4362-b93e-5b795f497130.3163.16880 (limit: -1)</span><br></pre></td></tr></table></figure>
+
+<p>会看到一行关键信息，包含可执行程序名称、路径和时间戳，这就是 core 文件：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ERROR: apport (pid 3164) Fri May 27 22:29:20 2022: writing core dump to core._home_lhx_test_coredump_a_out.0.b0a0dac1-9489-4362-b93e-5b795f497130.3163.16880 (limit: -1)</span><br></pre></td></tr></table></figure>
+
+<p>然后全局范围内搜索文件名，会发现 core 文件位于<code>/var/lib/apport/coredump/</code>目录：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:/$ sudo find . -name &quot;core._home_lhx_test_coredump_a_out.0.b0a0dac1*&quot;</span><br><span class="line">/var/lib/apport/coredump/core._home_lhx_test_coredump_a_out.0.b0a0dac1-9489-4362-b93e-5b795f497130.3163.16880</span><br></pre></td></tr></table></figure>
+
+<h2 id="其他注意事项"><a href="#其他注意事项" class="headerlink" title="其他注意事项"></a>其他注意事项</h2><ol>
+<li>注意<code>ulimit -c unlimited</code>命令只针对当前 shell 窗口有效。</li>
+<li>格式化设置 core 文件路径和名称时，注意要用 root 或 sudo 权限。</li>
+<li>如果上述方法还是不行，建议全局使用 root账户。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>coredump</tag>
       </tags>
   </entry>
   <entry>
@@ -985,294 +1340,53 @@
       </tags>
   </entry>
   <entry>
-    <title>df命令-显示磁盘空间</title>
-    <url>/posts/22729.html</url>
-    <content><![CDATA[<h2 id="df命令介绍"><a href="#df命令介绍" class="headerlink" title="df命令介绍"></a>df命令介绍</h2><p>df命令的英文全称即<code>Disk Free</code>，顾名思义功能是用于显示系统上可使用的磁盘空间。默认显示单位为KB，建议使用“df -h”的参数组合，根据磁盘容量自动变换合适的单位，更利于人性化阅读。</p>
-<p>日常普遍用该命令可以查看磁盘被占用了多少空间、还剩多少空间等信息。</p>
-<h2 id="df命令常用参数"><a href="#df命令常用参数" class="headerlink" title="df命令常用参数"></a>df命令常用参数</h2><table>
-<thead>
-<tr>
-<th>-a</th>
-<th>显示所有系统文件</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>-h</td>
-<td>以容易阅读的方式显示</td>
-</tr>
-</tbody></table>
-<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><h3 id="df默认选项"><a href="#df默认选项" class="headerlink" title="df默认选项"></a><code>df</code>默认选项</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df</span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">devtmpfs          347636       0    347636   0% /dev</span><br><span class="line">tmpfs             362780       0    362780   0% /dev/shm</span><br><span class="line">tmpfs             362780   41188    321592  12% /run</span><br><span class="line">tmpfs             362780       0    362780   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1       20510332 1610056  17835368   9% /</span><br><span class="line">tmpfs              72556       0     72556   0% /run/user/0</span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
-<h3 id="df-h便于人性化阅读"><a href="#df-h便于人性化阅读" class="headerlink" title="df -h便于人性化阅读"></a><code>df -h</code>便于人性化阅读</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
-<h3 id="df-ah显示全部文件系统"><a href="#df-ah显示全部文件系统" class="headerlink" title="df -ah显示全部文件系统"></a><code>df -ah</code>显示全部文件系统</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df -ah</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">sysfs              0     0     0    - /sys</span><br><span class="line">proc               0     0     0    - /proc</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">securityfs         0     0     0    - /sys/kernel/security</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">devpts             0     0     0    - /dev/pts</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/systemd</span><br><span class="line">pstore             0     0     0    - /sys/fs/pstore</span><br><span class="line">bpf                0     0     0    - /sys/fs/bpf</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/memory</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpu,cpuacct</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/net_cls,net_prio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/hugetlb</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpuset</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/freezer</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/perf_event</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/devices</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/pids</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/blkio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/rdma</span><br><span class="line">none               0     0     0    - /sys/kernel/tracing</span><br><span class="line">configfs           0     0     0    - /sys/kernel/config</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">mqueue             0     0     0    - /dev/mqueue</span><br><span class="line">hugetlbfs          0     0     0    - /dev/hugepages</span><br><span class="line">debugfs            0     0     0    - /sys/kernel/debug</span><br><span class="line">systemd-1          -     -     -    - /proc/sys/fs/binfmt_misc</span><br><span class="line">binfmt_misc        0     0     0    - /proc/sys/fs/binfmt_misc</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]#      </span><br></pre></td></tr></table></figure>
-<h3 id="df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况"><a href="#df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况" class="headerlink" title="df  目录 指定目录下的文件’指定文件所在分区的磁盘使用情况"></a><code>df  目录</code> 指定目录下的文件’指定文件所在分区的磁盘使用情况</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df /root/.bashrc </span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">/dev/vda1       20510332 1610068  17835356   9% /</span><br><span class="line">[root@paopao ~]# </span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
-
+    <title>Typora+Picgo+Gitee构建网络图床笔记</title>
+    <url>/posts/80f1815e.html</url>
+    <content><![CDATA[<p><strong>前言</strong></p>
+<p>之前一直在Typora上记录自己的笔记，但是发现markdown格式的笔记在插入图片时，仅能采用两种方法：1）在线图床，2）本地路径，即图片并不是像Word那样集成在文档内的，因此经过一番研究，发现了最新版的Typora已经支持在线图床功能，遂写此篇教程帮助后人构建自己的在线图床markdown笔记。</p>
+<h2 id="所需软件"><a href="#所需软件" class="headerlink" title="所需软件"></a><strong>所需软件</strong></h2><p>typora</p>
+<p><a href="https://link.zhihu.com/?target=https://typora.io/">https://typora.io/</a></p>
+<p>picgo</p>
+<p><a href="https://link.zhihu.com/?target=https://github.com/Molunerfinn/PicGo/releases">https://github.com/Molunerfinn/PicGo/releases</a></p>
+<p>建议选择2.2.2正式版本，beta版本可能会存在不稳定的风险。</p>
+<p><img src="https://pic3.zhimg.com/80/v2-be88c425ba401a71e9c91dca74f0d262_720w.jpg" alt="img"></p>
+<p>Gitee</p>
+<p>由于国内连接github时网络偶尔存在不稳定的情况，于是采用了gitee作为github图床的替代，但整体教程是一样的</p>
+<p><a href="https://link.zhihu.com/?target=https://gitee.com/">https://gitee.com/</a></p>
+<p><img src="https://pic3.zhimg.com/80/v2-daba73811b87533f8f032169d3d11d9a_720w.png" alt="img"></p>
+<h2 id="具体操作"><a href="#具体操作" class="headerlink" title="具体操作"></a><strong>具体操作</strong></h2><p>主要是分为两部分操作，第一部分是Typora的配置，第二部分是Picgo+Gitee的在线图床配置</p>
+<h3 id="Typora配置"><a href="#Typora配置" class="headerlink" title="Typora配置"></a><strong>Typora配置</strong></h3><p>打开Typora后，点击菜单栏-文件-偏好设置</p>
+<p>找到其中的“图像”设置，将其设置为如下内容</p>
+<p><img src="https://pic3.zhimg.com/80/v2-f374bec8d90d87c2f7683c1133064166_720w.jpg" alt="img"></p>
+<p>1）<strong>插入图片时…<strong>下边的选择框内选择</strong>上传图片</strong></p>
+<p>2）勾选上“<strong>对本地位置的图片应用上述规则</strong>”</p>
+<p>3）上传服务选择<strong>PicGo(app)</strong></p>
+<p>4）将<strong>PicGo路径</strong>项设置为本地PicGo的安装路径</p>
+<p>这样，我们就把Typora配置好了，下面我们进行PicGo+Gitee的网络图床构建</p>
+<h3 id="网络图床配置"><a href="#网络图床配置" class="headerlink" title="网络图床配置"></a><strong>网络图床配置</strong></h3><p>首先，安装好PicGo之后，我们需要给PicGo配置插件以支持Gitee图床</p>
+<p><strong>注意</strong>：你必须安装<a href="https://link.zhihu.com/?target=https://nodejs.org/en/">Node.js</a>之后才能安装PicGo的插件，因为PicGo要使用<code>npm</code>来安装插件。</p>
+<p>安装好Nodejs后，点开左边的<strong>插件设置</strong>一栏，在输入框内输入“github plus”，如下</p>
+<p><img src="https://pic1.zhimg.com/80/v2-270b499aeadae15d014215b32b1204c8_720w.jpg" alt="img"></p>
+<p>点击安装此插件，之后左侧选项栏<strong>图床设置</strong>会多一个<strong>githubplus</strong></p>
+<p><img src="https://pic1.zhimg.com/80/v2-1fd1e0c2ef8c48f1d85a5a04b8566714_720w.png" alt="img"></p>
+<p>接下来我们配置Gitee仓库以存储图片</p>
+<p>1）进入<a href="https://link.zhihu.com/?target=https://gitee.com/">https://gitee.com/</a>，没有账号的话，先注册账号，注册以后登录，新建一个<strong>公开仓库</strong>，名字为picgo（可以自己起其他名字）</p>
+<p>2）点击右上角，进入<strong>设置</strong>，在左侧的<strong>安全设置-私人令牌</strong>处生成新令牌。（注意：生成的新令牌只会显示一次，一定要保存好！！！）</p>
+<p>我们需要做的如下：</p>
+<p>1）回到picgo，按照如下进行设置</p>
+<p><img src="https://pic3.zhimg.com/80/v2-dceba8a3986c7df4dbc3f8cb1e8ca60e_720w.jpg" alt="img"></p>
+<p>其中的repo为 <strong>UserName&#x2F;仓库名称</strong> 格式</p>
+<p>branch填入master</p>
+<p>Token为刚才在Gitee生成的私人令牌，粘贴到这里就行</p>
+<p>path为仓库下用于存储图片的路径，这个可以自行选择</p>
+<p>最下边的origin部分选择gitee（默认是github）</p>
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a><strong>结束</strong></h2><p>经过上述操作，我们就把typora+picgo+gitee成功配置好了，之后当我们将本地的图片粘贴到markdown文档内的时候，typora会自动将图片上传到刚才我们配置好的gitee仓库内，并自动把markdown文档内的本地路径转化为gitee的图片外链，便于我们以后进行多端访问文档内的图片。</p>
 ]]></content>
       <categories>
-        <category>Linux</category>
+        <category>博客相关</category>
       </categories>
       <tags>
-        <tag>Linux命令</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>RPM介绍</title>
-    <url>/posts/22588541.html</url>
-    <content><![CDATA[<h1 id="RPM-命令"><a href="#RPM-命令" class="headerlink" title="RPM 命令"></a>RPM 命令</h1><p><strong>一、RPM 介绍</strong></p>
-<p>1.什么是 rpm ？</p>
-<p>rpm 即 RedHat Package Management，是 RedHat 的发明之一</p>
-<p>2.为什么需要 rpm ？</p>
-<p>在一个操作系统下，需要安装实现各种功能的软件包。这些软件包一般都有各自的程序，<br>但是同时也有错综复杂的依赖关系。同时还需要 解决软件包的版本，以及安装，配置，<br>卸载的自动化问题。为了解决 这些问题，RedHat 针对自己的系统提出了一个较好的办法<br>来管理成千 上百的软件。这就是 RPM 管理系统。在系统中安装了 rpm 管理系统以后，<br>只要是符合 rpm 文件标准的打包程序都可以方便地安装、升级、卸载。</p>
-<p>3.是不是所有的 linux 都使用 rpm ？</p>
-<p>任何系统都需要包管理系统，因此很多 linux 都使用 rpm 系统。 rpm 系统是 Redhat Linux 和<br>Fedora Core 的软件包管理器，但是 Mandriva、SuSE 等 Linux 发行版也都使用 rpm。由于 rpm<br>的源程序可以在别的系统上进行编译，所以有可能在别的系统上也使用 rpm。除了 rpm，<br>其他一些系统也有自己的软件包管理程序， 例如 debian 的 deb 包。</p>
-<p>4.rpm 包的文件名为什么那么长 ？</p>
-<p>rpm 包的文件名中包含了这个软件包的版本信息，操作系统信息，硬件要求等等。<br>比如 mypackage-1.1-2RH.i386.rpm，其中 mypackage 是在系统中登记的软件包的名字 1.1<br>是软件的版本号，2 是发行号，RH 表示用于 RH 操作系统。i386 表示用于 intel x86 平台。</p>
-<p>5.软件包文件名中的 i386,i686 是什么意思</p>
-<p>rpm 软件包的文件名中，不仅包含了软件名称，版本信息，还包括了适用的硬件架构的信息。</p>
-<p>i386 指这个软件包适用于 intel 80386 以上的 x86 架构的计算机(AI32)<br>i686 指这个软件包适用于 intel 80686 以上(奔腾 pro 以上)的 x86 架构的计算机(IA32)<br>noarch 指这个软件包与硬件架构无关，可以通用。</p>
-<p>i686 软件包通常针对 CPU 进行了优化，现在通常配置的机器都可以使用 i686 软件包。</p>
-<p>6.不同操作系统发行的 rpm 包可否混用？</p>
-<p>对于已经编译成二进制的 rpm 包，由于操作系统环境不同，一般不能混用。<br>对于以 src.rpm 发行的软件包，由于需要安装时进行本地编译，所以通常可以在不同系统下安装。</p>
-<p><strong>二、RPM 包管理的用途</strong></p>
-<p>1、可以安装、删除、升级和管理以 rpm 包形式发布的软件；<br>2、可以查询某个 rpm 包中包含哪些文件，以及某个指定文件属于哪个 rpm 包；<br>3、可以在查询系统中的某个 rpm 包是否已安装以及其版本；<br>4、作为开发者可以把自己开发的软件打成 rpm 包发布；<br>5、依赖性的检查，查询安装某个 rpm 包时，需要哪些其它的 rpm 包。</p>
-<p>注：RPM 软件的安装、删除、更新只有 root 权限才能使用；<br>对于查询功能任何用户都可以操作。</p>
-<p><strong>三、rpm 的一点简单用法</strong></p>
-<p>rpm 的一般格式：</p>
-<p>rpm [选项] [rpm 软件包]</p>
-<p>1、初始化 rpm 数据库（可以省略）</p>
-<p>rpm –initdb<br>rpm –rebuilddb % 注：这个要花好长时间</p>
-<p>%注：有时 rpm 系统出了问题，不能安装和查询，大多是这里出了问题。</p>
-<p>2、RPM 软件包管理的查询功能：</p>
-<p>rpm -q [select-options] [query-options]</p>
-<p>RPM 的查询功能是极为强大，是极为重要的功能之一；这里举几个常用的例子，更为详细的具体的，请参考 man rpm</p>
-<p><em>对系统中已安装软件的查询</em></p>
-<p>1）查询系统已安装的软件</p>
-<p>语法：rpm -q 软件名</p>
-<p>例：rpm -q gaim<br>% -q 就是 –query，此选项表示询问系统是不是安装了 gaim 软件包；<br>% 如果已安装会有信息输出；如果没有安装，会输出 gaim 没有安装的信息；</p>
-<p>%查看系统中所有已经安装的包，要加 -a 参数<br>rpm -qa</p>
-<p>% 如果分页查看，再加一个管道 |和 more 命令<br>rpm -qa |more</p>
-<p>% 如果要查找某个软件包，可以用 grep 抽取出来<br>rpm -qa |grep mplayer</p>
-<p>2）查询一个已经安装的文件属于哪个软件包；</p>
-<p>语法: rpm -qf 文件名</p>
-<p>注：文件名所在的绝对路径要指出</p>
-<p>例：rpm -qf &#x2F;usr&#x2F;lib&#x2F;libacl.la</p>
-<p>3）查询已安装软件包都安装到何处；</p>
-<p>语法：rpm -ql 软件包名</p>
-<p>例：rpm -ql mplayer</p>
-<p>4）查询一个已安装软件包的信息</p>
-<p>语法： rpm -qi 软件包名</p>
-<p>例：rpm -qi mplayer</p>
-<p>5）查看一下已安装软件的配置文件；</p>
-<p>语法格式：rpm -qc 软件名</p>
-<p>例：rpm -qc mplayer</p>
-<p>6）查看一个已经安装软件的文档安装位置：</p>
-<p>语法格式： rpm -qd 软件名</p>
-<p>例：rpm -qd mplayer</p>
-<p>7）查看一下已安装软件所依赖的软件包及文件；</p>
-<p>语法格式： rpm -qR 软件名</p>
-<p>例：rpm -qR mplayer</p>
-<p><strong>注</strong>：可以把几个参数组合起来用，如 rpm -qil mplayer</p>
-<p><em>对于未安装的软件包的查看</em> :查看的前提是当前目录下已存在一个.rpm 文件。</p>
-<p>1）查看一个软件包的用途、版本等信息；</p>
-<p>语法： rpm -qpi file.rpm</p>
-<p>例：rpm -qpi mplayer-1.0pre7try2-2.i386.rpm</p>
-<p>2）查看一件软件包所包含的文件；</p>
-<p>语法： rpm -qpl file.rpm</p>
-<p>例：rpm -qpl mplayer-1.0pre7try2-2.i386.rpm</p>
-<p>3）查看软件包的文档所在的位置；</p>
-<p>语法： rpm -qpd file.rpm</p>
-<p>例：rpm -qpd mplayer-1.0pre7try2-2.i386.rpm</p>
-<p>4）查看一个软件包的配置文件；</p>
-<p>语法： rpm -qpc file.rpm</p>
-<p>例：rpm -qpc mplayer-1.0pre7try2-2.i386.rpm</p>
-<p>5）查看一个软件包的依赖关系</p>
-<p>语法： rpm -qpR file.rpm</p>
-<p>例：rpm -qpR mplayer-1.0pre7try2-2.i386.rpm</p>
-<p>3、软件包的安装、升级、删除等； <em>安装和升级一个 rpm 包</em></p>
-<p>语法：<br>rpm -ivh file.rpm % 这个是用来安装一个新的 rpm 包<br>rpm -Uvh file.rpm % 这是用来升级一个 rpm 包</p>
-<p>% 如果有依赖关系的，需解决依赖关系。<br>% 如果找不到依赖关系的包，可以用下面的命令强制安装：</p>
-<p>rpm -ivh –nodeps –force file.rpm<br>rpm -Uvh –nodeps –force file.rpm</p>
-<p>例：<br>rpm -ivh –test mplayer-1.0pre7try2-2.i386.rpm<br>% –test 表示测试，并不真正安装。</p>
-<p>rpm -ivh –relocate &#x2F;&#x3D;&#x2F;usr&#x2F;local&#x2F;mplayer mplayer-1.0pre7try2-2.i386.rpm<br>% 为软件包指定安装目录：要加 –relocate 参数<br>% 安装在指定目录中的程序如何调用呢？<br>% 通常可执行程序都放在安装目录下的 bin 或者 sbin 目录中。</p>
-<p><em>删除一个 rpm 包</em></p>
-<p>首先查出需要删除的 rpm 包，然后用下面的命令来卸载：</p>
-<p>rpm -e 软件包名</p>
-<p>例：rpm -e mplayer % 卸载 mplayer<br>% 如果有其它的 rpm 依赖于该 rpm 包，系统会出现警告。<br>% 如果一定要卸载，可以用选项 –nodeps 忽略依赖关系。但最好不要这么做。</p>
-<p><strong>四、RPM 管理包管理器支持网络安装和查询</strong></p>
-<p>rpm [选项] rpm 包的 http 或者 ftp 的地址</p>
-<p>比如我们想通过 Fedora Core 4.0 的一个镜像查询、安装软件包。</p>
-<p>rpm -qpi <a href="http://mirrors.kernel.org/.../RPMS/rsh-0.17-29.rpm">http://mirrors.kernel.org/.../RPMS/rsh-0.17-29.rpm</a><br>% 查询</p>
-<p>rpm -ivh <a href="http://mirrors.kernel.org/.../RPMS/rsh-0.17-29.rpm">http://mirrors.kernel.org/.../RPMS/rsh-0.17-29.rpm</a><br>% 安装</p>
-<p><strong>五、对已安装 rpm 包查询的一点补充</strong></p>
-<p>可以用 locate 来查询一些软件的安装位置，可能需要先运行 updatedb 来更新已安装软件库</p>
-<p><strong>六、从 rpm 软件包抽取文件</strong></p>
-<p>rpm2cpio xxx.rpm | cpio -idmv<br>% i 表示提取文件，v 表示指示执行进程<br>% d 表示根据包中文件原来的路径建立目录<br>% m 表示保持文件的更新时间</p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>rz、sz命令-文件传输</title>
-    <url>/posts/42689.html</url>
-    <content><![CDATA[<h1 id="1-软件安装"><a href="#1-软件安装" class="headerlink" title="1. 软件安装"></a>1. 软件安装</h1><p>rz&#x2F;sz命令用来在xshell远程服务器和本地之间传输文件，主要有两种方式安装，yum安装或者编译安装。</p>
-<h2 id="1-1-yum包安装"><a href="#1-1-yum包安装" class="headerlink" title="1.1 yum包安装"></a>1.1 yum包安装</h2><p>root账号登陆后执行以下命令：</p>
-<blockquote>
-<p>yum install -y lrzsz</p>
-</blockquote>
-<h2 id="2-2-源码编译安装"><a href="#2-2-源码编译安装" class="headerlink" title="2.2 源码编译安装"></a>2.2 源码编译安装</h2><p>root账号登陆后，依次执行以下命令：</p>
-<blockquote>
-<p>cd &#x2F;tmp<br>wget <a href="http://www.ohse.de/uwe/releases/lrzsz-0.12.20.tar.gz">http://www.ohse.de/uwe/releases/lrzsz-0.12.20.tar.gz</a><br>tar zxvf lrzsz-0.12.20.tar.gz &amp;&amp; cd lrzsz-0.12.20<br>.&#x2F;configure &amp;&amp; make &amp;&amp; make install</p>
-</blockquote>
-<p>上面安装过程默认把lsz&#x2F;lrz安装到了&#x2F;usr&#x2F;local&#x2F;bin&#x2F;目录下，现在我们还不能使用sz&#x2F;rz命令，需要手动建立软链接：</p>
-<blockquote>
-<p>cd &#x2F;usr&#x2F;bin<br>ln -s &#x2F;usr&#x2F;local&#x2F;bin&#x2F;lsz sz<br>ln -s &#x2F;usr&#x2F;local&#x2F;bin&#x2F;lrz rz</p>
-</blockquote>
-<h1 id="2-使用说明"><a href="#2-使用说明" class="headerlink" title="2. 使用说明"></a>2. 使用说明</h1><h2 id="2-1-sz命令：发送文件到本地目录"><a href="#2-1-sz命令：发送文件到本地目录" class="headerlink" title="2.1 sz命令：发送文件到本地目录"></a>2.1 sz命令：发送文件到本地目录</h2><blockquote>
-<p>sz filename</p>
-</blockquote>
-<h2 id="2-2-rz命令：将本地文件上传到linux服务器"><a href="#2-2-rz命令：将本地文件上传到linux服务器" class="headerlink" title="2.2 rz命令：将本地文件上传到linux服务器"></a>2.2 rz命令：将本地文件上传到linux服务器</h2><blockquote>
-<p>rz</p>
-</blockquote>
-<p>执行此命令后，在弹出框中选择要上传的文件即可。</p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux命令</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>mount命令-挂载磁盘</title>
-    <url>/posts/37407.html</url>
-    <content><![CDATA[<h2 id="mount命令介绍"><a href="#mount命令介绍" class="headerlink" title="mount命令介绍"></a>mount命令介绍</h2><p>用于加载文件系统到指定的加载点。此命令的最常用于挂载cdrom，使我们可以访问cdrom中的数据，因为你将光盘插入cdrom中，Linux并不会自动挂载，必须使用Linux mount命令来手动完成挂载。</p>
-<h2 id="mount命令常用参数"><a href="#mount命令常用参数" class="headerlink" title="mount命令常用参数"></a>mount命令常用参数</h2><table>
-<thead>
-<tr>
-<th>-t</th>
-<th>指定挂载类型</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>-a</td>
-<td>加载文件“&#x2F;etc&#x2F;fstab”中描述的所有文件系统</td>
-</tr>
-</tbody></table>
-<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>挂载 &#x2F;dev&#x2F;cdrom 到 &#x2F;mnt：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@linuxcool ~]# mount /dev/cdrom /mnt</span><br></pre></td></tr></table></figure>
-
-<p>启动所有挂载：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@linuxcool ~]# mount -a</span><br></pre></td></tr></table></figure>
-
-<p>挂载nfs格式文件系统：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@linuxcool ~]# mount -t nfs /123 /mnt  </span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux命令</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>yum命令-RPM包管理器</title>
-    <url>/posts/29820.html</url>
-    <content><![CDATA[<h2 id="yum命令介绍"><a href="#yum命令介绍" class="headerlink" title="yum命令介绍"></a>yum命令介绍</h2><p>yum命令是在Fedora和RedHat以及SUSE中基于rpm的软件包管理器，它可以使系统管理人员交互和自动化地更新与管理RPM软件包，能够从指定的服务器自动下载RPM包并且安装，可以自动处理依赖性关系，并且一次安装所有依赖的软体包，无须繁琐地一次次下载、安装。</p>
-<h2 id="yum命令常用参数"><a href="#yum命令常用参数" class="headerlink" title="yum命令常用参数"></a>yum命令常用参数</h2><table>
-<thead>
-<tr>
-<th>-h</th>
-<th>显示帮助信息</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>-y</td>
-<td>对所有的提问都回答“yes”</td>
-</tr>
-<tr>
-<td>install</td>
-<td>安装rpm软件包</td>
-</tr>
-<tr>
-<td>update</td>
-<td>更新rpm软件包</td>
-</tr>
-<tr>
-<td>check-update</td>
-<td>检查是否有可用的更新rpm软件包</td>
-</tr>
-<tr>
-<td>remove</td>
-<td>删除指定的rpm软件包</td>
-</tr>
-<tr>
-<td>list</td>
-<td>显示软件包的信息</td>
-</tr>
-<tr>
-<td>search</td>
-<td>检查软件包的信息</td>
-</tr>
-<tr>
-<td>info</td>
-<td>显示指定的rpm软件包的描述信息和概要信息</td>
-</tr>
-<tr>
-<td>clean</td>
-<td>清理yum过期的缓存</td>
-</tr>
-<tr>
-<td>resolvedep</td>
-<td>显示rpm软件包的依赖关系</td>
-</tr>
-<tr>
-<td>localinstall</td>
-<td>安装本地的rpm软件包</td>
-</tr>
-<tr>
-<td>localupdate</td>
-<td>显示本地rpm软件包进行更新</td>
-</tr>
-<tr>
-<td>deplist</td>
-<td>显示rpm软件包的所有依赖关系</td>
-</tr>
-</tbody></table>
-<h2 id="国内-yum-源"><a href="#国内-yum-源" class="headerlink" title="国内 yum 源"></a>国内 yum 源</h2><p>网易（163）yum源是国内最好的yum源之一 ，无论是速度还是软件版本，都非常的不错。</p>
-<p>将yum源设置为163 yum，可以提升软件包安装和更新的速度，同时避免一些常见软件版本无法找到。</p>
-<h3 id="yum源配置方法"><a href="#yum源配置方法" class="headerlink" title="yum源配置方法"></a>yum源配置方法</h3><p>首先备份&#x2F;etc&#x2F;yum.repos.d&#x2F;CentOS-Base.repo</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</span><br></pre></td></tr></table></figure>
-
-<p>下载对应版本 repo 文件, 放入 &#x2F;etc&#x2F;yum.repos.d&#x2F; (操作前请做好相应备份)</p>
-<ul>
-<li><a href="http://mirrors.163.com/.help/CentOS5-Base-163.repo">CentOS5</a> ：<a href="http://mirrors.163.com/.help/CentOS5-Base-163.repo">http://mirrors.163.com/.help/CentOS5-Base-163.repo</a></li>
-<li><a href="http://mirrors.163.com/.help/CentOS6-Base-163.repo">CentOS6</a> ：<a href="http://mirrors.163.com/.help/CentOS6-Base-163.repo">http://mirrors.163.com/.help/CentOS6-Base-163.repo</a></li>
-<li><a href="http://mirrors.163.com/.help/CentOS7-Base-163.repo">CentOS7</a> ：<a href="http://mirrors.163.com/.help/CentOS7-Base-163.repo">http://mirrors.163.com/.help/CentOS7-Base-163.repo</a></li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">wget http://mirrors.163.com/.help/CentOS6-Base-163.repo</span><br><span class="line">mv CentOS6-Base-163.repo CentOS-Base.repo</span><br></pre></td></tr></table></figure>
-
-<p>运行以下命令生成缓存</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum clean all</span><br><span class="line">yum makecache</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux命令</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux一行执行多条命令</title>
-    <url>/posts/2732b274.html</url>
-    <content><![CDATA[<h3 id="分号"><a href="#分号" class="headerlink" title=";(分号)"></a>;(分号)</h3><p>被分号(;)所分隔的命令会连续的执行下去，就算是错误命令也会继续执行后面的命令.</p>
-<h3 id="amp-amp"><a href="#amp-amp" class="headerlink" title="&amp;&amp;"></a>&amp;&amp;</h3><p>如果命令被 &amp;&amp; 所分隔，那么命令也会一直执行下去，但是中间有错误的命令存在就不会执行后面的命令，没错就直行至完为止。</p>
-<h3 id=""><a href="#" class="headerlink" title="||"></a>||</h3><p>如果每个命令被双竖线 || 所分隔，那么一遇到可以执行成功的命令就会停止执行后面的命令，而不管后面的命令是否正确与否。如果执行到错误的命令就是继续执行后一个命令，一直执行到遇到正确的命令为止。</p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
+        <tag>Markdown</tag>
       </tags>
   </entry>
   <entry>
@@ -1331,56 +1445,6 @@
 <h2 id="进阶应用"><a href="#进阶应用" class="headerlink" title="进阶应用"></a><strong>进阶应用</strong></h2><p>当你学会使用 Markdown 之后，你会发现 Markdown 还有更多好玩的地方。例如：开源的 gitbook 就可以教你把一个个 Markdown 文件组织起来，弄成一本电子书。</p>
 <p><img src="https://pic2.zhimg.com/80/v2-cdc7ada790a4473145b3c1207a3f8495_720w.jpg" alt="img"></p>
 <p>具体如何操作，可以参考这里：**<a href="https://link.zhihu.com/?target=https://github.com/chenyurong/gitbook-notebook">https://github.com/chenyurong/g</a>**</p>
-]]></content>
-      <categories>
-        <category>博客相关</category>
-      </categories>
-      <tags>
-        <tag>Markdown</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Typora+Picgo+Gitee构建网络图床笔记</title>
-    <url>/posts/80f1815e.html</url>
-    <content><![CDATA[<p><strong>前言</strong></p>
-<p>之前一直在Typora上记录自己的笔记，但是发现markdown格式的笔记在插入图片时，仅能采用两种方法：1）在线图床，2）本地路径，即图片并不是像Word那样集成在文档内的，因此经过一番研究，发现了最新版的Typora已经支持在线图床功能，遂写此篇教程帮助后人构建自己的在线图床markdown笔记。</p>
-<h2 id="所需软件"><a href="#所需软件" class="headerlink" title="所需软件"></a><strong>所需软件</strong></h2><p>typora</p>
-<p><a href="https://link.zhihu.com/?target=https://typora.io/">https://typora.io/</a></p>
-<p>picgo</p>
-<p><a href="https://link.zhihu.com/?target=https://github.com/Molunerfinn/PicGo/releases">https://github.com/Molunerfinn/PicGo/releases</a></p>
-<p>建议选择2.2.2正式版本，beta版本可能会存在不稳定的风险。</p>
-<p><img src="https://pic3.zhimg.com/80/v2-be88c425ba401a71e9c91dca74f0d262_720w.jpg" alt="img"></p>
-<p>Gitee</p>
-<p>由于国内连接github时网络偶尔存在不稳定的情况，于是采用了gitee作为github图床的替代，但整体教程是一样的</p>
-<p><a href="https://link.zhihu.com/?target=https://gitee.com/">https://gitee.com/</a></p>
-<p><img src="https://pic3.zhimg.com/80/v2-daba73811b87533f8f032169d3d11d9a_720w.png" alt="img"></p>
-<h2 id="具体操作"><a href="#具体操作" class="headerlink" title="具体操作"></a><strong>具体操作</strong></h2><p>主要是分为两部分操作，第一部分是Typora的配置，第二部分是Picgo+Gitee的在线图床配置</p>
-<h3 id="Typora配置"><a href="#Typora配置" class="headerlink" title="Typora配置"></a><strong>Typora配置</strong></h3><p>打开Typora后，点击菜单栏-文件-偏好设置</p>
-<p>找到其中的“图像”设置，将其设置为如下内容</p>
-<p><img src="https://pic3.zhimg.com/80/v2-f374bec8d90d87c2f7683c1133064166_720w.jpg" alt="img"></p>
-<p>1）<strong>插入图片时…<strong>下边的选择框内选择</strong>上传图片</strong></p>
-<p>2）勾选上“<strong>对本地位置的图片应用上述规则</strong>”</p>
-<p>3）上传服务选择<strong>PicGo(app)</strong></p>
-<p>4）将<strong>PicGo路径</strong>项设置为本地PicGo的安装路径</p>
-<p>这样，我们就把Typora配置好了，下面我们进行PicGo+Gitee的网络图床构建</p>
-<h3 id="网络图床配置"><a href="#网络图床配置" class="headerlink" title="网络图床配置"></a><strong>网络图床配置</strong></h3><p>首先，安装好PicGo之后，我们需要给PicGo配置插件以支持Gitee图床</p>
-<p><strong>注意</strong>：你必须安装<a href="https://link.zhihu.com/?target=https://nodejs.org/en/">Node.js</a>之后才能安装PicGo的插件，因为PicGo要使用<code>npm</code>来安装插件。</p>
-<p>安装好Nodejs后，点开左边的<strong>插件设置</strong>一栏，在输入框内输入“github plus”，如下</p>
-<p><img src="https://pic1.zhimg.com/80/v2-270b499aeadae15d014215b32b1204c8_720w.jpg" alt="img"></p>
-<p>点击安装此插件，之后左侧选项栏<strong>图床设置</strong>会多一个<strong>githubplus</strong></p>
-<p><img src="https://pic1.zhimg.com/80/v2-1fd1e0c2ef8c48f1d85a5a04b8566714_720w.png" alt="img"></p>
-<p>接下来我们配置Gitee仓库以存储图片</p>
-<p>1）进入<a href="https://link.zhihu.com/?target=https://gitee.com/">https://gitee.com/</a>，没有账号的话，先注册账号，注册以后登录，新建一个<strong>公开仓库</strong>，名字为picgo（可以自己起其他名字）</p>
-<p>2）点击右上角，进入<strong>设置</strong>，在左侧的<strong>安全设置-私人令牌</strong>处生成新令牌。（注意：生成的新令牌只会显示一次，一定要保存好！！！）</p>
-<p>我们需要做的如下：</p>
-<p>1）回到picgo，按照如下进行设置</p>
-<p><img src="https://pic3.zhimg.com/80/v2-dceba8a3986c7df4dbc3f8cb1e8ca60e_720w.jpg" alt="img"></p>
-<p>其中的repo为 <strong>UserName&#x2F;仓库名称</strong> 格式</p>
-<p>branch填入master</p>
-<p>Token为刚才在Gitee生成的私人令牌，粘贴到这里就行</p>
-<p>path为仓库下用于存储图片的路径，这个可以自行选择</p>
-<p>最下边的origin部分选择gitee（默认是github）</p>
-<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a><strong>结束</strong></h2><p>经过上述操作，我们就把typora+picgo+gitee成功配置好了，之后当我们将本地的图片粘贴到markdown文档内的时候，typora会自动将图片上传到刚才我们配置好的gitee仓库内，并自动把markdown文档内的本地路径转化为gitee的图片外链，便于我们以后进行多端访问文档内的图片。</p>
 ]]></content>
       <categories>
         <category>博客相关</category>
@@ -1849,6 +1913,61 @@
       </tags>
   </entry>
   <entry>
+    <title>v2ray多用户配置</title>
+    <url>/posts/21a98812.html</url>
+    <content><![CDATA[<h1 id="v2ray多用户配置"><a href="#v2ray多用户配置" class="headerlink" title="v2ray多用户配置"></a>v2ray多用户配置</h1><blockquote>
+<p>本文转载自：<a href="https://v2raytech.com/v2ray-multiple-users/%EF%BC%8C%E5%A6%82%E6%96%87%E4%B8%AD%E5%86%85%E5%AE%B9%E6%9C%89%E9%94%99%E8%AF%AF%E8%AF%B7%E5%88%B0%E5%8E%9F%E6%96%87%E6%9F%A5%E7%9C%8B%E5%8E%9F%E5%A7%8B%E7%89%88(%E6%9C%80%E6%96%B0%E7%89%88)">https://v2raytech.com/v2ray-multiple-users/，如文中内容有错误请到原文查看原始版(最新版)</a></p>
+</blockquote>
+<blockquote>
+<p>如有问题，欢迎到 <a href="https://hijk.club/">网络跳越论坛</a> 或 TG群组 <a href="https://t.me/hijkclub">https://t.me/hijkclub</a> 交流</p>
+</blockquote>
+<p>部分网友自行搭建好v2ray科学上网环境后，不好意思拒绝朋友的分享请求，所以想设置一个不同的端口或者id再分享。类似的需求v2ray都是支持的，配置起来也不算麻烦。本文就v2ray普通版、伪装版分别介绍v2ray多用户配置。</p>
+<p>注意：自行更改配置文件需要用到 vi&#x2F;vim&#x2F;nano 等编辑器，或者把配置文件下载到本地修改，修改完再上传到服务端。下载和上传教程请参考：<a href="https://v2xtls.org/bitvise%E8%BF%9E%E6%8E%A5linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%99%E7%A8%8B/">Bitvise连接Linux服务器教程</a>(Windows用户)、<a href="https://v2xtls.org/mac%E7%94%B5%E8%84%91%E8%BF%9E%E6%8E%A5linux%E6%95%99%E7%A8%8B/">Mac电脑连接Linux教程</a>(Mac用户)。</p>
+<h2 id="普通版多用户配置"><a href="#普通版多用户配置" class="headerlink" title="普通版多用户配置"></a>普通版多用户配置</h2><p><a href="https://v2xtls.org/v2ray%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC/">v2ray一键脚本</a> 运行完后，会输出配置文件路径，默认是 <code>/etc/v2ray/config.json</code>，其内容类似这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;loglevel&quot;: &quot;info&quot;,</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [&#123;</span><br><span class="line">    &quot;port&quot;: 12345,</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;6be0aa25-09c1-4d8b-a96f-75cd3485021f&quot;,</span><br><span class="line">          &quot;level&quot;: 1,</span><br><span class="line">          &quot;alterId&quot;: 53</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  &quot;outbounds&quot;: [&#123;</span><br><span class="line">    &quot;protocol&quot;: &quot;freedom&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;&#125;</span><br><span class="line">  &#125;,&#123;</span><br><span class="line">    &quot;protocol&quot;: &quot;blackhole&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;&#125;,</span><br><span class="line">    &quot;tag&quot;: &quot;blocked&quot;</span><br><span class="line">  &#125;],</span><br><span class="line">  &quot;routing&quot;: &#123;</span><br><span class="line">    &quot;rules&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;type&quot;: &quot;field&quot;,</span><br><span class="line">        &quot;ip&quot;: [&quot;geoip:private&quot;],</span><br><span class="line">        &quot;outboundTag&quot;: &quot;blocked&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下文教程的修改都是参考这个文件，如果出现问题，请注意与原来文件的差异。</p>
+<p>v2ray多用户分成两种：同端口不同id，不同端口不同id。v2ray两种类型都支持，接下来分别做介绍。</p>
+<h3 id="同端口不同id"><a href="#同端口不同id" class="headerlink" title="同端口不同id"></a>同端口不同id</h3><p>这是最简单的配置多用户方式。方法是编辑 <code>/etc/v2ray/config.json</code> 文件，在”<strong>clients</strong>“一节中增加新增用户配置。例如在上面配置基础上增加一个用户：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;loglevel&quot;: &quot;info&quot;,</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [&#123;</span><br><span class="line">    &quot;port&quot;: 12345,</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;6be0aa25-09c1-4d8b-a96f-75cd3485021f&quot;,</span><br><span class="line">          &quot;level&quot;: 1,</span><br><span class="line">          &quot;alterId&quot;: 53</span><br><span class="line">        &#125;, # 逗号不能少</span><br><span class="line">        # 下面是新增的内容</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;2a1292fd-07be-37e7-af20-57668b4a546a&quot;,  # id可以用 /usr/bin/v2ray/v2ctl uuid生成</span><br><span class="line">          &quot;level&quot;: 1, # 这个不用改</span><br><span class="line">          &quot;alterId&quot;: 63 # 建议50-150之间的一个整数</span><br><span class="line">        &#125;</span><br><span class="line">        # 新增内容结束</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  # 下面的内容保持不变</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong>“#”和后面的东西都不能出现在配置文件中，上面只是为了解释说明。</p>
+<p>编辑好文件后，重启 v2ray：<code>systemctl restart v2ray</code>。如果命令失败，或者 <code>netstat -nltp | grep v2ray</code> 输出为空，说明配置文件有错误，请仔细检查，改好后再重启。</p>
+<p>接下来就可以用新的id和alterId配置客户端，其余信息保持不变。</p>
+<h3 id="不同端口不同id"><a href="#不同端口不同id" class="headerlink" title="不同端口不同id"></a>不同端口不同id</h3><p>如果希望端口也不一样，请按照如下步骤做：</p>
+<p>\1. 首先编辑 <code>/etc/v2ray/config.json</code> 文件，按照”<strong>inbounds</strong>“格式新增入口和用户。例如新增一个端口和用户后，配置文件变成：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;loglevel&quot;: &quot;info&quot;,</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [&#123;</span><br><span class="line">    &quot;port&quot;: 12345,</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;6be0aa25-09c1-4d8b-a96f-75cd3485021f&quot;,</span><br><span class="line">          &quot;level&quot;: 1,</span><br><span class="line">          &quot;alterId&quot;: 53</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, # 逗号不能省，原来这里是&quot;&#125;],&quot;</span><br><span class="line">  # 以下是新增的配置</span><br><span class="line">  &#123;</span><br><span class="line">    &quot;port&quot;: 54321, # 端口是1000-65535之间的一个整数</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;, # 也可以改成其他协议，如果你知道怎么配置的话</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;24813255-228d-b0e0-c3fa-e5d4c9defda1&quot;, # id可以用 /usr/bin/v2ray/v2ctl uuid生成</span><br><span class="line">          &quot;level&quot;: 1, # 0或1都可以</span><br><span class="line">          &quot;alterId&quot;: 57 # 建议50-150之间的一个整数</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  # 新增内容结束</span><br><span class="line">  # 下面的内容保持不变</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong>“#”和后面的东西都不能出现在配置文件中，上面只是为了解释说明。</p>
+<p>编辑好文件后，重启 v2ray：<code>systemctl restart v2ray</code>。如果命令失败，或者 <code>netstat -nltp | grep v2ray</code> 输出为空，说明配置文件有错误，请仔细检查，改好后再重启。</p>
+<p>\2. 设置防火墙放行新增的端口。CentOS系统命令是：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">firewall-cmd --permanent --add-port=54321/tcp # 注意：54321要改成你的端口号</span><br><span class="line">firewall-cmd --permanent --add-port=54321/udp # 注意：54321要改成你的端口号</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<p>Ubuntu系统命令是：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ufw allow 54321/tcp # 注意：54321要改成你的端口</span><br><span class="line">ufw allow 54321/udp # 注意：54321要改成你的端口</span><br></pre></td></tr></table></figure>
+
+<p>接下来用新的端口、id和alterId配置客户端，其余信息保持不变。</p>
+<h2 id="带伪装多用户配置"><a href="#带伪装多用户配置" class="headerlink" title="带伪装多用户配置"></a>带伪装多用户配置</h2><p><strong>同端口不同id的配置和普通版操作方法一样</strong>，配置好后重启v2ray就行了，这里不再重复。</p>
+<p>接下来说说不同端口不同id的情形。伪装有了Nginx的介入，所以有多种情况，这里只介绍最简单的一种实现方式。</p>
+<ol>
+<li><p>编辑 <code>/etc/v2ray/config.json</code> 文件，按照 <a href="https://v2xtls.org/v2ray%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE/#single_port">普通版同端口不同id</a> 中的方法添加用户；</p>
+</li>
+<li><p>编辑 <code>/etc/nginx/conf.d/你的域名.conf</code> 文件，找到 “**listen 443 ssl http2;**” 这一行，在这行下面添加“listen 新的端口号 ssl http2;”一行（新的端口号要改成整数，例如8443，不能是443）。然后保存文件， <code>nginx -t</code> 检查配置有没有错误，没有错误的话重启Nginx：<code>systemctl restart nginx</code>；</p>
+</li>
+<li><p>设置防火墙放行端口，请参考 <a href="https://v2xtls.org/v2ray%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE/#set_firewall">普通版设置防火墙</a> 中的命令。</p>
+</li>
+</ol>
+<p>接下来用新的端口、id和alterId配置客户端，其余信息保持不变。</p>
+<p>如果你想添加多个端口或多个用户，重复上面的过程就可以了。</p>
+]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>V2Ray</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>V2Ray配置教程</title>
     <url>/posts/39483.html</url>
     <content><![CDATA[<h1 id="V2Ray-配置教程"><a href="#V2Ray-配置教程" class="headerlink" title="V2Ray 配置教程"></a>V2Ray 配置教程</h1><p>V2Ray 是继 Shadowsocks(R)后又一个体验很棒、功能非常强大的科学上网工具，近年来受到网友的广泛关注和喜爱。敏感时期，基本上只有 <a href="https://tlanyan.pp.ua/v2ray-traffic-mask/">V2ray 伪装</a> 或 <a href="https://tlanyan.pp.ua/trojan-tutorial/">trojan</a> 能提供十分稳的服务，推荐使用。</p>
@@ -1967,61 +2086,6 @@
 <p><a href="https://v2xtls.org/wp-content/uploads/2020/11/v2rayNG%E5%85%A8%E5%B1%80%E8%AE%BE%E7%BD%AE-576x1024-1.jpeg"><img src="https://v2xtls.org/wp-content/uploads/2020/11/v2rayNG%E5%85%A8%E5%B1%80%E8%AE%BE%E7%BD%AE-576x1024-1.jpeg" alt="v2rayNG全局设置"></a></p>
 <p>v2rayNG 全局设置</p>
 <p>配置好且服务端没有问题的话，打开浏览器应该能正常访问 google、youtube 等网站了。</p>
-]]></content>
-      <categories>
-        <category>其他</category>
-      </categories>
-      <tags>
-        <tag>V2Ray</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>v2ray多用户配置</title>
-    <url>/posts/21a98812.html</url>
-    <content><![CDATA[<h1 id="v2ray多用户配置"><a href="#v2ray多用户配置" class="headerlink" title="v2ray多用户配置"></a>v2ray多用户配置</h1><blockquote>
-<p>本文转载自：<a href="https://v2raytech.com/v2ray-multiple-users/%EF%BC%8C%E5%A6%82%E6%96%87%E4%B8%AD%E5%86%85%E5%AE%B9%E6%9C%89%E9%94%99%E8%AF%AF%E8%AF%B7%E5%88%B0%E5%8E%9F%E6%96%87%E6%9F%A5%E7%9C%8B%E5%8E%9F%E5%A7%8B%E7%89%88(%E6%9C%80%E6%96%B0%E7%89%88)">https://v2raytech.com/v2ray-multiple-users/，如文中内容有错误请到原文查看原始版(最新版)</a></p>
-</blockquote>
-<blockquote>
-<p>如有问题，欢迎到 <a href="https://hijk.club/">网络跳越论坛</a> 或 TG群组 <a href="https://t.me/hijkclub">https://t.me/hijkclub</a> 交流</p>
-</blockquote>
-<p>部分网友自行搭建好v2ray科学上网环境后，不好意思拒绝朋友的分享请求，所以想设置一个不同的端口或者id再分享。类似的需求v2ray都是支持的，配置起来也不算麻烦。本文就v2ray普通版、伪装版分别介绍v2ray多用户配置。</p>
-<p>注意：自行更改配置文件需要用到 vi&#x2F;vim&#x2F;nano 等编辑器，或者把配置文件下载到本地修改，修改完再上传到服务端。下载和上传教程请参考：<a href="https://v2xtls.org/bitvise%E8%BF%9E%E6%8E%A5linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%99%E7%A8%8B/">Bitvise连接Linux服务器教程</a>(Windows用户)、<a href="https://v2xtls.org/mac%E7%94%B5%E8%84%91%E8%BF%9E%E6%8E%A5linux%E6%95%99%E7%A8%8B/">Mac电脑连接Linux教程</a>(Mac用户)。</p>
-<h2 id="普通版多用户配置"><a href="#普通版多用户配置" class="headerlink" title="普通版多用户配置"></a>普通版多用户配置</h2><p><a href="https://v2xtls.org/v2ray%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC/">v2ray一键脚本</a> 运行完后，会输出配置文件路径，默认是 <code>/etc/v2ray/config.json</code>，其内容类似这样：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;loglevel&quot;: &quot;info&quot;,</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [&#123;</span><br><span class="line">    &quot;port&quot;: 12345,</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;6be0aa25-09c1-4d8b-a96f-75cd3485021f&quot;,</span><br><span class="line">          &quot;level&quot;: 1,</span><br><span class="line">          &quot;alterId&quot;: 53</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  &quot;outbounds&quot;: [&#123;</span><br><span class="line">    &quot;protocol&quot;: &quot;freedom&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;&#125;</span><br><span class="line">  &#125;,&#123;</span><br><span class="line">    &quot;protocol&quot;: &quot;blackhole&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;&#125;,</span><br><span class="line">    &quot;tag&quot;: &quot;blocked&quot;</span><br><span class="line">  &#125;],</span><br><span class="line">  &quot;routing&quot;: &#123;</span><br><span class="line">    &quot;rules&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;type&quot;: &quot;field&quot;,</span><br><span class="line">        &quot;ip&quot;: [&quot;geoip:private&quot;],</span><br><span class="line">        &quot;outboundTag&quot;: &quot;blocked&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>下文教程的修改都是参考这个文件，如果出现问题，请注意与原来文件的差异。</p>
-<p>v2ray多用户分成两种：同端口不同id，不同端口不同id。v2ray两种类型都支持，接下来分别做介绍。</p>
-<h3 id="同端口不同id"><a href="#同端口不同id" class="headerlink" title="同端口不同id"></a>同端口不同id</h3><p>这是最简单的配置多用户方式。方法是编辑 <code>/etc/v2ray/config.json</code> 文件，在”<strong>clients</strong>“一节中增加新增用户配置。例如在上面配置基础上增加一个用户：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;loglevel&quot;: &quot;info&quot;,</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [&#123;</span><br><span class="line">    &quot;port&quot;: 12345,</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;6be0aa25-09c1-4d8b-a96f-75cd3485021f&quot;,</span><br><span class="line">          &quot;level&quot;: 1,</span><br><span class="line">          &quot;alterId&quot;: 53</span><br><span class="line">        &#125;, # 逗号不能少</span><br><span class="line">        # 下面是新增的内容</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;2a1292fd-07be-37e7-af20-57668b4a546a&quot;,  # id可以用 /usr/bin/v2ray/v2ctl uuid生成</span><br><span class="line">          &quot;level&quot;: 1, # 这个不用改</span><br><span class="line">          &quot;alterId&quot;: 63 # 建议50-150之间的一个整数</span><br><span class="line">        &#125;</span><br><span class="line">        # 新增内容结束</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  # 下面的内容保持不变</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意：</strong>“#”和后面的东西都不能出现在配置文件中，上面只是为了解释说明。</p>
-<p>编辑好文件后，重启 v2ray：<code>systemctl restart v2ray</code>。如果命令失败，或者 <code>netstat -nltp | grep v2ray</code> 输出为空，说明配置文件有错误，请仔细检查，改好后再重启。</p>
-<p>接下来就可以用新的id和alterId配置客户端，其余信息保持不变。</p>
-<h3 id="不同端口不同id"><a href="#不同端口不同id" class="headerlink" title="不同端口不同id"></a>不同端口不同id</h3><p>如果希望端口也不一样，请按照如下步骤做：</p>
-<p>\1. 首先编辑 <code>/etc/v2ray/config.json</code> 文件，按照”<strong>inbounds</strong>“格式新增入口和用户。例如新增一个端口和用户后，配置文件变成：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;loglevel&quot;: &quot;info&quot;,</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [&#123;</span><br><span class="line">    &quot;port&quot;: 12345,</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;6be0aa25-09c1-4d8b-a96f-75cd3485021f&quot;,</span><br><span class="line">          &quot;level&quot;: 1,</span><br><span class="line">          &quot;alterId&quot;: 53</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, # 逗号不能省，原来这里是&quot;&#125;],&quot;</span><br><span class="line">  # 以下是新增的配置</span><br><span class="line">  &#123;</span><br><span class="line">    &quot;port&quot;: 54321, # 端口是1000-65535之间的一个整数</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;, # 也可以改成其他协议，如果你知道怎么配置的话</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;24813255-228d-b0e0-c3fa-e5d4c9defda1&quot;, # id可以用 /usr/bin/v2ray/v2ctl uuid生成</span><br><span class="line">          &quot;level&quot;: 1, # 0或1都可以</span><br><span class="line">          &quot;alterId&quot;: 57 # 建议50-150之间的一个整数</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  # 新增内容结束</span><br><span class="line">  # 下面的内容保持不变</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意：</strong>“#”和后面的东西都不能出现在配置文件中，上面只是为了解释说明。</p>
-<p>编辑好文件后，重启 v2ray：<code>systemctl restart v2ray</code>。如果命令失败，或者 <code>netstat -nltp | grep v2ray</code> 输出为空，说明配置文件有错误，请仔细检查，改好后再重启。</p>
-<p>\2. 设置防火墙放行新增的端口。CentOS系统命令是：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">firewall-cmd --permanent --add-port=54321/tcp # 注意：54321要改成你的端口号</span><br><span class="line">firewall-cmd --permanent --add-port=54321/udp # 注意：54321要改成你的端口号</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
-
-<p>Ubuntu系统命令是：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ufw allow 54321/tcp # 注意：54321要改成你的端口</span><br><span class="line">ufw allow 54321/udp # 注意：54321要改成你的端口</span><br></pre></td></tr></table></figure>
-
-<p>接下来用新的端口、id和alterId配置客户端，其余信息保持不变。</p>
-<h2 id="带伪装多用户配置"><a href="#带伪装多用户配置" class="headerlink" title="带伪装多用户配置"></a>带伪装多用户配置</h2><p><strong>同端口不同id的配置和普通版操作方法一样</strong>，配置好后重启v2ray就行了，这里不再重复。</p>
-<p>接下来说说不同端口不同id的情形。伪装有了Nginx的介入，所以有多种情况，这里只介绍最简单的一种实现方式。</p>
-<ol>
-<li><p>编辑 <code>/etc/v2ray/config.json</code> 文件，按照 <a href="https://v2xtls.org/v2ray%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE/#single_port">普通版同端口不同id</a> 中的方法添加用户；</p>
-</li>
-<li><p>编辑 <code>/etc/nginx/conf.d/你的域名.conf</code> 文件，找到 “**listen 443 ssl http2;**” 这一行，在这行下面添加“listen 新的端口号 ssl http2;”一行（新的端口号要改成整数，例如8443，不能是443）。然后保存文件， <code>nginx -t</code> 检查配置有没有错误，没有错误的话重启Nginx：<code>systemctl restart nginx</code>；</p>
-</li>
-<li><p>设置防火墙放行端口，请参考 <a href="https://v2xtls.org/v2ray%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE/#set_firewall">普通版设置防火墙</a> 中的命令。</p>
-</li>
-</ol>
-<p>接下来用新的端口、id和alterId配置客户端，其余信息保持不变。</p>
-<p>如果你想添加多个端口或多个用户，重复上面的过程就可以了。</p>
 ]]></content>
       <categories>
         <category>其他</category>
