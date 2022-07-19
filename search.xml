@@ -1,6 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>通过qemu+gdb实现跨架构调试</title>
+    <url>/posts/bf48f70d.html</url>
+    <content><![CDATA[<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>有时候身边只有 x86 架构的硬件环境，却想学习和测试 arm、mips 等其他架构特性，此时怎么办呢？众所周知，VMware 只能模拟同架构不同操作系统，对此可以通过 qemu 实现跨架构模拟。</p>
+<span id="more"></span>
+
+<h2 id="安装-qemu-user"><a href="#安装-qemu-user" class="headerlink" title="安装 qemu-user"></a>安装 qemu-user</h2><p>qemu 是一个支持跨平台虚拟化的虚拟机，有 user mode 和 system mode 两种配置方式。其中qemu 在system mode配置下模拟出整个计算机，可以在qemu之上运行一个操作系统。qemu 的system mode与常见的VMware和Virtualbox等虚拟机比较相似，但是qemu 的优势是可以跨指令集。例如，VMware和Virtualbox之类的工具通常只能在x86计算机上虚拟出一个x86计算机，而qemu 支持在x86上虚拟出一个ARM计算机。qemu在user mode配置下，可以运行跟当前平台指令集不同的平台可执行程序。例如可以用qemu在x86上运行ARM的可执行程序，但是两个平台必须是同一种操作系统，比如Linux。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install qemu-user</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装-gdb-multiarch"><a href="#安装-gdb-multiarch" class="headerlink" title="安装 gdb-multiarch"></a>安装 gdb-multiarch</h2><p>gdb-multiarch 是一个经过交叉编译后的、支持多架构版本的 gdb。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install gdb-multiarch</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装-aarch64-编译工具链"><a href="#安装-aarch64-编译工具链" class="headerlink" title="安装 aarch64 编译工具链"></a>安装 aarch64 编译工具链</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install gcc-aarch64-linux-gnu</span><br></pre></td></tr></table></figure>
+
+<h2 id="交叉编译测试用例"><a href="#交叉编译测试用例" class="headerlink" title="交叉编译测试用例"></a>交叉编译测试用例</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ ls</span><br><span class="line">hello.c</span><br><span class="line">lhx@ubuntu:~/test/qemu$ cat hello.c </span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">void hello()</span><br><span class="line">&#123;</span><br><span class="line">  printf(&quot;Hello World !\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">  hello();</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br><span class="line">lhx@ubuntu:~/test/qemu$ aarch64-linux-gnu-gcc -g -static hello.c </span><br><span class="line">lhx@ubuntu:~/test/qemu$ ls</span><br><span class="line">a.out  hello.c</span><br><span class="line">lhx@ubuntu:~/test/qemu$ file a.out </span><br><span class="line">a.out: ELF 64-bit LSB executable, ARM aarch64, version 1 (GNU/Linux), statically linked, BuildID[sha1]=e1fe3c59cad06eff9cab2729a00233bc10d763ce, for GNU/Linux 3.7.0, with debug_info, not stripped</span><br><span class="line">lhx@ubuntu:~/test/qemu$ qemu-aarch64 ./a.out </span><br><span class="line">Hello World !</span><br></pre></td></tr></table></figure>
+
+<h2 id="开始qemu-gdb跨架构调试"><a href="#开始qemu-gdb跨架构调试" class="headerlink" title="开始qemu+gdb跨架构调试"></a>开始qemu+gdb跨架构调试</h2><ul>
+<li>窗口1：启动 a.out<br>通过 qemu-aarch64 运行交叉编译的 a.out, 并指定 gdb 调试端口号为1234，然后等待 gdb 远程连接。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ qemu-aarch64 -g 1234 ./a.out</span><br><span class="line">Hello World !</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>-g port：该选项表示QEMU_GDB环境变量取值，即 等待gdb连接的端口号。</p>
+</blockquote>
+<ul>
+<li>窗口2：gdb 远程调试<br>通过 gdb-multiarch 启动 a.out，这里 a.out 用于读取和远程端一致的调试符号信息。连接上远程端口号后，便可以进行设断点、查看寄存器、反汇编等一系列调试操作。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ ls</span><br><span class="line">a.out  hello.c</span><br><span class="line">lhx@ubuntu:~/test/qemu$ gdb-multiarch -q a.out </span><br><span class="line">Reading symbols from a.out...</span><br><span class="line">(gdb) target remote localhost:1234</span><br><span class="line">Remote debugging using localhost:1234</span><br><span class="line">0x0000000000400558 in _start ()</span><br><span class="line">(gdb) b main</span><br><span class="line">Breakpoint 1 at 0x4006d4: file hello.c, line 10.</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Breakpoint 1, main () at hello.c:10</span><br><span class="line">10	  hello();</span><br><span class="line">(gdb) s</span><br><span class="line">hello () at hello.c:5</span><br><span class="line">5	  printf(&quot;Hello World !\n&quot;);</span><br><span class="line">(gdb) n</span><br><span class="line">6	&#125;</span><br><span class="line">(gdb) info registers </span><br><span class="line">x0             0xe                 14</span><br><span class="line">x1             0x1                 1</span><br><span class="line">x2             0x0                 0</span><br><span class="line">x3             0x48bf00            4767488</span><br><span class="line">x4             0xfbad2a84          4222429828</span><br><span class="line">x5             0x21a               538</span><br><span class="line">x6             0x10                16</span><br><span class="line">x7             0x7f7f7f7f7f7f7f7f  9187201950435737471</span><br><span class="line">x8             0x40                64</span><br><span class="line">x9             0x3fffffff          1073741823</span><br><span class="line">x10            0x20000000          536870912</span><br><span class="line">x11            0x10000             65536</span><br><span class="line">x12            0x48b000            4763648</span><br><span class="line">x13            0x410               1040</span><br><span class="line">x14            0x0                 0</span><br><span class="line">x15            0x48c738            4769592</span><br><span class="line">x16            0x40b998            4241816</span><br><span class="line">x17            0x416fc0            4288448</span><br><span class="line">x18            0x0                 0</span><br><span class="line">x19            0x400db8            4197816</span><br><span class="line">x20            0x400e80            4198016</span><br><span class="line">x21            0x0                 0</span><br><span class="line">x22            0x400280            4194944</span><br><span class="line">x23            0x489030            4755504</span><br><span class="line">x24            0x18                24</span><br><span class="line">x25            0x48b000            4763648</span><br><span class="line">x26            0x48b000            4763648</span><br><span class="line">x27            0x451000            4526080</span><br><span class="line">x28            0x0                 0</span><br><span class="line">x29            0x4000800260        274886296160</span><br><span class="line">x30            0x4006c0            4196032</span><br><span class="line">sp             0x4000800260        0x4000800260</span><br><span class="line">pc             0x4006c0            0x4006c0 &lt;hello+20&gt;</span><br><span class="line">cpsr           0x60000000          1610612736</span><br><span class="line">fpsr           0x0                 0</span><br><span class="line">fpcr           0x0                 0</span><br><span class="line"></span><br><span class="line">(gdb) bt</span><br><span class="line">#0  hello () at hello.c:6</span><br><span class="line">#1  0x00000000004006d8 in main () at hello.c:10</span><br><span class="line">(gdb) disassemble hello</span><br><span class="line">Dump of assembler code for function hello:</span><br><span class="line">   0x00000000004006ac &lt;+0&gt;:	stp	x29, x30, [sp, #-16]!</span><br><span class="line">   0x00000000004006b0 &lt;+4&gt;:	mov	x29, sp</span><br><span class="line">   0x00000000004006b4 &lt;+8&gt;:	adrp	x0, 0x451000 &lt;_nl_locale_subfreeres+552&gt;</span><br><span class="line">   0x00000000004006b8 &lt;+12&gt;:	add	x0, x0, #0x3e8</span><br><span class="line">   0x00000000004006bc &lt;+16&gt;:	bl	0x407350 &lt;puts&gt;</span><br><span class="line">   0x00000000004006c0 &lt;+20&gt;:	nop</span><br><span class="line">   0x00000000004006c4 &lt;+24&gt;:	ldp	x29, x30, [sp], #16</span><br><span class="line">   0x00000000004006c8 &lt;+28&gt;:	ret</span><br><span class="line">End of assembler dump.</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line">[Inferior 1 (process 1) exited normally]</span><br><span class="line">(gdb) </span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>调试器</category>
+      </categories>
+      <tags>
+        <tag>GDB</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Linux中关于包安装命令apt、yum、dpkg、rpm的区别</title>
     <url>/posts/7a422bf0.html</url>
     <content><![CDATA[<h2 id="Linux两大派系"><a href="#Linux两大派系" class="headerlink" title="Linux两大派系"></a>Linux两大派系</h2><p>介绍这几个命令之前，需要先了解下Linux两大派系：Debian系列和RedHat系列。</p>
@@ -39,39 +75,31 @@
       </categories>
   </entry>
   <entry>
-    <title>通过qemu+gdb实现跨架构调试</title>
-    <url>/posts/bf48f70d.html</url>
-    <content><![CDATA[<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>有时候身边只有 x86 架构的硬件环境，却想学习和测试 arm、mips 等其他架构特性，此时怎么办呢？众所周知，VMware 只能模拟同架构不同操作系统，对此可以通过 qemu 实现跨架构模拟。</p>
-<span id="more"></span>
-
-<h2 id="安装-qemu-user"><a href="#安装-qemu-user" class="headerlink" title="安装 qemu-user"></a>安装 qemu-user</h2><p>qemu 是一个支持跨平台虚拟化的虚拟机，有 user mode 和 system mode 两种配置方式。其中qemu 在system mode配置下模拟出整个计算机，可以在qemu之上运行一个操作系统。qemu 的system mode与常见的VMware和Virtualbox等虚拟机比较相似，但是qemu 的优势是可以跨指令集。例如，VMware和Virtualbox之类的工具通常只能在x86计算机上虚拟出一个x86计算机，而qemu 支持在x86上虚拟出一个ARM计算机。qemu在user mode配置下，可以运行跟当前平台指令集不同的平台可执行程序。例如可以用qemu在x86上运行ARM的可执行程序，但是两个平台必须是同一种操作系统，比如Linux。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install qemu-user</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装-gdb-multiarch"><a href="#安装-gdb-multiarch" class="headerlink" title="安装 gdb-multiarch"></a>安装 gdb-multiarch</h2><p>gdb-multiarch 是一个经过交叉编译后的、支持多架构版本的 gdb。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install gdb-multiarch</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装-aarch64-编译工具链"><a href="#安装-aarch64-编译工具链" class="headerlink" title="安装 aarch64 编译工具链"></a>安装 aarch64 编译工具链</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install gcc-aarch64-linux-gnu</span><br></pre></td></tr></table></figure>
-
-<h2 id="交叉编译测试用例"><a href="#交叉编译测试用例" class="headerlink" title="交叉编译测试用例"></a>交叉编译测试用例</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ ls</span><br><span class="line">hello.c</span><br><span class="line">lhx@ubuntu:~/test/qemu$ cat hello.c </span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">void hello()</span><br><span class="line">&#123;</span><br><span class="line">  printf(&quot;Hello World !\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">  hello();</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br><span class="line">lhx@ubuntu:~/test/qemu$ aarch64-linux-gnu-gcc -g -static hello.c </span><br><span class="line">lhx@ubuntu:~/test/qemu$ ls</span><br><span class="line">a.out  hello.c</span><br><span class="line">lhx@ubuntu:~/test/qemu$ file a.out </span><br><span class="line">a.out: ELF 64-bit LSB executable, ARM aarch64, version 1 (GNU/Linux), statically linked, BuildID[sha1]=e1fe3c59cad06eff9cab2729a00233bc10d763ce, for GNU/Linux 3.7.0, with debug_info, not stripped</span><br><span class="line">lhx@ubuntu:~/test/qemu$ qemu-aarch64 ./a.out </span><br><span class="line">Hello World !</span><br></pre></td></tr></table></figure>
-
-<h2 id="开始qemu-gdb跨架构调试"><a href="#开始qemu-gdb跨架构调试" class="headerlink" title="开始qemu+gdb跨架构调试"></a>开始qemu+gdb跨架构调试</h2><ul>
-<li>窗口1：启动 a.out<br>通过 qemu-aarch64 运行交叉编译的 a.out, 并指定 gdb 调试端口号为1234，然后等待 gdb 远程连接。</li>
+    <title>Linux和Windows下查看文件哈希值</title>
+    <url>/posts/b6b9c575.html</url>
+    <content><![CDATA[<h2 id="哈希值介绍"><a href="#哈希值介绍" class="headerlink" title="哈希值介绍"></a>哈希值介绍</h2><p>哈希值是文件内容经过哈希函数的计算，返回的一个独一无二的字符串。哪怕原始内容只改动一个字节，哈希码也会完全不同。用户下载软件后，只要计算一下哈希码，再跟作者给出的哈希码比较一下，就会知道软件有没有被改动。</p>
+<p>目前，常用的三种哈希函数是 MD5、SHA1 和 SHA256。安全性：SHA256 &gt; SHA1 &gt; MD5。</p>
+<h2 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h2><ul>
+<li>md5sum 文件名</li>
+<li>sha1sum 文件名</li>
+<li>sha256sum 文件名</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ qemu-aarch64 -g 1234 ./a.out</span><br><span class="line">Hello World !</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ md5sum a.txt </span><br><span class="line">905138a85e85e74344e90d25dba7299e  a.txt</span><br><span class="line"></span><br><span class="line">$ sha1sum a.txt </span><br><span class="line">b1fda0e52e8099d2aeb80f57bb91548cace3093f  a.txt</span><br><span class="line"></span><br><span class="line">$ sha256sum a.txt </span><br><span class="line">a4bf1f6be616bf6a0de2ff6264de43a64bb768d38c783ec2bc74b5d4dcf5f889  a.txt</span><br></pre></td></tr></table></figure>
+
+<h2 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h2><ul>
+<li>certutil -hashfile 文件名  MD5</li>
+<li>certutil -hashfile 文件名  SHA1</li>
+<li>certutil -hashfile 文件名  SHA256</li>
+</ul>
 <blockquote>
-<p>-g port：该选项表示QEMU_GDB环境变量取值，即 等待gdb连接的端口号。</p>
+<p>【certutil 用法】<br>  CertUtil [选项] -hashfile InFile [HashAlgorithm]   通过文件生成并显示加密哈希<br>  哈希算法（大小写都可以）: MD2 MD4 MD5 SHA1 SHA256 SHA384 SHA512</p>
 </blockquote>
-<ul>
-<li>窗口2：gdb 远程调试<br>通过 gdb-multiarch 启动 a.out，这里 a.out 用于读取和远程端一致的调试符号信息。连接上远程端口号后，便可以进行设断点、查看寄存器、反汇编等一系列调试操作。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ ls</span><br><span class="line">a.out  hello.c</span><br><span class="line">lhx@ubuntu:~/test/qemu$ gdb-multiarch -q a.out </span><br><span class="line">Reading symbols from a.out...</span><br><span class="line">(gdb) target remote localhost:1234</span><br><span class="line">Remote debugging using localhost:1234</span><br><span class="line">0x0000000000400558 in _start ()</span><br><span class="line">(gdb) b main</span><br><span class="line">Breakpoint 1 at 0x4006d4: file hello.c, line 10.</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Breakpoint 1, main () at hello.c:10</span><br><span class="line">10	  hello();</span><br><span class="line">(gdb) s</span><br><span class="line">hello () at hello.c:5</span><br><span class="line">5	  printf(&quot;Hello World !\n&quot;);</span><br><span class="line">(gdb) n</span><br><span class="line">6	&#125;</span><br><span class="line">(gdb) info registers </span><br><span class="line">x0             0xe                 14</span><br><span class="line">x1             0x1                 1</span><br><span class="line">x2             0x0                 0</span><br><span class="line">x3             0x48bf00            4767488</span><br><span class="line">x4             0xfbad2a84          4222429828</span><br><span class="line">x5             0x21a               538</span><br><span class="line">x6             0x10                16</span><br><span class="line">x7             0x7f7f7f7f7f7f7f7f  9187201950435737471</span><br><span class="line">x8             0x40                64</span><br><span class="line">x9             0x3fffffff          1073741823</span><br><span class="line">x10            0x20000000          536870912</span><br><span class="line">x11            0x10000             65536</span><br><span class="line">x12            0x48b000            4763648</span><br><span class="line">x13            0x410               1040</span><br><span class="line">x14            0x0                 0</span><br><span class="line">x15            0x48c738            4769592</span><br><span class="line">x16            0x40b998            4241816</span><br><span class="line">x17            0x416fc0            4288448</span><br><span class="line">x18            0x0                 0</span><br><span class="line">x19            0x400db8            4197816</span><br><span class="line">x20            0x400e80            4198016</span><br><span class="line">x21            0x0                 0</span><br><span class="line">x22            0x400280            4194944</span><br><span class="line">x23            0x489030            4755504</span><br><span class="line">x24            0x18                24</span><br><span class="line">x25            0x48b000            4763648</span><br><span class="line">x26            0x48b000            4763648</span><br><span class="line">x27            0x451000            4526080</span><br><span class="line">x28            0x0                 0</span><br><span class="line">x29            0x4000800260        274886296160</span><br><span class="line">x30            0x4006c0            4196032</span><br><span class="line">sp             0x4000800260        0x4000800260</span><br><span class="line">pc             0x4006c0            0x4006c0 &lt;hello+20&gt;</span><br><span class="line">cpsr           0x60000000          1610612736</span><br><span class="line">fpsr           0x0                 0</span><br><span class="line">fpcr           0x0                 0</span><br><span class="line"></span><br><span class="line">(gdb) bt</span><br><span class="line">#0  hello () at hello.c:6</span><br><span class="line">#1  0x00000000004006d8 in main () at hello.c:10</span><br><span class="line">(gdb) disassemble hello</span><br><span class="line">Dump of assembler code for function hello:</span><br><span class="line">   0x00000000004006ac &lt;+0&gt;:	stp	x29, x30, [sp, #-16]!</span><br><span class="line">   0x00000000004006b0 &lt;+4&gt;:	mov	x29, sp</span><br><span class="line">   0x00000000004006b4 &lt;+8&gt;:	adrp	x0, 0x451000 &lt;_nl_locale_subfreeres+552&gt;</span><br><span class="line">   0x00000000004006b8 &lt;+12&gt;:	add	x0, x0, #0x3e8</span><br><span class="line">   0x00000000004006bc &lt;+16&gt;:	bl	0x407350 &lt;puts&gt;</span><br><span class="line">   0x00000000004006c0 &lt;+20&gt;:	nop</span><br><span class="line">   0x00000000004006c4 &lt;+24&gt;:	ldp	x29, x30, [sp], #16</span><br><span class="line">   0x00000000004006c8 &lt;+28&gt;:	ret</span><br><span class="line">End of assembler dump.</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line">[Inferior 1 (process 1) exited normally]</span><br><span class="line">(gdb) </span><br></pre></td></tr></table></figure>
-
-]]></content>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&gt; certutil -hashfile a.txt md5</span><br><span class="line">MD5 的 a.txt 哈希:</span><br><span class="line">905138a85e85e74344e90d25dba7299e</span><br><span class="line">CertUtil: -hashfile 命令成功完成。</span><br><span class="line"></span><br><span class="line">&gt; certutil -hashfile a.txt sha1</span><br><span class="line">SHA1 的 a.txt 哈希:</span><br><span class="line">b1fda0e52e8099d2aeb80f57bb91548cace3093f</span><br><span class="line">CertUtil: -hashfile 命令成功完成。</span><br><span class="line"></span><br><span class="line">&gt; certutil -hashfile a.txt sha256</span><br><span class="line">SHA256 的 a.txt 哈希:</span><br><span class="line">a4bf1f6be616bf6a0de2ff6264de43a64bb768d38c783ec2bc74b5d4dcf5f889</span><br><span class="line">CertUtil: -hashfile 命令成功完成。</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
-        <category>调试器</category>
+        <category>Linux</category>
       </categories>
       <tags>
-        <tag>GDB</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -141,34 +169,6 @@
       </categories>
       <tags>
         <tag>gcc</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux和Windows下查看文件哈希值</title>
-    <url>/posts/b6b9c575.html</url>
-    <content><![CDATA[<h2 id="哈希值介绍"><a href="#哈希值介绍" class="headerlink" title="哈希值介绍"></a>哈希值介绍</h2><p>哈希值是文件内容经过哈希函数的计算，返回的一个独一无二的字符串。哪怕原始内容只改动一个字节，哈希码也会完全不同。用户下载软件后，只要计算一下哈希码，再跟作者给出的哈希码比较一下，就会知道软件有没有被改动。</p>
-<p>目前，常用的三种哈希函数是 MD5、SHA1 和 SHA256。安全性：SHA256 &gt; SHA1 &gt; MD5。</p>
-<h2 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h2><ul>
-<li>md5sum 文件名</li>
-<li>sha1sum 文件名</li>
-<li>sha256sum 文件名</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ md5sum a.txt </span><br><span class="line">905138a85e85e74344e90d25dba7299e  a.txt</span><br><span class="line"></span><br><span class="line">$ sha1sum a.txt </span><br><span class="line">b1fda0e52e8099d2aeb80f57bb91548cace3093f  a.txt</span><br><span class="line"></span><br><span class="line">$ sha256sum a.txt </span><br><span class="line">a4bf1f6be616bf6a0de2ff6264de43a64bb768d38c783ec2bc74b5d4dcf5f889  a.txt</span><br></pre></td></tr></table></figure>
-
-<h2 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h2><ul>
-<li>certutil -hashfile 文件名  MD5</li>
-<li>certutil -hashfile 文件名  SHA1</li>
-<li>certutil -hashfile 文件名  SHA256</li>
-</ul>
-<blockquote>
-<p>【certutil 用法】<br>  CertUtil [选项] -hashfile InFile [HashAlgorithm]   通过文件生成并显示加密哈希<br>  哈希算法（大小写都可以）: MD2 MD4 MD5 SHA1 SHA256 SHA384 SHA512</p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&gt; certutil -hashfile a.txt md5</span><br><span class="line">MD5 的 a.txt 哈希:</span><br><span class="line">905138a85e85e74344e90d25dba7299e</span><br><span class="line">CertUtil: -hashfile 命令成功完成。</span><br><span class="line"></span><br><span class="line">&gt; certutil -hashfile a.txt sha1</span><br><span class="line">SHA1 的 a.txt 哈希:</span><br><span class="line">b1fda0e52e8099d2aeb80f57bb91548cace3093f</span><br><span class="line">CertUtil: -hashfile 命令成功完成。</span><br><span class="line"></span><br><span class="line">&gt; certutil -hashfile a.txt sha256</span><br><span class="line">SHA256 的 a.txt 哈希:</span><br><span class="line">a4bf1f6be616bf6a0de2ff6264de43a64bb768d38c783ec2bc74b5d4dcf5f889</span><br><span class="line">CertUtil: -hashfile 命令成功完成。</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -581,6 +581,24 @@
       </tags>
   </entry>
   <entry>
+    <title>读书笔记-《编码：隐匿在计算机软硬件背后的语言》</title>
+    <url>/posts/36fffd2c.html</url>
+    <content><![CDATA[<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202112161937656.jpg" alt="书封面"></p>
+<h3 id="第1章-至密亲友"><a href="#第1章-至密亲友" class="headerlink" title="第1章 至密亲友"></a>第1章 至密亲友</h3><p>编码：一种用来在机器和人之间传递信息的方式，编码就是交流。可以通过不同事物的组合表示出特定的信息，最常见的是通过两种事物的组合，如：</p>
+<ul>
+<li>手电筒的<strong>快闪</strong>和<strong>慢闪</strong>组合</li>
+<li>摩尔斯电码的<strong>点</strong>和<strong>划</strong>组合</li>
+</ul>
+<h3 id="第2章-编码与组合"><a href="#第2章-编码与组合" class="headerlink" title="第2章 编码与组合"></a>第2章 编码与组合</h3><p>通过<strong>点</strong>和<strong>划</strong>组合而成的摩尔斯电码表：<br><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202112161954230.png" alt="image-20211216195448024"><br>这样就可以表示不同的字母，达到信息传递的作用。摩尔斯码又称作二进制码，因为其组合方式</p>
+]]></content>
+      <categories>
+        <category>计算机基础知识</category>
+      </categories>
+      <tags>
+        <tag>底层架构</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>计算机基础知识-软硬件和汇编</title>
     <url>/posts/df8d5ad8.html</url>
     <content><![CDATA[<h2 id="三大原则"><a href="#三大原则" class="headerlink" title="三大原则"></a>三大原则</h2><ol>
@@ -656,48 +674,6 @@
       </tags>
   </entry>
   <entry>
-    <title>读书笔记-《编码：隐匿在计算机软硬件背后的语言》</title>
-    <url>/posts/36fffd2c.html</url>
-    <content><![CDATA[<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202112161937656.jpg" alt="书封面"></p>
-<h3 id="第1章-至密亲友"><a href="#第1章-至密亲友" class="headerlink" title="第1章 至密亲友"></a>第1章 至密亲友</h3><p>编码：一种用来在机器和人之间传递信息的方式，编码就是交流。可以通过不同事物的组合表示出特定的信息，最常见的是通过两种事物的组合，如：</p>
-<ul>
-<li>手电筒的<strong>快闪</strong>和<strong>慢闪</strong>组合</li>
-<li>摩尔斯电码的<strong>点</strong>和<strong>划</strong>组合</li>
-</ul>
-<h3 id="第2章-编码与组合"><a href="#第2章-编码与组合" class="headerlink" title="第2章 编码与组合"></a>第2章 编码与组合</h3><p>通过<strong>点</strong>和<strong>划</strong>组合而成的摩尔斯电码表：<br><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202112161954230.png" alt="image-20211216195448024"><br>这样就可以表示不同的字母，达到信息传递的作用。摩尔斯码又称作二进制码，因为其组合方式</p>
-]]></content>
-      <categories>
-        <category>计算机基础知识</category>
-      </categories>
-      <tags>
-        <tag>底层架构</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>重装系统后重新关联GitHub</title>
-    <url>/posts/df1ca536.html</url>
-    <content><![CDATA[<p>重装系统后， 系统盘文件都会被清空，会删除 .ssh 目录下绑定好的 ssh 公钥和私钥，此时 git push 本地仓库，便会报错：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ git push</span><br><span class="line">git@github.com: Permission denied (publickey).</span><br><span class="line">fatal: Could not read from remote repository.</span><br><span class="line"></span><br><span class="line">Please make sure you have the correct access rights</span><br><span class="line">and the repository exists.</span><br></pre></td></tr></table></figure>
-
-<p>对此，需要本地重新关联 GitHub 账号，才能继续 push 本地仓库。</p>
-<h2 id="本地创建-ssh-key"><a href="#本地创建-ssh-key" class="headerlink" title="本地创建 ssh key"></a>本地创建 ssh key</h2><p>在命令行窗口输入<code>ssh-keygen -t rsa -C &quot;your_email@youremail.com&quot;</code>，这里要将<code>your_email@youremail.com</code>改为自己指定的邮箱。然后，敲三次回车，就生成了 ssh key。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -C &quot;liupaopao520@163.com&quot;</span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/c/Users/Administrator/.ssh/id_rsa):</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /c/Users/Administrator/.ssh/id_rsa</span><br><span class="line">Your public key has been saved in /c/Users/Administrator/.ssh/id_rsa.pub</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:v9WQpeyCOJKOJG2vKrCbFfKnIo7tbFnZ4Qnp8LVSU2E liupaopao520@163.com</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 3072]----+</span><br><span class="line">|        E.       |</span><br><span class="line">|       ..        |</span><br><span class="line">|     . .      .  |</span><br><span class="line">|  . o =    . +   |</span><br><span class="line">|*Oo* . .   +     |</span><br><span class="line">|OBB.o     .      |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
-
-<p>生成的 ssh key 文件位于<code>C:\Users\Administrator\.ssh</code>目录下，打开 id_rsa.pub，复制里面的公钥。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ pwd</span><br><span class="line">/c/Users/Administrator/.ssh</span><br><span class="line"></span><br><span class="line">$ ls</span><br><span class="line">id_rsa  id_rsa.pub  known_hosts</span><br><span class="line"></span><br><span class="line">$ cat id_rsa.pub</span><br><span class="line">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDEy......l8xl8s8VEc= liupaopao520@163.com</span><br></pre></td></tr></table></figure>
-
-<h2 id="GitHub添加ssh-key"><a href="#GitHub添加ssh-key" class="headerlink" title="GitHub添加ssh key"></a>GitHub添加ssh key</h2><p>进入 GitHub 网站，进入Account Settings，左边选择 SSH and GPG keys，然后在 SSH keys 分类里，点击 New SSH keys，Title 随便填，粘贴刚才复制的 Key。</p>
-<p>打开 git bash，输入<code>ssh -T git@github.com</code>，验证是否关联成功。看到如下信息，则说明已成功关联 GitHub。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ssh -T git@github.com</span><br><span class="line">Hi HanxuLiu! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Git</category>
-      </categories>
-      <tags>
-        <tag>GitHub</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>本地电脑同时关联GitHub和Gitee</title>
     <url>/posts/1f76836b.html</url>
     <content><![CDATA[<h2 id="清除git全局设置"><a href="#清除git全局设置" class="headerlink" title="清除git全局设置"></a>清除git全局设置</h2><p>若之前没有设置过全局的可以跳过这一步，若之前对git 设置过全局的 user.name 和 user.email，进行过如下操作：</p>
@@ -762,34 +738,27 @@
       </tags>
   </entry>
   <entry>
-    <title>rz、sz命令-文件传输</title>
-    <url>/posts/42689.html</url>
-    <content><![CDATA[<h1 id="1-软件安装"><a href="#1-软件安装" class="headerlink" title="1. 软件安装"></a>1. 软件安装</h1><p>rz&#x2F;sz命令用来在xshell远程服务器和本地之间传输文件，主要有两种方式安装，yum安装或者编译安装。</p>
-<h2 id="1-1-yum包安装"><a href="#1-1-yum包安装" class="headerlink" title="1.1 yum包安装"></a>1.1 yum包安装</h2><p>root账号登陆后执行以下命令：</p>
-<blockquote>
-<p>yum install -y lrzsz</p>
-</blockquote>
-<h2 id="2-2-源码编译安装"><a href="#2-2-源码编译安装" class="headerlink" title="2.2 源码编译安装"></a>2.2 源码编译安装</h2><p>root账号登陆后，依次执行以下命令：</p>
-<blockquote>
-<p>cd &#x2F;tmp<br>wget <a href="http://www.ohse.de/uwe/releases/lrzsz-0.12.20.tar.gz">http://www.ohse.de/uwe/releases/lrzsz-0.12.20.tar.gz</a><br>tar zxvf lrzsz-0.12.20.tar.gz &amp;&amp; cd lrzsz-0.12.20<br>.&#x2F;configure &amp;&amp; make &amp;&amp; make install</p>
-</blockquote>
-<p>上面安装过程默认把lsz&#x2F;lrz安装到了&#x2F;usr&#x2F;local&#x2F;bin&#x2F;目录下，现在我们还不能使用sz&#x2F;rz命令，需要手动建立软链接：</p>
-<blockquote>
-<p>cd &#x2F;usr&#x2F;bin<br>ln -s &#x2F;usr&#x2F;local&#x2F;bin&#x2F;lsz sz<br>ln -s &#x2F;usr&#x2F;local&#x2F;bin&#x2F;lrz rz</p>
-</blockquote>
-<h1 id="2-使用说明"><a href="#2-使用说明" class="headerlink" title="2. 使用说明"></a>2. 使用说明</h1><h2 id="2-1-sz命令：发送文件到本地目录"><a href="#2-1-sz命令：发送文件到本地目录" class="headerlink" title="2.1 sz命令：发送文件到本地目录"></a>2.1 sz命令：发送文件到本地目录</h2><blockquote>
-<p>sz filename</p>
-</blockquote>
-<h2 id="2-2-rz命令：将本地文件上传到linux服务器"><a href="#2-2-rz命令：将本地文件上传到linux服务器" class="headerlink" title="2.2 rz命令：将本地文件上传到linux服务器"></a>2.2 rz命令：将本地文件上传到linux服务器</h2><blockquote>
-<p>rz</p>
-</blockquote>
-<p>执行此命令后，在弹出框中选择要上传的文件即可。</p>
+    <title>重装系统后重新关联GitHub</title>
+    <url>/posts/df1ca536.html</url>
+    <content><![CDATA[<p>重装系统后， 系统盘文件都会被清空，会删除 .ssh 目录下绑定好的 ssh 公钥和私钥，此时 git push 本地仓库，便会报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ git push</span><br><span class="line">git@github.com: Permission denied (publickey).</span><br><span class="line">fatal: Could not read from remote repository.</span><br><span class="line"></span><br><span class="line">Please make sure you have the correct access rights</span><br><span class="line">and the repository exists.</span><br></pre></td></tr></table></figure>
+
+<p>对此，需要本地重新关联 GitHub 账号，才能继续 push 本地仓库。</p>
+<h2 id="本地创建-ssh-key"><a href="#本地创建-ssh-key" class="headerlink" title="本地创建 ssh key"></a>本地创建 ssh key</h2><p>在命令行窗口输入<code>ssh-keygen -t rsa -C &quot;your_email@youremail.com&quot;</code>，这里要将<code>your_email@youremail.com</code>改为自己指定的邮箱。然后，敲三次回车，就生成了 ssh key。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -C &quot;liupaopao520@163.com&quot;</span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/c/Users/Administrator/.ssh/id_rsa):</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /c/Users/Administrator/.ssh/id_rsa</span><br><span class="line">Your public key has been saved in /c/Users/Administrator/.ssh/id_rsa.pub</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:v9WQpeyCOJKOJG2vKrCbFfKnIo7tbFnZ4Qnp8LVSU2E liupaopao520@163.com</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 3072]----+</span><br><span class="line">|        E.       |</span><br><span class="line">|       ..        |</span><br><span class="line">|     . .      .  |</span><br><span class="line">|  . o =    . +   |</span><br><span class="line">|*Oo* . .   +     |</span><br><span class="line">|OBB.o     .      |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
+
+<p>生成的 ssh key 文件位于<code>C:\Users\Administrator\.ssh</code>目录下，打开 id_rsa.pub，复制里面的公钥。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ pwd</span><br><span class="line">/c/Users/Administrator/.ssh</span><br><span class="line"></span><br><span class="line">$ ls</span><br><span class="line">id_rsa  id_rsa.pub  known_hosts</span><br><span class="line"></span><br><span class="line">$ cat id_rsa.pub</span><br><span class="line">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDEy......l8xl8s8VEc= liupaopao520@163.com</span><br></pre></td></tr></table></figure>
+
+<h2 id="GitHub添加ssh-key"><a href="#GitHub添加ssh-key" class="headerlink" title="GitHub添加ssh key"></a>GitHub添加ssh key</h2><p>进入 GitHub 网站，进入Account Settings，左边选择 SSH and GPG keys，然后在 SSH keys 分类里，点击 New SSH keys，Title 随便填，粘贴刚才复制的 Key。</p>
+<p>打开 git bash，输入<code>ssh -T git@github.com</code>，验证是否关联成功。看到如下信息，则说明已成功关联 GitHub。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ssh -T git@github.com</span><br><span class="line">Hi HanxuLiu! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>Linux</category>
+        <category>Git</category>
       </categories>
       <tags>
-        <tag>Linux命令</tag>
+        <tag>GitHub</tag>
       </tags>
   </entry>
   <entry>
@@ -890,6 +859,125 @@
       </categories>
   </entry>
   <entry>
+    <title>Next主题美化修改记录（一）</title>
+    <url>/posts/d87f7e0c.html</url>
+    <content><![CDATA[<p>基于 Next 主题 V8.10.1，第一波美化修改记录。</p>
+<p>主要修改为：</p>
+<ul>
+<li>添加文章结束分割线</li>
+<li>添加上吊猫个性化回到顶部</li>
+<li>添加畅言评论系统</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="git-status-结果"><a href="#git-status-结果" class="headerlink" title="git status 结果"></a>git status 结果</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Changed files:</span><br><span class="line">	modified:   layout/_macro/post.njk</span><br><span class="line">	modified:   layout/_partials/footer.njk</span><br><span class="line">	modified:   layout/_partials/page/tags.njk</span><br><span class="line">	modified:   source/css/_common/components/back-to-top.styl</span><br><span class="line"></span><br><span class="line">Untracked files:</span><br><span class="line">	layout/_macro/passage-end-tag.njk</span><br></pre></td></tr></table></figure>
+<p>新文件 layout&#x2F;_macro&#x2F;passage-end-tag.njk 内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    &#123;% if not is_index %&#125;</span><br><span class="line">        &lt;div style=&quot;text-align:center;color: #ccc;font-size:14px;&quot;&gt;-------------     本文结束　&lt;i class=&quot;fa fa-heartbeat&quot;&gt;&lt;/i&gt;　步履不止     -------------&lt;/div&gt;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="git-diff-结果"><a href="#git-diff-结果" class="headerlink" title="git diff 结果"></a>git diff 结果</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">diff --git a/layout/_macro/post.njk b/layout/_macro/post.njk</span><br><span class="line">index 27851de..6c994b4 100644</span><br><span class="line">--- a/layout/_macro/post.njk</span><br><span class="line">+++ b/layout/_macro/post.njk</span><br><span class="line">@@ -102,6 +102,12 @@</span><br><span class="line">       &#123;&#123; partial(&#x27;_partials/post/post-related.njk&#x27;) &#125;&#125;</span><br><span class="line">     &#123;%- endif %&#125;</span><br><span class="line"> </span><br><span class="line">+&lt;div&gt;</span><br><span class="line">+  &#123;% if not is_index %&#125;</span><br><span class="line">+    &#123;% include &#x27;passage-end-tag.njk&#x27; %&#125;</span><br><span class="line">+  &#123;% endif %&#125;</span><br><span class="line">+&lt;/div&gt;</span><br><span class="line">+</span><br><span class="line">     &lt;footer class=&quot;post-footer&quot;&gt;</span><br><span class="line">       &#123;%- if is_index %&#125;</span><br><span class="line">         &lt;div class=&quot;post-eof&quot;&gt;&lt;/div&gt;</span><br><span class="line">diff --git a/layout/_partials/footer.njk b/layout/_partials/footer.njk</span><br><span class="line">index d39307a..a060418 100644</span><br><span class="line">--- a/layout/_partials/footer.njk</span><br><span class="line">+++ b/layout/_partials/footer.njk</span><br><span class="line">@@ -19,7 +19,7 @@</span><br><span class="line">   &lt;/span&gt;</span><br><span class="line">   &lt;span class=&quot;author&quot; itemprop=&quot;copyrightHolder&quot;&gt;&#123;&#123; theme.footer.copyright or author &#125;&#125;&lt;/span&gt;</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line">-</span><br><span class="line">+&lt;!--</span><br><span class="line"> &#123;%- if config.symbols_count_time.total_symbols or config.symbols_count_time.total_time %&#125;</span><br><span class="line"> &lt;div class=&quot;wordcount&quot;&gt;</span><br><span class="line">   &#123;%- if config.symbols_count_time.total_symbols %&#125;</span><br><span class="line">@@ -47,7 +47,7 @@</span><br><span class="line">   &#123;%- endif %&#125;</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line"> &#123;%- endif %&#125;</span><br><span class="line">-</span><br><span class="line">+--&gt;</span><br><span class="line"> &#123;%- if theme.busuanzi_count.enable %&#125;</span><br><span class="line"> &lt;div class=&quot;busuanzi-count&quot;&gt;</span><br><span class="line">   &#123;%- if theme.busuanzi_count.total_visitors %&#125;</span><br><span class="line">@@ -73,14 +73,14 @@</span><br><span class="line">   &#123;%- endif %&#125;</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line"> &#123;%- endif %&#125;</span><br><span class="line">-</span><br><span class="line">+&lt;!--</span><br><span class="line"> &#123;%- if theme.footer.powered %&#125;</span><br><span class="line">   &lt;div class=&quot;powered-by&quot;&gt;</span><br><span class="line">     &#123;%- set next_site = &#x27;https://theme-next.js.org&#x27; if theme.scheme === &#x27;Gemini&#x27; else &#x27;https://theme-next.js.org/&#x27; + theme.scheme | lower + &#x27;/&#x27; %&#125;</span><br><span class="line">     &#123;&#123;- __(&#x27;footer.powered&#x27;, next_url(&#x27;https://hexo.io&#x27;, &#x27;Hexo&#x27;) + &#x27; &amp; &#x27; + next_url(next_site, &#x27;NexT.&#x27; + theme.scheme)) &#125;&#125;</span><br><span class="line">   &lt;/div&gt;</span><br><span class="line"> &#123;%- endif %&#125;</span><br><span class="line">-</span><br><span class="line">+--&gt;</span><br><span class="line"> &#123;%- if theme.add_this_id %&#125;</span><br><span class="line">   &lt;div class=&quot;addthis_inline_share_toolbox&quot;&gt;</span><br><span class="line">     &lt;script src=&quot;//s7.addthis.com/js/300/addthis_widget.js#pubid=&#123;&#123; theme.add_this_id &#125;&#125;&quot; async=&quot;async&quot;&gt;&lt;/script&gt;</span><br><span class="line">diff --git a/layout/_partials/page/tags.njk b/layout/_partials/page/tags.njk</span><br><span class="line">index c6e55cc..7cbc75c 100644</span><br><span class="line">--- a/layout/_partials/page/tags.njk</span><br><span class="line">+++ b/layout/_partials/page/tags.njk</span><br><span class="line">@@ -13,4 +13,4 @@</span><br><span class="line">       &#125;)</span><br><span class="line">     &#125;&#125;</span><br><span class="line">   &lt;/div&gt;</span><br><span class="line">-&lt;/div&gt;</span><br><span class="line">+&lt;/div&gt;</span><br><span class="line">\ No newline at end of file</span><br><span class="line">diff --git a/source/css/_common/components/back-to-top.styl b/source/css/_common/components/back-to-top.styl</span><br><span class="line">index d1c9152..89af070 100644</span><br><span class="line">--- a/source/css/_common/components/back-to-top.styl</span><br><span class="line">+++ b/source/css/_common/components/back-to-top.styl</span><br><span class="line">@@ -43,3 +43,26 @@ if (hexo-config(&#x27;back2top.enable&#x27;)) &#123;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line">+</span><br><span class="line">+/* 这里已经注释掉，若想生效取消注释即可，其他不用设置</span><br><span class="line">+//自定义回到顶部样式-上吊猫</span><br><span class="line">+.back-to-top &#123;</span><br><span class="line">+  right: 60px;</span><br><span class="line">+  width: 70px;  //图片素材宽度</span><br><span class="line">+  height: 900px;  //图片素材高度</span><br><span class="line">+  top: -900px;</span><br><span class="line">+  bottom: unset;</span><br><span class="line">+  transition: all .5s ease-in-out;</span><br><span class="line">+  background: url(&quot;/images/scroll.png&quot;);</span><br><span class="line">+</span><br><span class="line">+  //隐藏箭头图标</span><br><span class="line">+  &gt; i &#123;</span><br><span class="line">+    display: none;</span><br><span class="line">+  &#125;</span><br><span class="line">+</span><br><span class="line">+  &amp;.back-to-top-on &#123;</span><br><span class="line">+    bottom: unset;</span><br><span class="line">+    top: 100vh &lt; (900px + 200px) ? calc( 100vh - 900px - 200px ) : 0px;</span><br><span class="line">+  &#125;</span><br><span class="line">+&#125;</span><br><span class="line">+*/</span><br><span class="line">\ No newline at end of file</span><br></pre></td></tr></table></figure>
+
+<h2 id="config-yml-修改情况"><a href="#config-yml-修改情况" class="headerlink" title="_config.yml 修改情况"></a>_config.yml 修改情况</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">24c24</span><br><span class="line">&lt;   #sidebar: source/_data/sidebar.njk</span><br><span class="line">---</span><br><span class="line">&gt;   sidebar: source/_data/sidebar.njk</span><br><span class="line">53,54c53,54</span><br><span class="line">&lt;   small: /images/favicon-16x16-next.png</span><br><span class="line">&lt;   medium: /images/favicon-32x32-next.png</span><br><span class="line">---</span><br><span class="line">&gt;   small: /images/favicon-50.png # favicon-16x16-next.png</span><br><span class="line">&gt;   medium: /images/favicon-100.png # favicon-32x32-next.png</span><br><span class="line">98,102c98,102</span><br><span class="line">&lt;   #home: / || fa fa-home</span><br><span class="line">&lt;   #about: /about/ || fa fa-user</span><br><span class="line">&lt;   #tags: /tags/ || fa fa-tags</span><br><span class="line">&lt;   #categories: /categories/ || fa fa-th</span><br><span class="line">&lt;   #archives: /archives/ || fa fa-archive</span><br><span class="line">---</span><br><span class="line">&gt;   home: / || fa fa-home</span><br><span class="line">&gt;   categories: /categories/ || fa fa-folder-open</span><br><span class="line">&gt;   tags: /tags/ || fa fa-tags</span><br><span class="line">&gt;   archives: /archives/ || fa fa-calendar # fa fa-archive</span><br><span class="line">&gt;   about: /about/ || fa fa-user</span><br><span class="line">120,121c120,121</span><br><span class="line">&lt;   position: left</span><br><span class="line">&lt;   #position: right</span><br><span class="line">---</span><br><span class="line">&gt;   #position: left</span><br><span class="line">&gt;   position: right</span><br><span class="line">143c143</span><br><span class="line">&lt;   url: #/images/avatar.gif</span><br><span class="line">---</span><br><span class="line">&gt;   url: /images/avatar.jpg</span><br><span class="line">145c145</span><br><span class="line">&lt;   rounded: false</span><br><span class="line">---</span><br><span class="line">&gt;   rounded: true</span><br><span class="line">147c147</span><br><span class="line">&lt;   rotated: false</span><br><span class="line">---</span><br><span class="line">&gt;   rotated: true</span><br><span class="line">157,158c157,158</span><br><span class="line">&lt;   #GitHub: https://github.com/yourname || fab fa-github</span><br><span class="line">&lt;   #E-Mail: mailto:yourname@gmail.com || fa fa-envelope</span><br><span class="line">---</span><br><span class="line">&gt;   #GitHub: https://github.com/liu-paopao || fab fa-github</span><br><span class="line">&gt;   #E-Mail: mailto:liupaopao520@163.com || fa fa-envelope</span><br><span class="line">170c170</span><br><span class="line">&lt;   icons_only: false</span><br><span class="line">---</span><br><span class="line">&gt;   icons_only: true</span><br><span class="line">212c212</span><br><span class="line">&lt;     name: fa fa-heart</span><br><span class="line">---</span><br><span class="line">&gt;     name: fa fa-heartbeat</span><br><span class="line">222c222</span><br><span class="line">&lt;   powered: true</span><br><span class="line">---</span><br><span class="line">&gt;   powered: false</span><br><span class="line">262a263</span><br><span class="line">&gt; </span><br><span class="line">264c265</span><br><span class="line">&lt; tag_icon: false</span><br><span class="line">---</span><br><span class="line">&gt; tag_icon: true</span><br><span class="line">375c376</span><br><span class="line">&lt;     enable: false</span><br><span class="line">---</span><br><span class="line">&gt;     enable: true</span><br><span class="line">384c385</span><br><span class="line">&lt;   scrollpercent: false</span><br><span class="line">---</span><br><span class="line">&gt;   scrollpercent: true</span><br><span class="line">409c410</span><br><span class="line">&lt;   permalink: https://github.com/yourname</span><br><span class="line">---</span><br><span class="line">&gt;   permalink: https://github.com/liu-paopao</span><br><span class="line">529c530</span><br><span class="line">&lt; fancybox: false</span><br><span class="line">---</span><br><span class="line">&gt; fancybox: true</span><br><span class="line">610,612c611,613</span><br><span class="line">&lt;   enable: false</span><br><span class="line">&lt;   appid:</span><br><span class="line">&lt;   appkey:</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br><span class="line">&gt;   appid: cyw09gPog</span><br><span class="line">&gt;   appkey: 4488e6b82bfe3d819f4971a5e5c115f4</span><br><span class="line">745c746</span><br><span class="line">&lt;   enable: false</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br><span class="line">857c858</span><br><span class="line">&lt;   enable: false</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>博客相关</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>df命令-显示磁盘空间</title>
+    <url>/posts/22729.html</url>
+    <content><![CDATA[<h2 id="df命令介绍"><a href="#df命令介绍" class="headerlink" title="df命令介绍"></a>df命令介绍</h2><p>df命令的英文全称即<code>Disk Free</code>，顾名思义功能是用于显示系统上可使用的磁盘空间。默认显示单位为KB，建议使用“df -h”的参数组合，根据磁盘容量自动变换合适的单位，更利于人性化阅读。</p>
+<p>日常普遍用该命令可以查看磁盘被占用了多少空间、还剩多少空间等信息。</p>
+<h2 id="df命令常用参数"><a href="#df命令常用参数" class="headerlink" title="df命令常用参数"></a>df命令常用参数</h2><table>
+<thead>
+<tr>
+<th>-a</th>
+<th>显示所有系统文件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-h</td>
+<td>以容易阅读的方式显示</td>
+</tr>
+</tbody></table>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><h3 id="df默认选项"><a href="#df默认选项" class="headerlink" title="df默认选项"></a><code>df</code>默认选项</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df</span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">devtmpfs          347636       0    347636   0% /dev</span><br><span class="line">tmpfs             362780       0    362780   0% /dev/shm</span><br><span class="line">tmpfs             362780   41188    321592  12% /run</span><br><span class="line">tmpfs             362780       0    362780   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1       20510332 1610056  17835368   9% /</span><br><span class="line">tmpfs              72556       0     72556   0% /run/user/0</span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
+<h3 id="df-h便于人性化阅读"><a href="#df-h便于人性化阅读" class="headerlink" title="df -h便于人性化阅读"></a><code>df -h</code>便于人性化阅读</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
+<h3 id="df-ah显示全部文件系统"><a href="#df-ah显示全部文件系统" class="headerlink" title="df -ah显示全部文件系统"></a><code>df -ah</code>显示全部文件系统</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df -ah</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">sysfs              0     0     0    - /sys</span><br><span class="line">proc               0     0     0    - /proc</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">securityfs         0     0     0    - /sys/kernel/security</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">devpts             0     0     0    - /dev/pts</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/systemd</span><br><span class="line">pstore             0     0     0    - /sys/fs/pstore</span><br><span class="line">bpf                0     0     0    - /sys/fs/bpf</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/memory</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpu,cpuacct</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/net_cls,net_prio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/hugetlb</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpuset</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/freezer</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/perf_event</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/devices</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/pids</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/blkio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/rdma</span><br><span class="line">none               0     0     0    - /sys/kernel/tracing</span><br><span class="line">configfs           0     0     0    - /sys/kernel/config</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">mqueue             0     0     0    - /dev/mqueue</span><br><span class="line">hugetlbfs          0     0     0    - /dev/hugepages</span><br><span class="line">debugfs            0     0     0    - /sys/kernel/debug</span><br><span class="line">systemd-1          -     -     -    - /proc/sys/fs/binfmt_misc</span><br><span class="line">binfmt_misc        0     0     0    - /proc/sys/fs/binfmt_misc</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]#      </span><br></pre></td></tr></table></figure>
+<h3 id="df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况"><a href="#df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况" class="headerlink" title="df  目录 指定目录下的文件’指定文件所在分区的磁盘使用情况"></a><code>df  目录</code> 指定目录下的文件’指定文件所在分区的磁盘使用情况</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df /root/.bashrc </span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">/dev/vda1       20510332 1610068  17835356   9% /</span><br><span class="line">[root@paopao ~]# </span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux命令</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mount命令-挂载磁盘</title>
+    <url>/posts/37407.html</url>
+    <content><![CDATA[<h2 id="mount命令介绍"><a href="#mount命令介绍" class="headerlink" title="mount命令介绍"></a>mount命令介绍</h2><p>用于加载文件系统到指定的加载点。此命令的最常用于挂载cdrom，使我们可以访问cdrom中的数据，因为你将光盘插入cdrom中，Linux并不会自动挂载，必须使用Linux mount命令来手动完成挂载。</p>
+<h2 id="mount命令常用参数"><a href="#mount命令常用参数" class="headerlink" title="mount命令常用参数"></a>mount命令常用参数</h2><table>
+<thead>
+<tr>
+<th>-t</th>
+<th>指定挂载类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-a</td>
+<td>加载文件“&#x2F;etc&#x2F;fstab”中描述的所有文件系统</td>
+</tr>
+</tbody></table>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>挂载 &#x2F;dev&#x2F;cdrom 到 &#x2F;mnt：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@linuxcool ~]# mount /dev/cdrom /mnt</span><br></pre></td></tr></table></figure>
+
+<p>启动所有挂载：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@linuxcool ~]# mount -a</span><br></pre></td></tr></table></figure>
+
+<p>挂载nfs格式文件系统：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@linuxcool ~]# mount -t nfs /123 /mnt  </span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux命令</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>rz、sz命令-文件传输</title>
+    <url>/posts/42689.html</url>
+    <content><![CDATA[<h1 id="1-软件安装"><a href="#1-软件安装" class="headerlink" title="1. 软件安装"></a>1. 软件安装</h1><p>rz&#x2F;sz命令用来在xshell远程服务器和本地之间传输文件，主要有两种方式安装，yum安装或者编译安装。</p>
+<h2 id="1-1-yum包安装"><a href="#1-1-yum包安装" class="headerlink" title="1.1 yum包安装"></a>1.1 yum包安装</h2><p>root账号登陆后执行以下命令：</p>
+<blockquote>
+<p>yum install -y lrzsz</p>
+</blockquote>
+<h2 id="2-2-源码编译安装"><a href="#2-2-源码编译安装" class="headerlink" title="2.2 源码编译安装"></a>2.2 源码编译安装</h2><p>root账号登陆后，依次执行以下命令：</p>
+<blockquote>
+<p>cd &#x2F;tmp<br>wget <a href="http://www.ohse.de/uwe/releases/lrzsz-0.12.20.tar.gz">http://www.ohse.de/uwe/releases/lrzsz-0.12.20.tar.gz</a><br>tar zxvf lrzsz-0.12.20.tar.gz &amp;&amp; cd lrzsz-0.12.20<br>.&#x2F;configure &amp;&amp; make &amp;&amp; make install</p>
+</blockquote>
+<p>上面安装过程默认把lsz&#x2F;lrz安装到了&#x2F;usr&#x2F;local&#x2F;bin&#x2F;目录下，现在我们还不能使用sz&#x2F;rz命令，需要手动建立软链接：</p>
+<blockquote>
+<p>cd &#x2F;usr&#x2F;bin<br>ln -s &#x2F;usr&#x2F;local&#x2F;bin&#x2F;lsz sz<br>ln -s &#x2F;usr&#x2F;local&#x2F;bin&#x2F;lrz rz</p>
+</blockquote>
+<h1 id="2-使用说明"><a href="#2-使用说明" class="headerlink" title="2. 使用说明"></a>2. 使用说明</h1><h2 id="2-1-sz命令：发送文件到本地目录"><a href="#2-1-sz命令：发送文件到本地目录" class="headerlink" title="2.1 sz命令：发送文件到本地目录"></a>2.1 sz命令：发送文件到本地目录</h2><blockquote>
+<p>sz filename</p>
+</blockquote>
+<h2 id="2-2-rz命令：将本地文件上传到linux服务器"><a href="#2-2-rz命令：将本地文件上传到linux服务器" class="headerlink" title="2.2 rz命令：将本地文件上传到linux服务器"></a>2.2 rz命令：将本地文件上传到linux服务器</h2><blockquote>
+<p>rz</p>
+</blockquote>
+<p>执行此命令后，在弹出框中选择要上传的文件即可。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux命令</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>yum命令-RPM包管理器</title>
     <url>/posts/29820.html</url>
     <content><![CDATA[<h2 id="yum命令介绍"><a href="#yum命令介绍" class="headerlink" title="yum命令介绍"></a>yum命令介绍</h2><p>yum命令是在Fedora和RedHat以及SUSE中基于rpm的软件包管理器，它可以使系统管理人员交互和自动化地更新与管理RPM软件包，能够从指定的服务器自动下载RPM包并且安装，可以自动处理依赖性关系，并且一次安装所有依赖的软体包，无须繁琐地一次次下载、安装。</p>
@@ -977,91 +1065,81 @@
       </tags>
   </entry>
   <entry>
-    <title>mount命令-挂载磁盘</title>
-    <url>/posts/37407.html</url>
-    <content><![CDATA[<h2 id="mount命令介绍"><a href="#mount命令介绍" class="headerlink" title="mount命令介绍"></a>mount命令介绍</h2><p>用于加载文件系统到指定的加载点。此命令的最常用于挂载cdrom，使我们可以访问cdrom中的数据，因为你将光盘插入cdrom中，Linux并不会自动挂载，必须使用Linux mount命令来手动完成挂载。</p>
-<h2 id="mount命令常用参数"><a href="#mount命令常用参数" class="headerlink" title="mount命令常用参数"></a>mount命令常用参数</h2><table>
-<thead>
-<tr>
-<th>-t</th>
-<th>指定挂载类型</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>-a</td>
-<td>加载文件“&#x2F;etc&#x2F;fstab”中描述的所有文件系统</td>
-</tr>
-</tbody></table>
-<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>挂载 &#x2F;dev&#x2F;cdrom 到 &#x2F;mnt：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@linuxcool ~]# mount /dev/cdrom /mnt</span><br></pre></td></tr></table></figure>
-
-<p>启动所有挂载：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@linuxcool ~]# mount -a</span><br></pre></td></tr></table></figure>
-
-<p>挂载nfs格式文件系统：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@linuxcool ~]# mount -t nfs /123 /mnt  </span><br></pre></td></tr></table></figure>
+    <title>Linux一行执行多条命令</title>
+    <url>/posts/2732b274.html</url>
+    <content><![CDATA[<h3 id="分号"><a href="#分号" class="headerlink" title=";(分号)"></a>;(分号)</h3><p>被分号(;)所分隔的命令会连续的执行下去，就算是错误命令也会继续执行后面的命令.</p>
+<h3 id="amp-amp"><a href="#amp-amp" class="headerlink" title="&amp;&amp;"></a>&amp;&amp;</h3><p>如果命令被 &amp;&amp; 所分隔，那么命令也会一直执行下去，但是中间有错误的命令存在就不会执行后面的命令，没错就直行至完为止。</p>
+<h3 id=""><a href="#" class="headerlink" title="||"></a>||</h3><p>如果每个命令被双竖线 || 所分隔，那么一遇到可以执行成功的命令就会停止执行后面的命令，而不管后面的命令是否正确与否。如果执行到错误的命令就是继续执行后一个命令，一直执行到遇到正确的命令为止。</p>
 ]]></content>
       <categories>
         <category>Linux</category>
       </categories>
       <tags>
-        <tag>Linux命令</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
-    <title>Next主题美化修改记录（一）</title>
-    <url>/posts/d87f7e0c.html</url>
-    <content><![CDATA[<p>基于 Next 主题 V8.10.1，第一波美化修改记录。</p>
-<p>主要修改为：</p>
+    <title>Linux下段错误生成core文件的相关配置</title>
+    <url>/posts/831131d.html</url>
+    <content><![CDATA[<h2 id="core-dump-介绍"><a href="#core-dump-介绍" class="headerlink" title="core dump 介绍"></a>core dump 介绍</h2><p>在 Linux 环境下调试 C&#x2F;C++ 程序时，经常会因为内存访问错误产生段错误（核心已转储），而在当前目录却找不到转储的 core 文件，此时需要检查系统 core dump 配置是否打开。</p>
+<p>如果打开系统 core dump 功能，那么在程序运行报段错误后，系统就会将程序的内存映像转储到硬盘，随后可以用 gdb 对生成的 core 文件进行分析，还原程序发生段错误时刻的堆栈调用信息。</p>
+<h2 id="查看系统-core-dump-配置"><a href="#查看系统-core-dump-配置" class="headerlink" title="查看系统 core dump 配置"></a>查看系统 core dump 配置</h2><p>通过<code>ulimit -a</code>命令查看系统 core 文件的大小限制，可以看到第一行 core file size 设置为0，即没有打开 core dump 开关。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ ulimit -a</span><br><span class="line">core file size          (blocks, -c) 0</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 0</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 31400</span><br><span class="line">max locked memory       (kbytes, -l) 65536</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 1024</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) 31400</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置系统生成的-core-文件大小"><a href="#设置系统生成的-core-文件大小" class="headerlink" title="设置系统生成的 core 文件大小"></a>设置系统生成的 core 文件大小</h2><p>使用<code>ulimit -c [kbytes]</code>命令设置系统允许生成的core文件大小。</p>
 <ul>
-<li>添加文章结束分割线</li>
-<li>添加上吊猫个性化回到顶部</li>
-<li>添加畅言评论系统</li>
+<li>ulimit -c 0 ：不产生core文件</li>
+<li>ulimit -c 100 ：设置core文件最大为100kb</li>
+<li>ulimit -c unlimited ：不限制core文件大小</li>
 </ul>
-<span id="more"></span>
+<p>通常会设置为 unlimited，即不限制文件大小。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ ulimit -c unlimited </span><br></pre></td></tr></table></figure>
 
-<h2 id="git-status-结果"><a href="#git-status-结果" class="headerlink" title="git status 结果"></a>git status 结果</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Changed files:</span><br><span class="line">	modified:   layout/_macro/post.njk</span><br><span class="line">	modified:   layout/_partials/footer.njk</span><br><span class="line">	modified:   layout/_partials/page/tags.njk</span><br><span class="line">	modified:   source/css/_common/components/back-to-top.styl</span><br><span class="line"></span><br><span class="line">Untracked files:</span><br><span class="line">	layout/_macro/passage-end-tag.njk</span><br></pre></td></tr></table></figure>
-<p>新文件 layout&#x2F;_macro&#x2F;passage-end-tag.njk 内容：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    &#123;% if not is_index %&#125;</span><br><span class="line">        &lt;div style=&quot;text-align:center;color: #ccc;font-size:14px;&quot;&gt;-------------     本文结束　&lt;i class=&quot;fa fa-heartbeat&quot;&gt;&lt;/i&gt;　步履不止     -------------&lt;/div&gt;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<p>然后，再查看下系统 core dump 配置，可以看到第一行 core file size 变为了 unlimited。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ ulimit -a</span><br><span class="line">core file size          (blocks, -c) unlimited</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 0</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 31400</span><br><span class="line">max locked memory       (kbytes, -l) 65536</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 1024</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) 31400</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
 
-<h2 id="git-diff-结果"><a href="#git-diff-结果" class="headerlink" title="git diff 结果"></a>git diff 结果</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">diff --git a/layout/_macro/post.njk b/layout/_macro/post.njk</span><br><span class="line">index 27851de..6c994b4 100644</span><br><span class="line">--- a/layout/_macro/post.njk</span><br><span class="line">+++ b/layout/_macro/post.njk</span><br><span class="line">@@ -102,6 +102,12 @@</span><br><span class="line">       &#123;&#123; partial(&#x27;_partials/post/post-related.njk&#x27;) &#125;&#125;</span><br><span class="line">     &#123;%- endif %&#125;</span><br><span class="line"> </span><br><span class="line">+&lt;div&gt;</span><br><span class="line">+  &#123;% if not is_index %&#125;</span><br><span class="line">+    &#123;% include &#x27;passage-end-tag.njk&#x27; %&#125;</span><br><span class="line">+  &#123;% endif %&#125;</span><br><span class="line">+&lt;/div&gt;</span><br><span class="line">+</span><br><span class="line">     &lt;footer class=&quot;post-footer&quot;&gt;</span><br><span class="line">       &#123;%- if is_index %&#125;</span><br><span class="line">         &lt;div class=&quot;post-eof&quot;&gt;&lt;/div&gt;</span><br><span class="line">diff --git a/layout/_partials/footer.njk b/layout/_partials/footer.njk</span><br><span class="line">index d39307a..a060418 100644</span><br><span class="line">--- a/layout/_partials/footer.njk</span><br><span class="line">+++ b/layout/_partials/footer.njk</span><br><span class="line">@@ -19,7 +19,7 @@</span><br><span class="line">   &lt;/span&gt;</span><br><span class="line">   &lt;span class=&quot;author&quot; itemprop=&quot;copyrightHolder&quot;&gt;&#123;&#123; theme.footer.copyright or author &#125;&#125;&lt;/span&gt;</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line">-</span><br><span class="line">+&lt;!--</span><br><span class="line"> &#123;%- if config.symbols_count_time.total_symbols or config.symbols_count_time.total_time %&#125;</span><br><span class="line"> &lt;div class=&quot;wordcount&quot;&gt;</span><br><span class="line">   &#123;%- if config.symbols_count_time.total_symbols %&#125;</span><br><span class="line">@@ -47,7 +47,7 @@</span><br><span class="line">   &#123;%- endif %&#125;</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line"> &#123;%- endif %&#125;</span><br><span class="line">-</span><br><span class="line">+--&gt;</span><br><span class="line"> &#123;%- if theme.busuanzi_count.enable %&#125;</span><br><span class="line"> &lt;div class=&quot;busuanzi-count&quot;&gt;</span><br><span class="line">   &#123;%- if theme.busuanzi_count.total_visitors %&#125;</span><br><span class="line">@@ -73,14 +73,14 @@</span><br><span class="line">   &#123;%- endif %&#125;</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line"> &#123;%- endif %&#125;</span><br><span class="line">-</span><br><span class="line">+&lt;!--</span><br><span class="line"> &#123;%- if theme.footer.powered %&#125;</span><br><span class="line">   &lt;div class=&quot;powered-by&quot;&gt;</span><br><span class="line">     &#123;%- set next_site = &#x27;https://theme-next.js.org&#x27; if theme.scheme === &#x27;Gemini&#x27; else &#x27;https://theme-next.js.org/&#x27; + theme.scheme | lower + &#x27;/&#x27; %&#125;</span><br><span class="line">     &#123;&#123;- __(&#x27;footer.powered&#x27;, next_url(&#x27;https://hexo.io&#x27;, &#x27;Hexo&#x27;) + &#x27; &amp; &#x27; + next_url(next_site, &#x27;NexT.&#x27; + theme.scheme)) &#125;&#125;</span><br><span class="line">   &lt;/div&gt;</span><br><span class="line"> &#123;%- endif %&#125;</span><br><span class="line">-</span><br><span class="line">+--&gt;</span><br><span class="line"> &#123;%- if theme.add_this_id %&#125;</span><br><span class="line">   &lt;div class=&quot;addthis_inline_share_toolbox&quot;&gt;</span><br><span class="line">     &lt;script src=&quot;//s7.addthis.com/js/300/addthis_widget.js#pubid=&#123;&#123; theme.add_this_id &#125;&#125;&quot; async=&quot;async&quot;&gt;&lt;/script&gt;</span><br><span class="line">diff --git a/layout/_partials/page/tags.njk b/layout/_partials/page/tags.njk</span><br><span class="line">index c6e55cc..7cbc75c 100644</span><br><span class="line">--- a/layout/_partials/page/tags.njk</span><br><span class="line">+++ b/layout/_partials/page/tags.njk</span><br><span class="line">@@ -13,4 +13,4 @@</span><br><span class="line">       &#125;)</span><br><span class="line">     &#125;&#125;</span><br><span class="line">   &lt;/div&gt;</span><br><span class="line">-&lt;/div&gt;</span><br><span class="line">+&lt;/div&gt;</span><br><span class="line">\ No newline at end of file</span><br><span class="line">diff --git a/source/css/_common/components/back-to-top.styl b/source/css/_common/components/back-to-top.styl</span><br><span class="line">index d1c9152..89af070 100644</span><br><span class="line">--- a/source/css/_common/components/back-to-top.styl</span><br><span class="line">+++ b/source/css/_common/components/back-to-top.styl</span><br><span class="line">@@ -43,3 +43,26 @@ if (hexo-config(&#x27;back2top.enable&#x27;)) &#123;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line">+</span><br><span class="line">+/* 这里已经注释掉，若想生效取消注释即可，其他不用设置</span><br><span class="line">+//自定义回到顶部样式-上吊猫</span><br><span class="line">+.back-to-top &#123;</span><br><span class="line">+  right: 60px;</span><br><span class="line">+  width: 70px;  //图片素材宽度</span><br><span class="line">+  height: 900px;  //图片素材高度</span><br><span class="line">+  top: -900px;</span><br><span class="line">+  bottom: unset;</span><br><span class="line">+  transition: all .5s ease-in-out;</span><br><span class="line">+  background: url(&quot;/images/scroll.png&quot;);</span><br><span class="line">+</span><br><span class="line">+  //隐藏箭头图标</span><br><span class="line">+  &gt; i &#123;</span><br><span class="line">+    display: none;</span><br><span class="line">+  &#125;</span><br><span class="line">+</span><br><span class="line">+  &amp;.back-to-top-on &#123;</span><br><span class="line">+    bottom: unset;</span><br><span class="line">+    top: 100vh &lt; (900px + 200px) ? calc( 100vh - 900px - 200px ) : 0px;</span><br><span class="line">+  &#125;</span><br><span class="line">+&#125;</span><br><span class="line">+*/</span><br><span class="line">\ No newline at end of file</span><br></pre></td></tr></table></figure>
+<h2 id="配置-core-文件保存路径"><a href="#配置-core-文件保存路径" class="headerlink" title="配置 core 文件保存路径"></a>配置 core 文件保存路径</h2><p>core 文件具体存放在哪个目录取决于系统参数kernel.core_pattern：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@ubuntu:# cat /proc/sys/kernel/core_pattern</span><br><span class="line">|/usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -- %E</span><br></pre></td></tr></table></figure>
 
-<h2 id="config-yml-修改情况"><a href="#config-yml-修改情况" class="headerlink" title="_config.yml 修改情况"></a>_config.yml 修改情况</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">24c24</span><br><span class="line">&lt;   #sidebar: source/_data/sidebar.njk</span><br><span class="line">---</span><br><span class="line">&gt;   sidebar: source/_data/sidebar.njk</span><br><span class="line">53,54c53,54</span><br><span class="line">&lt;   small: /images/favicon-16x16-next.png</span><br><span class="line">&lt;   medium: /images/favicon-32x32-next.png</span><br><span class="line">---</span><br><span class="line">&gt;   small: /images/favicon-50.png # favicon-16x16-next.png</span><br><span class="line">&gt;   medium: /images/favicon-100.png # favicon-32x32-next.png</span><br><span class="line">98,102c98,102</span><br><span class="line">&lt;   #home: / || fa fa-home</span><br><span class="line">&lt;   #about: /about/ || fa fa-user</span><br><span class="line">&lt;   #tags: /tags/ || fa fa-tags</span><br><span class="line">&lt;   #categories: /categories/ || fa fa-th</span><br><span class="line">&lt;   #archives: /archives/ || fa fa-archive</span><br><span class="line">---</span><br><span class="line">&gt;   home: / || fa fa-home</span><br><span class="line">&gt;   categories: /categories/ || fa fa-folder-open</span><br><span class="line">&gt;   tags: /tags/ || fa fa-tags</span><br><span class="line">&gt;   archives: /archives/ || fa fa-calendar # fa fa-archive</span><br><span class="line">&gt;   about: /about/ || fa fa-user</span><br><span class="line">120,121c120,121</span><br><span class="line">&lt;   position: left</span><br><span class="line">&lt;   #position: right</span><br><span class="line">---</span><br><span class="line">&gt;   #position: left</span><br><span class="line">&gt;   position: right</span><br><span class="line">143c143</span><br><span class="line">&lt;   url: #/images/avatar.gif</span><br><span class="line">---</span><br><span class="line">&gt;   url: /images/avatar.jpg</span><br><span class="line">145c145</span><br><span class="line">&lt;   rounded: false</span><br><span class="line">---</span><br><span class="line">&gt;   rounded: true</span><br><span class="line">147c147</span><br><span class="line">&lt;   rotated: false</span><br><span class="line">---</span><br><span class="line">&gt;   rotated: true</span><br><span class="line">157,158c157,158</span><br><span class="line">&lt;   #GitHub: https://github.com/yourname || fab fa-github</span><br><span class="line">&lt;   #E-Mail: mailto:yourname@gmail.com || fa fa-envelope</span><br><span class="line">---</span><br><span class="line">&gt;   #GitHub: https://github.com/liu-paopao || fab fa-github</span><br><span class="line">&gt;   #E-Mail: mailto:liupaopao520@163.com || fa fa-envelope</span><br><span class="line">170c170</span><br><span class="line">&lt;   icons_only: false</span><br><span class="line">---</span><br><span class="line">&gt;   icons_only: true</span><br><span class="line">212c212</span><br><span class="line">&lt;     name: fa fa-heart</span><br><span class="line">---</span><br><span class="line">&gt;     name: fa fa-heartbeat</span><br><span class="line">222c222</span><br><span class="line">&lt;   powered: true</span><br><span class="line">---</span><br><span class="line">&gt;   powered: false</span><br><span class="line">262a263</span><br><span class="line">&gt; </span><br><span class="line">264c265</span><br><span class="line">&lt; tag_icon: false</span><br><span class="line">---</span><br><span class="line">&gt; tag_icon: true</span><br><span class="line">375c376</span><br><span class="line">&lt;     enable: false</span><br><span class="line">---</span><br><span class="line">&gt;     enable: true</span><br><span class="line">384c385</span><br><span class="line">&lt;   scrollpercent: false</span><br><span class="line">---</span><br><span class="line">&gt;   scrollpercent: true</span><br><span class="line">409c410</span><br><span class="line">&lt;   permalink: https://github.com/yourname</span><br><span class="line">---</span><br><span class="line">&gt;   permalink: https://github.com/liu-paopao</span><br><span class="line">529c530</span><br><span class="line">&lt; fancybox: false</span><br><span class="line">---</span><br><span class="line">&gt; fancybox: true</span><br><span class="line">610,612c611,613</span><br><span class="line">&lt;   enable: false</span><br><span class="line">&lt;   appid:</span><br><span class="line">&lt;   appkey:</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br><span class="line">&gt;   appid: cyw09gPog</span><br><span class="line">&gt;   appkey: 4488e6b82bfe3d819f4971a5e5c115f4</span><br><span class="line">745c746</span><br><span class="line">&lt;   enable: false</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br><span class="line">857c858</span><br><span class="line">&lt;   enable: false</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>博客相关</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>df命令-显示磁盘空间</title>
-    <url>/posts/22729.html</url>
-    <content><![CDATA[<h2 id="df命令介绍"><a href="#df命令介绍" class="headerlink" title="df命令介绍"></a>df命令介绍</h2><p>df命令的英文全称即<code>Disk Free</code>，顾名思义功能是用于显示系统上可使用的磁盘空间。默认显示单位为KB，建议使用“df -h”的参数组合，根据磁盘容量自动变换合适的单位，更利于人性化阅读。</p>
-<p>日常普遍用该命令可以查看磁盘被占用了多少空间、还剩多少空间等信息。</p>
-<h2 id="df命令常用参数"><a href="#df命令常用参数" class="headerlink" title="df命令常用参数"></a>df命令常用参数</h2><table>
-<thead>
-<tr>
-<th>-a</th>
-<th>显示所有系统文件</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>-h</td>
-<td>以容易阅读的方式显示</td>
-</tr>
-</tbody></table>
-<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><h3 id="df默认选项"><a href="#df默认选项" class="headerlink" title="df默认选项"></a><code>df</code>默认选项</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df</span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">devtmpfs          347636       0    347636   0% /dev</span><br><span class="line">tmpfs             362780       0    362780   0% /dev/shm</span><br><span class="line">tmpfs             362780   41188    321592  12% /run</span><br><span class="line">tmpfs             362780       0    362780   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1       20510332 1610056  17835368   9% /</span><br><span class="line">tmpfs              72556       0     72556   0% /run/user/0</span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
-<h3 id="df-h便于人性化阅读"><a href="#df-h便于人性化阅读" class="headerlink" title="df -h便于人性化阅读"></a><code>df -h</code>便于人性化阅读</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
-<h3 id="df-ah显示全部文件系统"><a href="#df-ah显示全部文件系统" class="headerlink" title="df -ah显示全部文件系统"></a><code>df -ah</code>显示全部文件系统</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df -ah</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">sysfs              0     0     0    - /sys</span><br><span class="line">proc               0     0     0    - /proc</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">securityfs         0     0     0    - /sys/kernel/security</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">devpts             0     0     0    - /dev/pts</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/systemd</span><br><span class="line">pstore             0     0     0    - /sys/fs/pstore</span><br><span class="line">bpf                0     0     0    - /sys/fs/bpf</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/memory</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpu,cpuacct</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/net_cls,net_prio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/hugetlb</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpuset</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/freezer</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/perf_event</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/devices</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/pids</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/blkio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/rdma</span><br><span class="line">none               0     0     0    - /sys/kernel/tracing</span><br><span class="line">configfs           0     0     0    - /sys/kernel/config</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">mqueue             0     0     0    - /dev/mqueue</span><br><span class="line">hugetlbfs          0     0     0    - /dev/hugepages</span><br><span class="line">debugfs            0     0     0    - /sys/kernel/debug</span><br><span class="line">systemd-1          -     -     -    - /proc/sys/fs/binfmt_misc</span><br><span class="line">binfmt_misc        0     0     0    - /proc/sys/fs/binfmt_misc</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]#      </span><br></pre></td></tr></table></figure>
-<h3 id="df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况"><a href="#df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况" class="headerlink" title="df  目录 指定目录下的文件’指定文件所在分区的磁盘使用情况"></a><code>df  目录</code> 指定目录下的文件’指定文件所在分区的磁盘使用情况</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@paopao ~]# df /root/.bashrc </span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">/dev/vda1       20510332 1610068  17835356   9% /</span><br><span class="line">[root@paopao ~]# </span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></table></figure>
+<p>修改<code>/proc/sys/kernel/core_pattern</code>设置格式化的 core 文件保存位置或文件名：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@ubuntu:# cat /proc/sys/kernel/core_pattern</span><br><span class="line">|/usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -- %E</span><br><span class="line"></span><br><span class="line">root@ubuntu:# echo &quot;/home/lhx/test/coredump/core-%e-%p-%t&quot; &gt; /proc/sys/kernel/core_pattern</span><br><span class="line"></span><br><span class="line">root@ubuntu:/home/lhx/test/coredump# cat /proc/sys/kernel/core_pattern</span><br><span class="line"><span class="meta prompt_">/home/lhx/test/coredump/core-%</span><span class="language-bash">e-%p-%t</span></span><br></pre></td></tr></table></figure>
 
+<blockquote>
+<p>%E：添加可执行程序的完整路径<br>%e：添加可执行程序名<br>%p：添加pid<br>%t：进程奔溃的时间戳<br>%s：添加导致产生core的信号<br>%u - 添加当前uid<br>%g - 添加当前gid</p>
+</blockquote>
+<p>然后重新设置ulimit，再测试一下，发现生成了对应的 core 文件：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@ubuntu:/home/lhx/test/coredump# ulimit -c unlimited</span><br><span class="line">root@ubuntu:/home/lhx/test/coredump# ./a.out </span><br><span class="line">段错误 (核心已转储)</span><br><span class="line">root@ubuntu:/home/lhx/test/coredump# ls</span><br><span class="line">a.out  core-a.out-9209-1653703102  coredump.c</span><br></pre></td></tr></table></figure>
+
+<h2 id="复杂情况处理"><a href="#复杂情况处理" class="headerlink" title="复杂情况处理"></a>复杂情况处理</h2><ol>
+<li><p>一般情况下，使用<code>ulimit -c unlimited</code>命令后，会默认在当前目录生成对应 core 文件。</p>
+</li>
+<li><p>如果当前目录没有找到 core 文件，使用命令<code>cat /proc/sys/kernel/core_pattern</code>却看到<code>/usr/share/apport/apport</code>类似的路径，注意这个并不是系统保存的路径！Ubuntu 下 coredump 会被  Apport 来处理。</p>
+</li>
+<li><p>此时建议进行格式化设置 core 文件路径和名称，然后，基本就能正常显示 core 文件。</p>
+</li>
+<li><p>如果还是找不到 core 文件，则使用下面的终极方法：</p>
+</li>
+</ol>
+<p>使用<code>cat /var/log/apport.log</code>查看日志：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@ubuntu:/usr/share/apport# cat /var/log/apport.log </span><br><span class="line">ERROR: apport (pid 3164) Fri May 27 22:29:20 2022: called for pid 3163, signal 11, core limit 18446744073709551615, dump mode 1</span><br><span class="line">ERROR: apport (pid 3164) Fri May 27 22:29:20 2022: ignoring implausibly big core limit, treating as unlimited</span><br><span class="line">ERROR: apport (pid 3164) Fri May 27 22:29:20 2022: executable: /home/lhx/test/coredump/a.out (command line &quot;./a.out&quot;)</span><br><span class="line">ERROR: apport (pid 3164) Fri May 27 22:29:20 2022: executable does not belong to a package, ignoring</span><br><span class="line">ERROR: apport (pid 3164) Fri May 27 22:29:20 2022: writing core dump to core._home_lhx_test_coredump_a_out.0.b0a0dac1-9489-4362-b93e-5b795f497130.3163.16880 (limit: -1)</span><br></pre></td></tr></table></figure>
+
+<p>会看到一行关键信息，包含可执行程序名称、路径和时间戳，这就是 core 文件：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ERROR: apport (pid 3164) Fri May 27 22:29:20 2022: writing core dump to core._home_lhx_test_coredump_a_out.0.b0a0dac1-9489-4362-b93e-5b795f497130.3163.16880 (limit: -1)</span><br></pre></td></tr></table></figure>
+
+<p>然后全局范围内搜索文件名，会发现 core 文件位于<code>/var/lib/apport/coredump/</code>目录：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:/$ sudo find . -name &quot;core._home_lhx_test_coredump_a_out.0.b0a0dac1*&quot;</span><br><span class="line">/var/lib/apport/coredump/core._home_lhx_test_coredump_a_out.0.b0a0dac1-9489-4362-b93e-5b795f497130.3163.16880</span><br></pre></td></tr></table></figure>
+
+<h2 id="其他注意事项"><a href="#其他注意事项" class="headerlink" title="其他注意事项"></a>其他注意事项</h2><ol>
+<li>注意<code>ulimit -c unlimited</code>命令只针对当前 shell 窗口有效。</li>
+<li>格式化设置 core 文件路径和名称时，注意要用 root 或 sudo 权限。</li>
+<li>如果上述方法还是不行，建议全局使用 root账户。</li>
+</ol>
 ]]></content>
       <categories>
         <category>Linux</category>
       </categories>
       <tags>
-        <tag>Linux命令</tag>
+        <tag>coredump</tag>
       </tags>
   </entry>
   <entry>
@@ -1106,6 +1184,70 @@
 <p>path为仓库下用于存储图片的路径，这个可以自行选择</p>
 <p>最下边的origin部分选择gitee（默认是github）</p>
 <h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a><strong>结束</strong></h2><p>经过上述操作，我们就把typora+picgo+gitee成功配置好了，之后当我们将本地的图片粘贴到markdown文档内的时候，typora会自动将图片上传到刚才我们配置好的gitee仓库内，并自动把markdown文档内的本地路径转化为gitee的图片外链，便于我们以后进行多端访问文档内的图片。</p>
+]]></content>
+      <categories>
+        <category>博客相关</category>
+      </categories>
+      <tags>
+        <tag>Markdown</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>markdown介绍和使用说明</title>
+    <url>/posts/31824.html</url>
+    <content><![CDATA[<p><a href="https://www.zhihu.com/people/chen-shu-yi-21"><img src="https://pic1.zhimg.com/v2-9d019104896d4a8c9b94ba1ea53eadc9_xs.jpg?source=172ae18b" alt="陈树义"></a></p>
+<p><a href="https://www.zhihu.com/people/chen-shu-yi-21">陈树义</a><a href="https://www.zhihu.com/question/48510028"></a></p>
+<p>广州唯品会信息科技有限公司 Java开发工程师</p>
+<p>854 人赞同了该文章</p>
+<p>写博客、写文章比较多的人都知道 Markdown 是什么。</p>
+<blockquote>
+<p>Markdown 是一种轻量级标记语言，创始人为 John Gruber。它允许人们「使用易读易写的纯文本格式编写文档，然后转换成有效的 XHTML（或者 HTML）文档」。——维基百科</p>
+</blockquote>
+<p>简单地说，Markdown 与 HTML 语言一样，使用一些符号就代替样式。但是它比 HTML 语言更加简单。例如我想要实现标题样式，那么我可以这么做：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-169597b288329de5b969b341c5fed180_720w.jpg" alt="img"></p>
+<h2 id="Markdown的本质"><a href="#Markdown的本质" class="headerlink" title="Markdown的本质"></a><strong>Markdown的本质</strong></h2><p>有些朋友会觉得，我用 Word 也可以实现同样的效果，为什么要使用 Markdown 呢？这个问题提得非常好，直戳问题本质。</p>
+<p>Word 等其他文本编辑工具虽然也能实现同样的效果，但是其功能太强大了。Word 还能改变字体颜色，还可以调节字体大小。这么强大的功能可以说是 Word 的优点，但也可以说是它的缺点。</p>
+<p>当功能多了，我们的注意力就会分散，我们就会去纠结：这个字体大小到底是 14 还是 16 好？我想强调这一句话，是要加粗还是标红？</p>
+<p>而 Markdown 的出现让我们不需要去纠结这些问题。<strong>Markdown 的本质是让我们回归到内容本身，注重文章本身的结构，而不是样式。</strong></p>
+<p>例如我们想要强调一句话，那么我们直接使用两个星号为其加粗，而不需要考虑是加粗还是标红（Markdown中只有黑色字体，没有其他颜色字体）。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-51ce4ea5fbdf997b5137476c14c18135_720w.jpg" alt="img"></p>
+<p>你也不需要关心字体大小问题，因为 Markdown 中字体大小都与结构有关，无法手动设置。一级标题字体大一些，二级标题小一些。我们只需要关注哪些是一级标题，哪些是二级标题。而不需要去纠结标题字体到底要设置多大。</p>
+<p><strong>Markdown 的本质是让我们回归内容本身。</strong> 当你明白这个道理的时候，你会明白为什么许多功能 Markdown 没有。</p>
+<h2 id="Markdown语法"><a href="#Markdown语法" class="headerlink" title="Markdown语法"></a><strong>Markdown语法</strong></h2><p>原生的 Markdown 语法只包含了最基础的一些特性，例如：标题、加粗、斜体、段落、引用、超链接、图片、列表、代码块、水平分割线等。而一些自定义实现的编辑器，则有一些自定义的实现，例如：数学公式、TODO列表等。所以当你看到有一些语法在一个编辑可以用，但到另一个编辑器又用不了的时候，那么这个语法可能就不是通用的 Markdown 原生语法了。</p>
+<p>Markdown 语法非常简单，基本上只要多用几次就会了。下面简单介绍一些常用的 Markdown 语法。</p>
+<h3 id="段落"><a href="#段落" class="headerlink" title="段落"></a><strong>段落</strong></h3><p>Markdown 使用 <code>#</code> 号来表示段落。</p>
+<p><img src="https://pic4.zhimg.com/80/v2-ddbecf1f0fa5a9a5e92ab996d8863d23_720w.jpg" alt="img"></p>
+<h3 id="加粗、斜体、加粗斜体"><a href="#加粗、斜体、加粗斜体" class="headerlink" title="加粗、斜体、加粗斜体"></a><strong>加粗、斜体、加粗斜体</strong></h3><p>Markdown 使用一个星号表示斜体，两个星号表示加粗，三个星号表示加粗斜体。</p>
+<p><img src="https://pic4.zhimg.com/80/v2-4b35d8ad9479b746fa9ea0f45c06a6c3_720w.jpg" alt="img"></p>
+<h3 id="无序列表"><a href="#无序列表" class="headerlink" title="无序列表"></a><strong>无序列表</strong></h3><p>使用星号或者中横线来表示无序列表，注意后面需要加个空格。</p>
+<p><img src="https://pic4.zhimg.com/80/v2-dcc81e176f9d783776cc6adcd5098773_720w.jpg" alt="img"></p>
+<h3 id="有序列表"><a href="#有序列表" class="headerlink" title="有序列表"></a><strong>有序列表</strong></h3><p>使用<code>数字+.</code>来表示有序列表，后面同样需要价格空格。</p>
+<p><img src="https://pic4.zhimg.com/80/v2-de41880f5807e6f9fdde99c2742038b7_720w.jpg" alt="img"></p>
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a><strong>引用</strong></h3><p>Markdown 使用 <code>&gt;</code> 符号来表示引用。</p>
+<p><img src="https://pic1.zhimg.com/80/v2-ade3a47093a0899a08074c7fc2c167c0_720w.jpg" alt="img"></p>
+<h3 id="超链接"><a href="#超链接" class="headerlink" title="超链接"></a><strong>超链接</strong></h3><p>Markdown 使用 <code>[]()</code> 来表示超链接，中括号表示链接文字，小括号表示链接地址。</p>
+<p><img src="https://pic4.zhimg.com/80/v2-63cc3a2b007a0a449ac2d549d62c6277_720w.jpg" alt="img"></p>
+<h3 id="图片"><a href="#图片" class="headerlink" title="图片"></a><strong>图片</strong></h3><p>图片的样式与超链接非常相似，只需在前面加个感叹号就可以了，即用<code>![]()</code>表示图片。其中中括号表示图片未加载时的提示文字，小括号表示图片地址。</p>
+<p><img src="https://pic1.zhimg.com/80/v2-a059af56aadb832034c4057c0f136824_720w.jpg" alt="img"></p>
+<h3 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a><strong>代码块</strong></h3><p>我们使用 &#96; 号来表示代码块引用。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-736e127b8d833dc85e0499f7f817c3a1_720w.jpg" alt="img"></p>
+<h3 id="水平分割线"><a href="#水平分割线" class="headerlink" title="水平分割线"></a><strong>水平分割线</strong></h3><p>使用 <code>---</code> 来表示分割线</p>
+<p><img src="https://pic1.zhimg.com/80/v2-dc4df419d95a4bd2c05d8b7ab920fed8_720w.jpg" alt="img"></p>
+<h3 id="表格"><a href="#表格" class="headerlink" title="表格"></a><strong>表格</strong></h3><p>使用一根竖线来分隔各个单元格，使用冒号来决定单元格的对齐方向。</p>
+<p><img src="https://pic4.zhimg.com/80/v2-3222f96f11294e78f28bc1f949965557_720w.jpg" alt="img"></p>
+<h2 id="Markdown使用场景"><a href="#Markdown使用场景" class="headerlink" title="Markdown使用场景"></a><strong>Markdown使用场景</strong></h2><p>目前越来越多的站点都支持了 Markdown 语法，例如：Github 等代码托管平台，简书、博客园等写作平台。因此，掌握好 Markdown 语法可以非常方便地在各个主流站点使用。</p>
+<h2 id="编辑工具"><a href="#编辑工具" class="headerlink" title="编辑工具"></a><strong>编辑工具</strong></h2><p>因为 Markdown 本质上是一个纯文本，所以任何能打开纯文本的东西都可以来编辑 Markdown。但如果你想要有预览功能，那么一款顺手的编辑功能还是有必要的。</p>
+<p>在 Windows 上比较不错的编辑器有：MarkdownPad、Typora。在 OSX 上比较不错的编辑器有：Mou、MacDown、MWeb。</p>
+<p>而我之前使用 MouDown 和 sublime 做简单的编辑，但是笔记等的就使用印象笔记写，而要发表的文章则使用 MWeb 编写。</p>
+<h2 id="兼容神器"><a href="#兼容神器" class="headerlink" title="兼容神器"></a><strong>兼容神器</strong></h2><p>使用了 Markdown 可以写出条理非常清晰的文章，文章结构特别清晰。但是对于一些老编辑器而言，例如：ATLASSIAN 的 WIKI 对于 Markdown 的支持就很弱。</p>
+<p>那么怎么办呢？</p>
+<p>其实很简单，因为老的编辑器基本都支持 HTML，所以我们可以将 Markdown 渲染后的 HTML 复制到老编辑器。</p>
+<p>我一般是在本地写好 Markdown 文章，之后直接复制到一个 Markdown 编辑器，然后复制对应的 HTML 文本到老编辑器中。</p>
+<p><img src="https://pic4.zhimg.com/80/v2-394d2ecadb292765ac1d810cbe5672b3_720w.jpg" alt="img"></p>
+<p>之后点击一下蓝色的复制按钮，就可以复制渲染后的 HTML 文本，最后直接粘贴到老编辑器中就可以了。我用的 Markdown 编辑器是：**<a href="https://link.zhihu.com/?target=https://mdnice.github.io/">https://mdnice.github.io/</a>**，样式非常漂亮。</p>
+<h2 id="进阶应用"><a href="#进阶应用" class="headerlink" title="进阶应用"></a><strong>进阶应用</strong></h2><p>当你学会使用 Markdown 之后，你会发现 Markdown 还有更多好玩的地方。例如：开源的 gitbook 就可以教你把一个个 Markdown 文件组织起来，弄成一本电子书。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-cdc7ada790a4473145b3c1207a3f8495_720w.jpg" alt="img"></p>
+<p>具体如何操作，可以参考这里：**<a href="https://link.zhihu.com/?target=https://github.com/chenyurong/gitbook-notebook">https://github.com/chenyurong/g</a>**</p>
 ]]></content>
       <categories>
         <category>博客相关</category>
@@ -1360,70 +1502,6 @@
 </tr>
 </tbody></table>
 </blockquote>
-]]></content>
-      <categories>
-        <category>博客相关</category>
-      </categories>
-      <tags>
-        <tag>Markdown</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>markdown介绍和使用说明</title>
-    <url>/posts/31824.html</url>
-    <content><![CDATA[<p><a href="https://www.zhihu.com/people/chen-shu-yi-21"><img src="https://pic1.zhimg.com/v2-9d019104896d4a8c9b94ba1ea53eadc9_xs.jpg?source=172ae18b" alt="陈树义"></a></p>
-<p><a href="https://www.zhihu.com/people/chen-shu-yi-21">陈树义</a><a href="https://www.zhihu.com/question/48510028"></a></p>
-<p>广州唯品会信息科技有限公司 Java开发工程师</p>
-<p>854 人赞同了该文章</p>
-<p>写博客、写文章比较多的人都知道 Markdown 是什么。</p>
-<blockquote>
-<p>Markdown 是一种轻量级标记语言，创始人为 John Gruber。它允许人们「使用易读易写的纯文本格式编写文档，然后转换成有效的 XHTML（或者 HTML）文档」。——维基百科</p>
-</blockquote>
-<p>简单地说，Markdown 与 HTML 语言一样，使用一些符号就代替样式。但是它比 HTML 语言更加简单。例如我想要实现标题样式，那么我可以这么做：</p>
-<p><img src="https://pic1.zhimg.com/80/v2-169597b288329de5b969b341c5fed180_720w.jpg" alt="img"></p>
-<h2 id="Markdown的本质"><a href="#Markdown的本质" class="headerlink" title="Markdown的本质"></a><strong>Markdown的本质</strong></h2><p>有些朋友会觉得，我用 Word 也可以实现同样的效果，为什么要使用 Markdown 呢？这个问题提得非常好，直戳问题本质。</p>
-<p>Word 等其他文本编辑工具虽然也能实现同样的效果，但是其功能太强大了。Word 还能改变字体颜色，还可以调节字体大小。这么强大的功能可以说是 Word 的优点，但也可以说是它的缺点。</p>
-<p>当功能多了，我们的注意力就会分散，我们就会去纠结：这个字体大小到底是 14 还是 16 好？我想强调这一句话，是要加粗还是标红？</p>
-<p>而 Markdown 的出现让我们不需要去纠结这些问题。<strong>Markdown 的本质是让我们回归到内容本身，注重文章本身的结构，而不是样式。</strong></p>
-<p>例如我们想要强调一句话，那么我们直接使用两个星号为其加粗，而不需要考虑是加粗还是标红（Markdown中只有黑色字体，没有其他颜色字体）。</p>
-<p><img src="https://pic2.zhimg.com/80/v2-51ce4ea5fbdf997b5137476c14c18135_720w.jpg" alt="img"></p>
-<p>你也不需要关心字体大小问题，因为 Markdown 中字体大小都与结构有关，无法手动设置。一级标题字体大一些，二级标题小一些。我们只需要关注哪些是一级标题，哪些是二级标题。而不需要去纠结标题字体到底要设置多大。</p>
-<p><strong>Markdown 的本质是让我们回归内容本身。</strong> 当你明白这个道理的时候，你会明白为什么许多功能 Markdown 没有。</p>
-<h2 id="Markdown语法"><a href="#Markdown语法" class="headerlink" title="Markdown语法"></a><strong>Markdown语法</strong></h2><p>原生的 Markdown 语法只包含了最基础的一些特性，例如：标题、加粗、斜体、段落、引用、超链接、图片、列表、代码块、水平分割线等。而一些自定义实现的编辑器，则有一些自定义的实现，例如：数学公式、TODO列表等。所以当你看到有一些语法在一个编辑可以用，但到另一个编辑器又用不了的时候，那么这个语法可能就不是通用的 Markdown 原生语法了。</p>
-<p>Markdown 语法非常简单，基本上只要多用几次就会了。下面简单介绍一些常用的 Markdown 语法。</p>
-<h3 id="段落"><a href="#段落" class="headerlink" title="段落"></a><strong>段落</strong></h3><p>Markdown 使用 <code>#</code> 号来表示段落。</p>
-<p><img src="https://pic4.zhimg.com/80/v2-ddbecf1f0fa5a9a5e92ab996d8863d23_720w.jpg" alt="img"></p>
-<h3 id="加粗、斜体、加粗斜体"><a href="#加粗、斜体、加粗斜体" class="headerlink" title="加粗、斜体、加粗斜体"></a><strong>加粗、斜体、加粗斜体</strong></h3><p>Markdown 使用一个星号表示斜体，两个星号表示加粗，三个星号表示加粗斜体。</p>
-<p><img src="https://pic4.zhimg.com/80/v2-4b35d8ad9479b746fa9ea0f45c06a6c3_720w.jpg" alt="img"></p>
-<h3 id="无序列表"><a href="#无序列表" class="headerlink" title="无序列表"></a><strong>无序列表</strong></h3><p>使用星号或者中横线来表示无序列表，注意后面需要加个空格。</p>
-<p><img src="https://pic4.zhimg.com/80/v2-dcc81e176f9d783776cc6adcd5098773_720w.jpg" alt="img"></p>
-<h3 id="有序列表"><a href="#有序列表" class="headerlink" title="有序列表"></a><strong>有序列表</strong></h3><p>使用<code>数字+.</code>来表示有序列表，后面同样需要价格空格。</p>
-<p><img src="https://pic4.zhimg.com/80/v2-de41880f5807e6f9fdde99c2742038b7_720w.jpg" alt="img"></p>
-<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a><strong>引用</strong></h3><p>Markdown 使用 <code>&gt;</code> 符号来表示引用。</p>
-<p><img src="https://pic1.zhimg.com/80/v2-ade3a47093a0899a08074c7fc2c167c0_720w.jpg" alt="img"></p>
-<h3 id="超链接"><a href="#超链接" class="headerlink" title="超链接"></a><strong>超链接</strong></h3><p>Markdown 使用 <code>[]()</code> 来表示超链接，中括号表示链接文字，小括号表示链接地址。</p>
-<p><img src="https://pic4.zhimg.com/80/v2-63cc3a2b007a0a449ac2d549d62c6277_720w.jpg" alt="img"></p>
-<h3 id="图片"><a href="#图片" class="headerlink" title="图片"></a><strong>图片</strong></h3><p>图片的样式与超链接非常相似，只需在前面加个感叹号就可以了，即用<code>![]()</code>表示图片。其中中括号表示图片未加载时的提示文字，小括号表示图片地址。</p>
-<p><img src="https://pic1.zhimg.com/80/v2-a059af56aadb832034c4057c0f136824_720w.jpg" alt="img"></p>
-<h3 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a><strong>代码块</strong></h3><p>我们使用 &#96; 号来表示代码块引用。</p>
-<p><img src="https://pic2.zhimg.com/80/v2-736e127b8d833dc85e0499f7f817c3a1_720w.jpg" alt="img"></p>
-<h3 id="水平分割线"><a href="#水平分割线" class="headerlink" title="水平分割线"></a><strong>水平分割线</strong></h3><p>使用 <code>---</code> 来表示分割线</p>
-<p><img src="https://pic1.zhimg.com/80/v2-dc4df419d95a4bd2c05d8b7ab920fed8_720w.jpg" alt="img"></p>
-<h3 id="表格"><a href="#表格" class="headerlink" title="表格"></a><strong>表格</strong></h3><p>使用一根竖线来分隔各个单元格，使用冒号来决定单元格的对齐方向。</p>
-<p><img src="https://pic4.zhimg.com/80/v2-3222f96f11294e78f28bc1f949965557_720w.jpg" alt="img"></p>
-<h2 id="Markdown使用场景"><a href="#Markdown使用场景" class="headerlink" title="Markdown使用场景"></a><strong>Markdown使用场景</strong></h2><p>目前越来越多的站点都支持了 Markdown 语法，例如：Github 等代码托管平台，简书、博客园等写作平台。因此，掌握好 Markdown 语法可以非常方便地在各个主流站点使用。</p>
-<h2 id="编辑工具"><a href="#编辑工具" class="headerlink" title="编辑工具"></a><strong>编辑工具</strong></h2><p>因为 Markdown 本质上是一个纯文本，所以任何能打开纯文本的东西都可以来编辑 Markdown。但如果你想要有预览功能，那么一款顺手的编辑功能还是有必要的。</p>
-<p>在 Windows 上比较不错的编辑器有：MarkdownPad、Typora。在 OSX 上比较不错的编辑器有：Mou、MacDown、MWeb。</p>
-<p>而我之前使用 MouDown 和 sublime 做简单的编辑，但是笔记等的就使用印象笔记写，而要发表的文章则使用 MWeb 编写。</p>
-<h2 id="兼容神器"><a href="#兼容神器" class="headerlink" title="兼容神器"></a><strong>兼容神器</strong></h2><p>使用了 Markdown 可以写出条理非常清晰的文章，文章结构特别清晰。但是对于一些老编辑器而言，例如：ATLASSIAN 的 WIKI 对于 Markdown 的支持就很弱。</p>
-<p>那么怎么办呢？</p>
-<p>其实很简单，因为老的编辑器基本都支持 HTML，所以我们可以将 Markdown 渲染后的 HTML 复制到老编辑器。</p>
-<p>我一般是在本地写好 Markdown 文章，之后直接复制到一个 Markdown 编辑器，然后复制对应的 HTML 文本到老编辑器中。</p>
-<p><img src="https://pic4.zhimg.com/80/v2-394d2ecadb292765ac1d810cbe5672b3_720w.jpg" alt="img"></p>
-<p>之后点击一下蓝色的复制按钮，就可以复制渲染后的 HTML 文本，最后直接粘贴到老编辑器中就可以了。我用的 Markdown 编辑器是：**<a href="https://link.zhihu.com/?target=https://mdnice.github.io/">https://mdnice.github.io/</a>**，样式非常漂亮。</p>
-<h2 id="进阶应用"><a href="#进阶应用" class="headerlink" title="进阶应用"></a><strong>进阶应用</strong></h2><p>当你学会使用 Markdown 之后，你会发现 Markdown 还有更多好玩的地方。例如：开源的 gitbook 就可以教你把一个个 Markdown 文件组织起来，弄成一本电子书。</p>
-<p><img src="https://pic2.zhimg.com/80/v2-cdc7ada790a4473145b3c1207a3f8495_720w.jpg" alt="img"></p>
-<p>具体如何操作，可以参考这里：**<a href="https://link.zhihu.com/?target=https://github.com/chenyurong/gitbook-notebook">https://github.com/chenyurong/g</a>**</p>
 ]]></content>
       <categories>
         <category>博客相关</category>
@@ -1762,20 +1840,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Linux一行执行多条命令</title>
-    <url>/posts/2732b274.html</url>
-    <content><![CDATA[<h3 id="分号"><a href="#分号" class="headerlink" title=";(分号)"></a>;(分号)</h3><p>被分号(;)所分隔的命令会连续的执行下去，就算是错误命令也会继续执行后面的命令.</p>
-<h3 id="amp-amp"><a href="#amp-amp" class="headerlink" title="&amp;&amp;"></a>&amp;&amp;</h3><p>如果命令被 &amp;&amp; 所分隔，那么命令也会一直执行下去，但是中间有错误的命令存在就不会执行后面的命令，没错就直行至完为止。</p>
-<h3 id=""><a href="#" class="headerlink" title="||"></a>||</h3><p>如果每个命令被双竖线 || 所分隔，那么一遇到可以执行成功的命令就会停止执行后面的命令，而不管后面的命令是否正确与否。如果执行到错误的命令就是继续执行后一个命令，一直执行到遇到正确的命令为止。</p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>vim速查图_中英文版</title>
     <url>/posts/6c0adc53.html</url>
     <content><![CDATA[<h2 id="中文翻译版"><a href="#中文翻译版" class="headerlink" title="中文翻译版"></a>中文翻译版</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202203181645094.jpg" alt="vim速查图_中文版"></p>
@@ -1786,70 +1850,6 @@
       </categories>
       <tags>
         <tag>Vim</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux下段错误生成core文件的相关配置</title>
-    <url>/posts/831131d.html</url>
-    <content><![CDATA[<h2 id="core-dump-介绍"><a href="#core-dump-介绍" class="headerlink" title="core dump 介绍"></a>core dump 介绍</h2><p>在 Linux 环境下调试 C&#x2F;C++ 程序时，经常会因为内存访问错误产生段错误（核心已转储），而在当前目录却找不到转储的 core 文件，此时需要检查系统 core dump 配置是否打开。</p>
-<p>如果打开系统 core dump 功能，那么在程序运行报段错误后，系统就会将程序的内存映像转储到硬盘，随后可以用 gdb 对生成的 core 文件进行分析，还原程序发生段错误时刻的堆栈调用信息。</p>
-<h2 id="查看系统-core-dump-配置"><a href="#查看系统-core-dump-配置" class="headerlink" title="查看系统 core dump 配置"></a>查看系统 core dump 配置</h2><p>通过<code>ulimit -a</code>命令查看系统 core 文件的大小限制，可以看到第一行 core file size 设置为0，即没有打开 core dump 开关。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ ulimit -a</span><br><span class="line">core file size          (blocks, -c) 0</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 0</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 31400</span><br><span class="line">max locked memory       (kbytes, -l) 65536</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 1024</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) 31400</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
-
-<h2 id="设置系统生成的-core-文件大小"><a href="#设置系统生成的-core-文件大小" class="headerlink" title="设置系统生成的 core 文件大小"></a>设置系统生成的 core 文件大小</h2><p>使用<code>ulimit -c [kbytes]</code>命令设置系统允许生成的core文件大小。</p>
-<ul>
-<li>ulimit -c 0 ：不产生core文件</li>
-<li>ulimit -c 100 ：设置core文件最大为100kb</li>
-<li>ulimit -c unlimited ：不限制core文件大小</li>
-</ul>
-<p>通常会设置为 unlimited，即不限制文件大小。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ ulimit -c unlimited </span><br></pre></td></tr></table></figure>
-
-<p>然后，再查看下系统 core dump 配置，可以看到第一行 core file size 变为了 unlimited。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ ulimit -a</span><br><span class="line">core file size          (blocks, -c) unlimited</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 0</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 31400</span><br><span class="line">max locked memory       (kbytes, -l) 65536</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 1024</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) 31400</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
-
-<h2 id="配置-core-文件保存路径"><a href="#配置-core-文件保存路径" class="headerlink" title="配置 core 文件保存路径"></a>配置 core 文件保存路径</h2><p>core 文件具体存放在哪个目录取决于系统参数kernel.core_pattern：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@ubuntu:# cat /proc/sys/kernel/core_pattern</span><br><span class="line">|/usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -- %E</span><br></pre></td></tr></table></figure>
-
-<p>修改<code>/proc/sys/kernel/core_pattern</code>设置格式化的 core 文件保存位置或文件名：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@ubuntu:# cat /proc/sys/kernel/core_pattern</span><br><span class="line">|/usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -- %E</span><br><span class="line"></span><br><span class="line">root@ubuntu:# echo &quot;/home/lhx/test/coredump/core-%e-%p-%t&quot; &gt; /proc/sys/kernel/core_pattern</span><br><span class="line"></span><br><span class="line">root@ubuntu:/home/lhx/test/coredump# cat /proc/sys/kernel/core_pattern</span><br><span class="line"><span class="meta prompt_">/home/lhx/test/coredump/core-%</span><span class="language-bash">e-%p-%t</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>%E：添加可执行程序的完整路径<br>%e：添加可执行程序名<br>%p：添加pid<br>%t：进程奔溃的时间戳<br>%s：添加导致产生core的信号<br>%u - 添加当前uid<br>%g - 添加当前gid</p>
-</blockquote>
-<p>然后重新设置ulimit，再测试一下，发现生成了对应的 core 文件：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@ubuntu:/home/lhx/test/coredump# ulimit -c unlimited</span><br><span class="line">root@ubuntu:/home/lhx/test/coredump# ./a.out </span><br><span class="line">段错误 (核心已转储)</span><br><span class="line">root@ubuntu:/home/lhx/test/coredump# ls</span><br><span class="line">a.out  core-a.out-9209-1653703102  coredump.c</span><br></pre></td></tr></table></figure>
-
-<h2 id="复杂情况处理"><a href="#复杂情况处理" class="headerlink" title="复杂情况处理"></a>复杂情况处理</h2><ol>
-<li><p>一般情况下，使用<code>ulimit -c unlimited</code>命令后，会默认在当前目录生成对应 core 文件。</p>
-</li>
-<li><p>如果当前目录没有找到 core 文件，使用命令<code>cat /proc/sys/kernel/core_pattern</code>却看到<code>/usr/share/apport/apport</code>类似的路径，注意这个并不是系统保存的路径！Ubuntu 下 coredump 会被  Apport 来处理。</p>
-</li>
-<li><p>此时建议进行格式化设置 core 文件路径和名称，然后，基本就能正常显示 core 文件。</p>
-</li>
-<li><p>如果还是找不到 core 文件，则使用下面的终极方法：</p>
-</li>
-</ol>
-<p>使用<code>cat /var/log/apport.log</code>查看日志：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@ubuntu:/usr/share/apport# cat /var/log/apport.log </span><br><span class="line">ERROR: apport (pid 3164) Fri May 27 22:29:20 2022: called for pid 3163, signal 11, core limit 18446744073709551615, dump mode 1</span><br><span class="line">ERROR: apport (pid 3164) Fri May 27 22:29:20 2022: ignoring implausibly big core limit, treating as unlimited</span><br><span class="line">ERROR: apport (pid 3164) Fri May 27 22:29:20 2022: executable: /home/lhx/test/coredump/a.out (command line &quot;./a.out&quot;)</span><br><span class="line">ERROR: apport (pid 3164) Fri May 27 22:29:20 2022: executable does not belong to a package, ignoring</span><br><span class="line">ERROR: apport (pid 3164) Fri May 27 22:29:20 2022: writing core dump to core._home_lhx_test_coredump_a_out.0.b0a0dac1-9489-4362-b93e-5b795f497130.3163.16880 (limit: -1)</span><br></pre></td></tr></table></figure>
-
-<p>会看到一行关键信息，包含可执行程序名称、路径和时间戳，这就是 core 文件：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ERROR: apport (pid 3164) Fri May 27 22:29:20 2022: writing core dump to core._home_lhx_test_coredump_a_out.0.b0a0dac1-9489-4362-b93e-5b795f497130.3163.16880 (limit: -1)</span><br></pre></td></tr></table></figure>
-
-<p>然后全局范围内搜索文件名，会发现 core 文件位于<code>/var/lib/apport/coredump/</code>目录：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:/$ sudo find . -name &quot;core._home_lhx_test_coredump_a_out.0.b0a0dac1*&quot;</span><br><span class="line">/var/lib/apport/coredump/core._home_lhx_test_coredump_a_out.0.b0a0dac1-9489-4362-b93e-5b795f497130.3163.16880</span><br></pre></td></tr></table></figure>
-
-<h2 id="其他注意事项"><a href="#其他注意事项" class="headerlink" title="其他注意事项"></a>其他注意事项</h2><ol>
-<li>注意<code>ulimit -c unlimited</code>命令只针对当前 shell 窗口有效。</li>
-<li>格式化设置 core 文件路径和名称时，注意要用 root 或 sudo 权限。</li>
-<li>如果上述方法还是不行，建议全局使用 root账户。</li>
-</ol>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>coredump</tag>
       </tags>
   </entry>
   <entry>
@@ -2012,6 +2012,61 @@
       </tags>
   </entry>
   <entry>
+    <title>v2ray多用户配置</title>
+    <url>/posts/21a98812.html</url>
+    <content><![CDATA[<h1 id="v2ray多用户配置"><a href="#v2ray多用户配置" class="headerlink" title="v2ray多用户配置"></a>v2ray多用户配置</h1><blockquote>
+<p>本文转载自：<a href="https://v2raytech.com/v2ray-multiple-users/%EF%BC%8C%E5%A6%82%E6%96%87%E4%B8%AD%E5%86%85%E5%AE%B9%E6%9C%89%E9%94%99%E8%AF%AF%E8%AF%B7%E5%88%B0%E5%8E%9F%E6%96%87%E6%9F%A5%E7%9C%8B%E5%8E%9F%E5%A7%8B%E7%89%88(%E6%9C%80%E6%96%B0%E7%89%88)">https://v2raytech.com/v2ray-multiple-users/，如文中内容有错误请到原文查看原始版(最新版)</a></p>
+</blockquote>
+<blockquote>
+<p>如有问题，欢迎到 <a href="https://hijk.club/">网络跳越论坛</a> 或 TG群组 <a href="https://t.me/hijkclub">https://t.me/hijkclub</a> 交流</p>
+</blockquote>
+<p>部分网友自行搭建好v2ray科学上网环境后，不好意思拒绝朋友的分享请求，所以想设置一个不同的端口或者id再分享。类似的需求v2ray都是支持的，配置起来也不算麻烦。本文就v2ray普通版、伪装版分别介绍v2ray多用户配置。</p>
+<p>注意：自行更改配置文件需要用到 vi&#x2F;vim&#x2F;nano 等编辑器，或者把配置文件下载到本地修改，修改完再上传到服务端。下载和上传教程请参考：<a href="https://v2xtls.org/bitvise%E8%BF%9E%E6%8E%A5linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%99%E7%A8%8B/">Bitvise连接Linux服务器教程</a>(Windows用户)、<a href="https://v2xtls.org/mac%E7%94%B5%E8%84%91%E8%BF%9E%E6%8E%A5linux%E6%95%99%E7%A8%8B/">Mac电脑连接Linux教程</a>(Mac用户)。</p>
+<h2 id="普通版多用户配置"><a href="#普通版多用户配置" class="headerlink" title="普通版多用户配置"></a>普通版多用户配置</h2><p><a href="https://v2xtls.org/v2ray%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC/">v2ray一键脚本</a> 运行完后，会输出配置文件路径，默认是 <code>/etc/v2ray/config.json</code>，其内容类似这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;loglevel&quot;: &quot;info&quot;,</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [&#123;</span><br><span class="line">    &quot;port&quot;: 12345,</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;6be0aa25-09c1-4d8b-a96f-75cd3485021f&quot;,</span><br><span class="line">          &quot;level&quot;: 1,</span><br><span class="line">          &quot;alterId&quot;: 53</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  &quot;outbounds&quot;: [&#123;</span><br><span class="line">    &quot;protocol&quot;: &quot;freedom&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;&#125;</span><br><span class="line">  &#125;,&#123;</span><br><span class="line">    &quot;protocol&quot;: &quot;blackhole&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;&#125;,</span><br><span class="line">    &quot;tag&quot;: &quot;blocked&quot;</span><br><span class="line">  &#125;],</span><br><span class="line">  &quot;routing&quot;: &#123;</span><br><span class="line">    &quot;rules&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;type&quot;: &quot;field&quot;,</span><br><span class="line">        &quot;ip&quot;: [&quot;geoip:private&quot;],</span><br><span class="line">        &quot;outboundTag&quot;: &quot;blocked&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下文教程的修改都是参考这个文件，如果出现问题，请注意与原来文件的差异。</p>
+<p>v2ray多用户分成两种：同端口不同id，不同端口不同id。v2ray两种类型都支持，接下来分别做介绍。</p>
+<h3 id="同端口不同id"><a href="#同端口不同id" class="headerlink" title="同端口不同id"></a>同端口不同id</h3><p>这是最简单的配置多用户方式。方法是编辑 <code>/etc/v2ray/config.json</code> 文件，在”<strong>clients</strong>“一节中增加新增用户配置。例如在上面配置基础上增加一个用户：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;loglevel&quot;: &quot;info&quot;,</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [&#123;</span><br><span class="line">    &quot;port&quot;: 12345,</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;6be0aa25-09c1-4d8b-a96f-75cd3485021f&quot;,</span><br><span class="line">          &quot;level&quot;: 1,</span><br><span class="line">          &quot;alterId&quot;: 53</span><br><span class="line">        &#125;, # 逗号不能少</span><br><span class="line">        # 下面是新增的内容</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;2a1292fd-07be-37e7-af20-57668b4a546a&quot;,  # id可以用 /usr/bin/v2ray/v2ctl uuid生成</span><br><span class="line">          &quot;level&quot;: 1, # 这个不用改</span><br><span class="line">          &quot;alterId&quot;: 63 # 建议50-150之间的一个整数</span><br><span class="line">        &#125;</span><br><span class="line">        # 新增内容结束</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  # 下面的内容保持不变</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong>“#”和后面的东西都不能出现在配置文件中，上面只是为了解释说明。</p>
+<p>编辑好文件后，重启 v2ray：<code>systemctl restart v2ray</code>。如果命令失败，或者 <code>netstat -nltp | grep v2ray</code> 输出为空，说明配置文件有错误，请仔细检查，改好后再重启。</p>
+<p>接下来就可以用新的id和alterId配置客户端，其余信息保持不变。</p>
+<h3 id="不同端口不同id"><a href="#不同端口不同id" class="headerlink" title="不同端口不同id"></a>不同端口不同id</h3><p>如果希望端口也不一样，请按照如下步骤做：</p>
+<p>\1. 首先编辑 <code>/etc/v2ray/config.json</code> 文件，按照”<strong>inbounds</strong>“格式新增入口和用户。例如新增一个端口和用户后，配置文件变成：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;loglevel&quot;: &quot;info&quot;,</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [&#123;</span><br><span class="line">    &quot;port&quot;: 12345,</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;6be0aa25-09c1-4d8b-a96f-75cd3485021f&quot;,</span><br><span class="line">          &quot;level&quot;: 1,</span><br><span class="line">          &quot;alterId&quot;: 53</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, # 逗号不能省，原来这里是&quot;&#125;],&quot;</span><br><span class="line">  # 以下是新增的配置</span><br><span class="line">  &#123;</span><br><span class="line">    &quot;port&quot;: 54321, # 端口是1000-65535之间的一个整数</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;, # 也可以改成其他协议，如果你知道怎么配置的话</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;24813255-228d-b0e0-c3fa-e5d4c9defda1&quot;, # id可以用 /usr/bin/v2ray/v2ctl uuid生成</span><br><span class="line">          &quot;level&quot;: 1, # 0或1都可以</span><br><span class="line">          &quot;alterId&quot;: 57 # 建议50-150之间的一个整数</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  # 新增内容结束</span><br><span class="line">  # 下面的内容保持不变</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong>“#”和后面的东西都不能出现在配置文件中，上面只是为了解释说明。</p>
+<p>编辑好文件后，重启 v2ray：<code>systemctl restart v2ray</code>。如果命令失败，或者 <code>netstat -nltp | grep v2ray</code> 输出为空，说明配置文件有错误，请仔细检查，改好后再重启。</p>
+<p>\2. 设置防火墙放行新增的端口。CentOS系统命令是：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">firewall-cmd --permanent --add-port=54321/tcp # 注意：54321要改成你的端口号</span><br><span class="line">firewall-cmd --permanent --add-port=54321/udp # 注意：54321要改成你的端口号</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<p>Ubuntu系统命令是：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ufw allow 54321/tcp # 注意：54321要改成你的端口</span><br><span class="line">ufw allow 54321/udp # 注意：54321要改成你的端口</span><br></pre></td></tr></table></figure>
+
+<p>接下来用新的端口、id和alterId配置客户端，其余信息保持不变。</p>
+<h2 id="带伪装多用户配置"><a href="#带伪装多用户配置" class="headerlink" title="带伪装多用户配置"></a>带伪装多用户配置</h2><p><strong>同端口不同id的配置和普通版操作方法一样</strong>，配置好后重启v2ray就行了，这里不再重复。</p>
+<p>接下来说说不同端口不同id的情形。伪装有了Nginx的介入，所以有多种情况，这里只介绍最简单的一种实现方式。</p>
+<ol>
+<li><p>编辑 <code>/etc/v2ray/config.json</code> 文件，按照 <a href="https://v2xtls.org/v2ray%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE/#single_port">普通版同端口不同id</a> 中的方法添加用户；</p>
+</li>
+<li><p>编辑 <code>/etc/nginx/conf.d/你的域名.conf</code> 文件，找到 “**listen 443 ssl http2;**” 这一行，在这行下面添加“listen 新的端口号 ssl http2;”一行（新的端口号要改成整数，例如8443，不能是443）。然后保存文件， <code>nginx -t</code> 检查配置有没有错误，没有错误的话重启Nginx：<code>systemctl restart nginx</code>；</p>
+</li>
+<li><p>设置防火墙放行端口，请参考 <a href="https://v2xtls.org/v2ray%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE/#set_firewall">普通版设置防火墙</a> 中的命令。</p>
+</li>
+</ol>
+<p>接下来用新的端口、id和alterId配置客户端，其余信息保持不变。</p>
+<p>如果你想添加多个端口或多个用户，重复上面的过程就可以了。</p>
+]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>V2Ray</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>V2Ray配置教程</title>
     <url>/posts/39483.html</url>
     <content><![CDATA[<h1 id="V2Ray-配置教程"><a href="#V2Ray-配置教程" class="headerlink" title="V2Ray 配置教程"></a>V2Ray 配置教程</h1><p>V2Ray 是继 Shadowsocks(R)后又一个体验很棒、功能非常强大的科学上网工具，近年来受到网友的广泛关注和喜爱。敏感时期，基本上只有 <a href="https://tlanyan.pp.ua/v2ray-traffic-mask/">V2ray 伪装</a> 或 <a href="https://tlanyan.pp.ua/trojan-tutorial/">trojan</a> 能提供十分稳的服务，推荐使用。</p>
@@ -2130,61 +2185,6 @@
 <p><a href="https://v2xtls.org/wp-content/uploads/2020/11/v2rayNG%E5%85%A8%E5%B1%80%E8%AE%BE%E7%BD%AE-576x1024-1.jpeg"><img src="https://v2xtls.org/wp-content/uploads/2020/11/v2rayNG%E5%85%A8%E5%B1%80%E8%AE%BE%E7%BD%AE-576x1024-1.jpeg" alt="v2rayNG全局设置"></a></p>
 <p>v2rayNG 全局设置</p>
 <p>配置好且服务端没有问题的话，打开浏览器应该能正常访问 google、youtube 等网站了。</p>
-]]></content>
-      <categories>
-        <category>其他</category>
-      </categories>
-      <tags>
-        <tag>V2Ray</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>v2ray多用户配置</title>
-    <url>/posts/21a98812.html</url>
-    <content><![CDATA[<h1 id="v2ray多用户配置"><a href="#v2ray多用户配置" class="headerlink" title="v2ray多用户配置"></a>v2ray多用户配置</h1><blockquote>
-<p>本文转载自：<a href="https://v2raytech.com/v2ray-multiple-users/%EF%BC%8C%E5%A6%82%E6%96%87%E4%B8%AD%E5%86%85%E5%AE%B9%E6%9C%89%E9%94%99%E8%AF%AF%E8%AF%B7%E5%88%B0%E5%8E%9F%E6%96%87%E6%9F%A5%E7%9C%8B%E5%8E%9F%E5%A7%8B%E7%89%88(%E6%9C%80%E6%96%B0%E7%89%88)">https://v2raytech.com/v2ray-multiple-users/，如文中内容有错误请到原文查看原始版(最新版)</a></p>
-</blockquote>
-<blockquote>
-<p>如有问题，欢迎到 <a href="https://hijk.club/">网络跳越论坛</a> 或 TG群组 <a href="https://t.me/hijkclub">https://t.me/hijkclub</a> 交流</p>
-</blockquote>
-<p>部分网友自行搭建好v2ray科学上网环境后，不好意思拒绝朋友的分享请求，所以想设置一个不同的端口或者id再分享。类似的需求v2ray都是支持的，配置起来也不算麻烦。本文就v2ray普通版、伪装版分别介绍v2ray多用户配置。</p>
-<p>注意：自行更改配置文件需要用到 vi&#x2F;vim&#x2F;nano 等编辑器，或者把配置文件下载到本地修改，修改完再上传到服务端。下载和上传教程请参考：<a href="https://v2xtls.org/bitvise%E8%BF%9E%E6%8E%A5linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%99%E7%A8%8B/">Bitvise连接Linux服务器教程</a>(Windows用户)、<a href="https://v2xtls.org/mac%E7%94%B5%E8%84%91%E8%BF%9E%E6%8E%A5linux%E6%95%99%E7%A8%8B/">Mac电脑连接Linux教程</a>(Mac用户)。</p>
-<h2 id="普通版多用户配置"><a href="#普通版多用户配置" class="headerlink" title="普通版多用户配置"></a>普通版多用户配置</h2><p><a href="https://v2xtls.org/v2ray%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC/">v2ray一键脚本</a> 运行完后，会输出配置文件路径，默认是 <code>/etc/v2ray/config.json</code>，其内容类似这样：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;loglevel&quot;: &quot;info&quot;,</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [&#123;</span><br><span class="line">    &quot;port&quot;: 12345,</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;6be0aa25-09c1-4d8b-a96f-75cd3485021f&quot;,</span><br><span class="line">          &quot;level&quot;: 1,</span><br><span class="line">          &quot;alterId&quot;: 53</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  &quot;outbounds&quot;: [&#123;</span><br><span class="line">    &quot;protocol&quot;: &quot;freedom&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;&#125;</span><br><span class="line">  &#125;,&#123;</span><br><span class="line">    &quot;protocol&quot;: &quot;blackhole&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;&#125;,</span><br><span class="line">    &quot;tag&quot;: &quot;blocked&quot;</span><br><span class="line">  &#125;],</span><br><span class="line">  &quot;routing&quot;: &#123;</span><br><span class="line">    &quot;rules&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;type&quot;: &quot;field&quot;,</span><br><span class="line">        &quot;ip&quot;: [&quot;geoip:private&quot;],</span><br><span class="line">        &quot;outboundTag&quot;: &quot;blocked&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>下文教程的修改都是参考这个文件，如果出现问题，请注意与原来文件的差异。</p>
-<p>v2ray多用户分成两种：同端口不同id，不同端口不同id。v2ray两种类型都支持，接下来分别做介绍。</p>
-<h3 id="同端口不同id"><a href="#同端口不同id" class="headerlink" title="同端口不同id"></a>同端口不同id</h3><p>这是最简单的配置多用户方式。方法是编辑 <code>/etc/v2ray/config.json</code> 文件，在”<strong>clients</strong>“一节中增加新增用户配置。例如在上面配置基础上增加一个用户：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;loglevel&quot;: &quot;info&quot;,</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [&#123;</span><br><span class="line">    &quot;port&quot;: 12345,</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;6be0aa25-09c1-4d8b-a96f-75cd3485021f&quot;,</span><br><span class="line">          &quot;level&quot;: 1,</span><br><span class="line">          &quot;alterId&quot;: 53</span><br><span class="line">        &#125;, # 逗号不能少</span><br><span class="line">        # 下面是新增的内容</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;2a1292fd-07be-37e7-af20-57668b4a546a&quot;,  # id可以用 /usr/bin/v2ray/v2ctl uuid生成</span><br><span class="line">          &quot;level&quot;: 1, # 这个不用改</span><br><span class="line">          &quot;alterId&quot;: 63 # 建议50-150之间的一个整数</span><br><span class="line">        &#125;</span><br><span class="line">        # 新增内容结束</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  # 下面的内容保持不变</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意：</strong>“#”和后面的东西都不能出现在配置文件中，上面只是为了解释说明。</p>
-<p>编辑好文件后，重启 v2ray：<code>systemctl restart v2ray</code>。如果命令失败，或者 <code>netstat -nltp | grep v2ray</code> 输出为空，说明配置文件有错误，请仔细检查，改好后再重启。</p>
-<p>接下来就可以用新的id和alterId配置客户端，其余信息保持不变。</p>
-<h3 id="不同端口不同id"><a href="#不同端口不同id" class="headerlink" title="不同端口不同id"></a>不同端口不同id</h3><p>如果希望端口也不一样，请按照如下步骤做：</p>
-<p>\1. 首先编辑 <code>/etc/v2ray/config.json</code> 文件，按照”<strong>inbounds</strong>“格式新增入口和用户。例如新增一个端口和用户后，配置文件变成：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;loglevel&quot;: &quot;info&quot;,</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [&#123;</span><br><span class="line">    &quot;port&quot;: 12345,</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;6be0aa25-09c1-4d8b-a96f-75cd3485021f&quot;,</span><br><span class="line">          &quot;level&quot;: 1,</span><br><span class="line">          &quot;alterId&quot;: 53</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, # 逗号不能省，原来这里是&quot;&#125;],&quot;</span><br><span class="line">  # 以下是新增的配置</span><br><span class="line">  &#123;</span><br><span class="line">    &quot;port&quot;: 54321, # 端口是1000-65535之间的一个整数</span><br><span class="line">    &quot;protocol&quot;: &quot;vmess&quot;, # 也可以改成其他协议，如果你知道怎么配置的话</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">      &quot;clients&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;id&quot;: &quot;24813255-228d-b0e0-c3fa-e5d4c9defda1&quot;, # id可以用 /usr/bin/v2ray/v2ctl uuid生成</span><br><span class="line">          &quot;level&quot;: 1, # 0或1都可以</span><br><span class="line">          &quot;alterId&quot;: 57 # 建议50-150之间的一个整数</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  # 新增内容结束</span><br><span class="line">  # 下面的内容保持不变</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意：</strong>“#”和后面的东西都不能出现在配置文件中，上面只是为了解释说明。</p>
-<p>编辑好文件后，重启 v2ray：<code>systemctl restart v2ray</code>。如果命令失败，或者 <code>netstat -nltp | grep v2ray</code> 输出为空，说明配置文件有错误，请仔细检查，改好后再重启。</p>
-<p>\2. 设置防火墙放行新增的端口。CentOS系统命令是：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">firewall-cmd --permanent --add-port=54321/tcp # 注意：54321要改成你的端口号</span><br><span class="line">firewall-cmd --permanent --add-port=54321/udp # 注意：54321要改成你的端口号</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
-
-<p>Ubuntu系统命令是：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ufw allow 54321/tcp # 注意：54321要改成你的端口</span><br><span class="line">ufw allow 54321/udp # 注意：54321要改成你的端口</span><br></pre></td></tr></table></figure>
-
-<p>接下来用新的端口、id和alterId配置客户端，其余信息保持不变。</p>
-<h2 id="带伪装多用户配置"><a href="#带伪装多用户配置" class="headerlink" title="带伪装多用户配置"></a>带伪装多用户配置</h2><p><strong>同端口不同id的配置和普通版操作方法一样</strong>，配置好后重启v2ray就行了，这里不再重复。</p>
-<p>接下来说说不同端口不同id的情形。伪装有了Nginx的介入，所以有多种情况，这里只介绍最简单的一种实现方式。</p>
-<ol>
-<li><p>编辑 <code>/etc/v2ray/config.json</code> 文件，按照 <a href="https://v2xtls.org/v2ray%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE/#single_port">普通版同端口不同id</a> 中的方法添加用户；</p>
-</li>
-<li><p>编辑 <code>/etc/nginx/conf.d/你的域名.conf</code> 文件，找到 “**listen 443 ssl http2;**” 这一行，在这行下面添加“listen 新的端口号 ssl http2;”一行（新的端口号要改成整数，例如8443，不能是443）。然后保存文件， <code>nginx -t</code> 检查配置有没有错误，没有错误的话重启Nginx：<code>systemctl restart nginx</code>；</p>
-</li>
-<li><p>设置防火墙放行端口，请参考 <a href="https://v2xtls.org/v2ray%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE/#set_firewall">普通版设置防火墙</a> 中的命令。</p>
-</li>
-</ol>
-<p>接下来用新的端口、id和alterId配置客户端，其余信息保持不变。</p>
-<p>如果你想添加多个端口或多个用户，重复上面的过程就可以了。</p>
 ]]></content>
       <categories>
         <category>其他</category>
