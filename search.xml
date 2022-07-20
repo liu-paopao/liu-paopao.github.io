@@ -41,10 +41,8 @@
     <url>/posts/7a422bf0.html</url>
     <content><![CDATA[<h2 id="Linux两大派系"><a href="#Linux两大派系" class="headerlink" title="Linux两大派系"></a>Linux两大派系</h2><p>介绍这几个命令之前，需要先了解下Linux两大派系：Debian系列和RedHat系列。</p>
 <ul>
-<li><p>RedHat系列：Redhat、Centos、Fedora 等；国产包括中标麒麟等。</p>
-</li>
-<li><p>Debian系列：Debian、Ubuntu 等；国产包括深度uos、银河麒麟、普华等。</p>
-</li>
+<li>Debian系列：Debian、Ubuntu 等；国产包括深度uos、银河麒麟、普华等。</li>
+<li>RedHat系列：Redhat、Centos、Fedora 等；国产包括中标麒麟等。</li>
 </ul>
 <h2 id="两种包管理工具"><a href="#两种包管理工具" class="headerlink" title="两种包管理工具"></a>两种包管理工具</h2><p>两大派系都有自己的一套软件包管理工具和安装包格式。</p>
 <ul>
@@ -67,8 +65,70 @@
 <blockquote>
 <p>这里<code>e</code>表示 <code>erase (uninstall) package</code></p>
 </blockquote>
-<h2 id="查看某个软件包依赖关系"><a href="#查看某个软件包依赖关系" class="headerlink" title="查看某个软件包依赖关系"></a>查看某个软件包依赖关系</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum deplist 软件包</span><br></pre></td></tr></table></figure>
+<h2 id="查看软件包依赖关系"><a href="#查看软件包依赖关系" class="headerlink" title="查看软件包依赖关系"></a>查看软件包依赖关系</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apt-cache depends 软件包 # 依赖哪些包</span><br><span class="line"></span><br><span class="line">apt-cache rdepends 软件包 # 被哪些包依赖</span><br></pre></td></tr></table></figure>
 
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum deplist 软件包 # 依赖哪些包</span><br><span class="line">或者 rpm -qR 软件包 # 查软件包依赖哪些包，R表示requires</span><br><span class="line"></span><br><span class="line">rpm -e --test 软件包 # 被哪些包依赖</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>通过–test进行测试删除，查看是否有依赖关系,如果有会阻止删除</p>
+</blockquote>
+<h2 id="apt和dpkg区别"><a href="#apt和dpkg区别" class="headerlink" title="apt和dpkg区别"></a>apt和dpkg区别</h2><ul>
+<li>apt是会解决和安装模块的依赖问题，并会咨询软件仓库，是在线安装</li>
+<li>dpkg只能安装本地的deb文件，不会关心ubuntu软件仓库的软件，不会解决模块的依赖关系</li>
+</ul>
+<h2 id="总结表格"><a href="#总结表格" class="headerlink" title="总结表格"></a>总结表格</h2><table>
+<thead>
+<tr>
+<th>Linux派系</th>
+<th>Debian系列</th>
+<th>RedHat系列</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>安装包格式</td>
+<td>deb包</td>
+<td>rpm包</td>
+</tr>
+<tr>
+<td>包管理命令</td>
+<td>dpkg</td>
+<td>rpm</td>
+</tr>
+<tr>
+<td>安装命令</td>
+<td>dpkg –i xx.deb</td>
+<td>rpm –ivh xx.rpm</td>
+</tr>
+<tr>
+<td>卸载命令</td>
+<td>dpkg -r xx.deb</td>
+<td>rpm –e xx.rpm</td>
+</tr>
+<tr>
+<td>包管理工具</td>
+<td>apt</td>
+<td>yum</td>
+</tr>
+<tr>
+<td>安装&#x2F;卸载命令</td>
+<td>apt install&#x2F;remove xx</td>
+<td>yum install&#x2F;remove xx</td>
+</tr>
+<tr>
+<td>查询安装包</td>
+<td>dpkg -l | grep xx</td>
+<td>rpm –qa | grep xx</td>
+</tr>
+<tr>
+<td>查询依赖哪些</td>
+<td>apt-cache depends xx</td>
+<td>yum deplist xx</td>
+</tr>
+<tr>
+<td>查询被哪些依赖</td>
+<td>apt-cache rdepends xx</td>
+<td>rpm -e –test xx</td>
+</tr>
+</tbody></table>
 ]]></content>
       <categories>
         <category>Linux</category>
@@ -373,6 +433,118 @@
       </tags>
   </entry>
   <entry>
+    <title>搞懂链接器1：链接器定义和符号决议</title>
+    <url>/posts/600f79ea.html</url>
+    <content><![CDATA[<h2 id="什么是链接器-Linker"><a href="#什么是链接器-Linker" class="headerlink" title="什么是链接器 (Linker)"></a>什么是链接器 (Linker)</h2><p>维基百科的定义为：</p>
+<blockquote>
+<p><code>链接器</code> （英语：Linker），是一个程序，将一个或多个由编译器或汇编器生成的目标文件外加库，链接为一个可执行文件。</p>
+</blockquote>
+<blockquote>
+<p>在Unix-like系统上常用的链接器是GNU ld。目标文件是包括机器码和链接器可用信息的程序模块。简单的讲，链接器的工作就是解析未定义的符号引用，将目标文件中的占位符替换为符号的地址。链接器还要完成程序中各目标文件的地址空间的组织，这可能涉及重定位工作。大多数现代操作系统都提供动态链接和静态链接两种形式。</p>
+</blockquote>
+<p>为便于理解，可将链接器的定义分解成如下三点：</p>
+<ul>
+<li>首先是链接器的本质，链接器本质上也是一个程序，和我们经常使用的普通程序没什么不同。</li>
+<li>接器的输入是编译器编译好的目标文件（object file）。</li>
+<li>链接器的输出，链接器在将目标文件打包处理后，生成或者可执行文件，或者库，或者目标文件。</li>
+</ul>
+<p>从这个定义中能够看出，链接器的作用有点类似于我们经常使用的压缩软WinRAR (Linux下是tar)，压缩软件将一堆文件打包压缩成一个压缩文件，而链接器和压缩软件的区别在于链接器是将多个目标文件打包成一个文件而不进行压缩。</p>
+<h2 id="符号决议-Symbol-Resolution"><a href="#符号决议-Symbol-Resolution" class="headerlink" title="符号决议 (Symbol Resolution)"></a>符号决议 (Symbol Resolution)</h2><p>所有的应用程序都是链接器将所需要的一个个简单的目标文件汇集起来形成的，可以将这个过程想象成拼图游戏，每个拼块就是一个简单的目标文件：</p>
+<img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729223235.jpg" alt="拼图" style="zoom: 33%;" />
+
+<p>1、拼图游戏当中的每个拼块都依赖于其它拼块提供的拼接口，这就好比我们写的程序模块依赖于其它模块提供的编程接口，比如我们在list.c中实现了一种特定的链表数据结构，其它模块需要使用这种链表，这就是模块间的依赖。而链接器其中一项任务就是要确保提供给链接器进行链接的目标文件集合之间依赖是成立的（也就是说，不会出现在被依赖的模块中链接器找不到需要的接口），这就是要讲到的<code>符号决议</code>(Symbol Resolution)。</p>
+<p>2、我们在拼图游戏当中通常都是将一整幅图按组成部位一部分一部分拼接好，然后将这些比较完整的大的组成部分拼接成最后一整幅图。这就好比链接器会首先将程序每个模块当中目标文件集合链接成库，然后再将各个库进行链接最终形成可执行程序。这就是可执行程序的生成过程。</p>
+<p>3，链接器还有一项任务是无法用这个拼图游戏来类比的，但是这项重要的任务对程序员不可见，作为程序员几乎不会在这个过程遇到问题，这项任务就是<code>重定位</code>。</p>
+<h3 id="链接器的工作过程"><a href="#链接器的工作过程" class="headerlink" title="链接器的工作过程"></a>链接器的工作过程</h3><p>通过拼图这个游戏的类比，我们给出链接器的工作过程：</p>
+<ol>
+<li>首先，链接器对给定的目标文件或库的集合进行符号决议以确保模块间的依赖是正确的。</li>
+<li>其次，链接器将给定的目标文件集合进行拼接打包成需要的库或最终可执行文件。</li>
+<li>最后，链接器对链接好的库或可执行文件进行重定位。</li>
+</ol>
+<p>接下来详细的讲解下每一个过程。首先讲解链接器的符号决议过程。在这个过程当中，链接器需要做的工作就是确保所有目标文件中的符号引用都有唯一的定义。要想理解这句话我们首先来看看一个典型的c文件里都有些什么。</p>
+<h3 id="c源文件中都有什么"><a href="#c源文件中都有什么" class="headerlink" title="c源文件中都有什么"></a>c源文件中都有什么</h3><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729220137.png" alt="c程序示例图"></p>
+<p>如图所示是一个典型的c源文件，该文件中的变量可以划分为两类：</p>
+<ul>
+<li><p>全局变量：比如x_global_uninit，x_global_init，fn_c。只要程序没有结束运行，全局变量都可以随时使用。注意，用static修饰的全局变量比如y_global_uninit，其生命周期也等同于程序的运行周期，只是这种全局变量只能在所被定义的文件当中使用，对其它文件不可见。</p>
+</li>
+<li><p>局部变量：比如y_local_uninit，y_local_init，局部局部变量的生命周期和全局变量不同，局部变量变量只能在相应的函数内部使用，当函数调用完成后该函数中的局部变量也就无法使用了。因为局部变量只存在于函数运行时的栈帧当中，函数调用完成后相应的栈帧被自动回收(该内容涉及到程序运行时的内存模型)。</p>
+</li>
+</ul>
+<h3 id="目标文件里有什么"><a href="#目标文件里有什么" class="headerlink" title="目标文件里有什么"></a>目标文件里有什么</h3><p>编译器的任务就是把人类可以理解的代码转换成机器可以执行的机器指令，源文件编译后形成对应的目标文件。源文件被编译后生成的目标文件中本质上只有两部分：</p>
+<ul>
+<li><p>代码部分：你可能会想，一个源文件中不都是代码吗，这里的代码指的是计算机可以执行的机器指令，也就是源文件中定义的所有函数。比如上图中定义的函数fn_b以及fn_c。</p>
+</li>
+<li><p>数据部分：源文件中定义的全局变量。如果是已经初始化后的全局变量，该全局变量的值也存在于数据部分。</p>
+</li>
+</ul>
+<p>到目前为止，可以把一个目标文件简单的理解为由两部分组成，代码部分中保存的是CPU可以执行的机器指令，这些机器指令来自程序员所定义的函数，编译器将这些定义的函数翻译成机器指令并存放在目标文件的代码部分。数据部分存放的是机器指令所操作的数据。因此目前，可以简单的将目标文件理解为一个只有两部分的文件，如图所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729220213.png" alt="目标文件组成示意图"></p>
+<p>你可能会好奇函数中定义的局部变量为什么没有放到目标文件的数据段当中，这是因为局部变量是函数私有的，局部变量只能在该函数内部使用而全局变量时没有这个限制的，所以函数私有的局部变量被放在了代码段中，作为机器指令的操作数。</p>
+<p>编译器在编译过程中遇到外部定义的全局变量或函数时，只要编译器能找到相应的变量声明就会在心里默念“all is well， all is well(一切顺利)“，从这里可以看出编译器的要求还是很低的，至于所使用变量的定义编译器是不会费力去四处搜索，而是愉快的继续接下来的编译。注意，这里再次强调一下，编译器在遇到外部定义的全局变量或者函数时只要能在当前文件找到其声明，编译器就认为编译正确。而寻找使用变量定义的这项任务就被留给了链接器。链接器的其中一项任务就是要确定所使用的变量要有其唯一的定义。虽然编译器给链接器留了一项任务，但为了让链接器工作的轻松一点编译器还是多做了一点工作的，这部分工作就是符号表(Symbol table)。</p>
+<h3 id="什么是符号表-Symbol-table"><a href="#什么是符号表-Symbol-table" class="headerlink" title="什么是符号表 (Symbol table)"></a>什么是符号表 (Symbol table)</h3><p>之前提到，虽然编译器很不厚道的给链接器留了一项任务，但是编译器为了链接器工作的轻松一点还是做了一点事情，这就是<code>符号表</code>。那符号表中保存的是什么呢，符号表中保存的信息有两部分：</p>
+<ul>
+<li>该目标文件中引用的全局变量以及函数</li>
+<li>该目标文件中定义的全局变量以及函数</li>
+</ul>
+<p>以上图中的代码为例，编译器在编译过程中每次遇到一个全局变量或者函数名都会在符号表中添加一项，最终编译器会统计出如下所示的一张符号表：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729220247.png" alt="符号表示意图"></p>
+<ul>
+<li>z_global以及fn_a是未定义的，因为在当前文件中，这两个变量仅仅是声明，编译器并没有找到其定义。剩余的变量编译器都可以在当前文件中找到其定义。</li>
+<li>fn_b以及fn_c为当前文件定义的函数，因为在代码段。</li>
+<li>剩余的符号都是全局变量，因此放在了数据段。</li>
+</ul>
+<p>有同学可能会问，为什么全局变量y_global_uninit ，y_global_init以及函数fn_b不可被其它目标文件引用，这是因为这些变量用static修饰过了，在C语言中经static修饰过的函数的函数以及变量都是当前文件私有的，对外部不可见，这里一定要注意。所以static这个关键字的用法就是，如果你认为一个变量只应该被当前文件使用而不暴露给外部，那么你就可以使用<code>static关键字</code>修饰一下。 </p>
+<p>本质上整个符号表只是想表达两件事：</p>
+<ul>
+<li>我能提供给其它文件使用的符号</li>
+<li>我需要其它文件提供给我使用的符号</li>
+</ul>
+<p>这里还有一个问题就是，编译器将统计的这张符号表放在哪里了呢？</p>
+<h3 id="符号表存放在哪里"><a href="#符号表存放在哪里" class="headerlink" title="符号表存放在哪里"></a>符号表存放在哪里</h3><p>在目标文件里有什么这一小节中，我们将一个目标文件简单的划分了两段，数据段和代码段，现在我们要向目标文件中再添加一段，而符号表也被编译器很贴心的放在目标文件中，因此一个目标文件可以理解为如图所示的三段，而符号表中的内容就是上一节当中编译器统计的表格。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729220335.png" alt="image-20210729220335315"></p>
+<p>有了符号表，链接器就可以进行符号决议了。</p>
+<h3 id="符号决议的过程"><a href="#符号决议的过程" class="headerlink" title="符号决议的过程"></a>符号决议的过程</h3><p>在上一节符号表中，我们知道符号表给链接器提供了两种信息，一个是当前目标文件可以提供给其它目标文件使用的符号，另一个其它目标文件需要提供给当前目标文件使用的符号。有了这些信息链接器就可以进行符号决议了。如图所示，假设链接器需要链接三个目标文件：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729220420.png" alt="链接三个目标文件示意图"></p>
+<p>链接器会依次扫描每一个给定的目标文件，同时链接器还维护了两个集合，一个是已定义符号集合D，另一个是未定义符合集合U，下面是链接器进行符合决议的过程：</p>
+<p>1，对于当前目标文件，查找其符号表，并将已定义的符号并添加到已定义符号集合D中。</p>
+<p>2，对于当前目标文件，查找其符号表，将每一个当前目标文件引用的符号与已定义符号集合D进行对比，如果该符号不在集合D中则将其添加到未定义符合集合U中。</p>
+<p>3，当所有文件都扫描完成后，如果为定义符号集合U不为空，则说明当前输入的目标文件集合中有未定义错误，链接器报错，整个编译过程终止。</p>
+<p>上面的过程看似复杂，其实用一句话概括就是只要每个目标文件所引用变量都能在其它目标文件中找到唯一的定义，整个链接过程就是正确的。</p>
+<p>如果你觉得上面的解释比较晦涩的话，你也可以将链接符号决议这个过程想象成如下的游戏：</p>
+<p>新学期开学后，幼儿园的小朋友们都带了礼物要和其它的小朋友们分享，同时每个小朋友也有自己的心愿单，每个小朋友都可以依照自己的心愿单去其它的小朋友那里拿礼物，整个过程结束后，每个小朋友都能拿到自己想要的礼物。</p>
+<p>在这个游戏当中，小朋友就好比目标文件，每个小朋友自己带的礼物就好比每个目标文件的已定义符号集合，心愿单就好比每个目标文件中未定义符号的集合。</p>
+<h3 id="举例说明-undefined-reference"><a href="#举例说明-undefined-reference" class="headerlink" title="举例说明 undefined reference"></a>举例说明 undefined reference</h3><p>假设我们写了一个math.c的数字计算程序，其中定义了一个add函数，该函数在main.c中被引用到，那么很简单，我们只需要在main.c中include写好的math.h头文件就可以使用add函数了，如图所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729221716.png" alt="引用示意图"></p>
+<p>但是由于粗心大意，一不小心把math.c中的add函数给注释掉了，当你在写完main.c、打算很潇洒的编译一下时，出现了很经典的undefined reference to <code>add(int, int)</code>错误，如图所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729221746.png" alt="引用报错示意图"></p>
+<p>这个错误其实是这样产生的：</p>
+<ol>
+<li>链接器发现了你写的代码math.o中引用了外部定义的add函数(不要忘了，这是通过检查目标文件math.o中的符号表得到的信息)，所以链接器开始查找add函数到底是在哪里定义的。</li>
+<li>链接器转而去目标文件math.o的目标文件符号表中查找，没有找到add函数的定义。</li>
+<li>链接器转而去其它目标文件符号表中查找，同样没有找到add函数的定义。</li>
+<li>链接器在查找了所有目标文件的符号表后都没有找到add函数，因此链接器停止工作并报出错误undefined reference to &#96;add(int, int)’，如上图所示。</li>
+</ol>
+<p>因此如果你很清楚链接器符号决议这个过程的话就会进行如下排查：</p>
+<ol>
+<li>main.c中对add函数的函数名有没有写正确。</li>
+<li>链接命令中有没有包含math.o，如果没有添加上该目标文件。</li>
+<li>如果链接命令没有问题，查看math.c中定义的add函数定义是否有问题。</li>
+<li>如果是C和C++混合编程时，确保相应的位置添加了extern “C”。</li>
+</ol>
+<p>一般情况下经过这几个步骤的排查基本能够解决问题。</p>
+<p>所以当你再次看到undefined reference这样的错误的是时候，你就应该可以很从容的去解决这类问题了。</p>
+<blockquote>
+<p>参考资料来自于公众号《码农的荒岛求生》，此处整理仅供个人学习。</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>编译器</category>
+      </categories>
+      <tags>
+        <tag>链接器</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>搞懂链接器3：重定位</title>
     <url>/posts/6748ea9.html</url>
     <content><![CDATA[<p>程序的运行过程就是CPU不断的从内存中取出指令然后执行执行的过程，对于函数调用来说比如我们在C&#x2F;C++语言中调用简单的加法函数add，其对应的汇编指令可能是这样的:</p>
@@ -519,440 +691,6 @@
       </tags>
   </entry>
   <entry>
-    <title>搞懂链接器1：链接器定义和符号决议</title>
-    <url>/posts/600f79ea.html</url>
-    <content><![CDATA[<h2 id="什么是链接器-Linker"><a href="#什么是链接器-Linker" class="headerlink" title="什么是链接器 (Linker)"></a>什么是链接器 (Linker)</h2><p>维基百科的定义为：</p>
-<blockquote>
-<p><code>链接器</code> （英语：Linker），是一个程序，将一个或多个由编译器或汇编器生成的目标文件外加库，链接为一个可执行文件。</p>
-</blockquote>
-<blockquote>
-<p>在Unix-like系统上常用的链接器是GNU ld。目标文件是包括机器码和链接器可用信息的程序模块。简单的讲，链接器的工作就是解析未定义的符号引用，将目标文件中的占位符替换为符号的地址。链接器还要完成程序中各目标文件的地址空间的组织，这可能涉及重定位工作。大多数现代操作系统都提供动态链接和静态链接两种形式。</p>
-</blockquote>
-<p>为便于理解，可将链接器的定义分解成如下三点：</p>
-<ul>
-<li>首先是链接器的本质，链接器本质上也是一个程序，和我们经常使用的普通程序没什么不同。</li>
-<li>接器的输入是编译器编译好的目标文件（object file）。</li>
-<li>链接器的输出，链接器在将目标文件打包处理后，生成或者可执行文件，或者库，或者目标文件。</li>
-</ul>
-<p>从这个定义中能够看出，链接器的作用有点类似于我们经常使用的压缩软WinRAR (Linux下是tar)，压缩软件将一堆文件打包压缩成一个压缩文件，而链接器和压缩软件的区别在于链接器是将多个目标文件打包成一个文件而不进行压缩。</p>
-<h2 id="符号决议-Symbol-Resolution"><a href="#符号决议-Symbol-Resolution" class="headerlink" title="符号决议 (Symbol Resolution)"></a>符号决议 (Symbol Resolution)</h2><p>所有的应用程序都是链接器将所需要的一个个简单的目标文件汇集起来形成的，可以将这个过程想象成拼图游戏，每个拼块就是一个简单的目标文件：</p>
-<img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729223235.jpg" alt="拼图" style="zoom: 33%;" />
-
-<p>1、拼图游戏当中的每个拼块都依赖于其它拼块提供的拼接口，这就好比我们写的程序模块依赖于其它模块提供的编程接口，比如我们在list.c中实现了一种特定的链表数据结构，其它模块需要使用这种链表，这就是模块间的依赖。而链接器其中一项任务就是要确保提供给链接器进行链接的目标文件集合之间依赖是成立的（也就是说，不会出现在被依赖的模块中链接器找不到需要的接口），这就是要讲到的<code>符号决议</code>(Symbol Resolution)。</p>
-<p>2、我们在拼图游戏当中通常都是将一整幅图按组成部位一部分一部分拼接好，然后将这些比较完整的大的组成部分拼接成最后一整幅图。这就好比链接器会首先将程序每个模块当中目标文件集合链接成库，然后再将各个库进行链接最终形成可执行程序。这就是可执行程序的生成过程。</p>
-<p>3，链接器还有一项任务是无法用这个拼图游戏来类比的，但是这项重要的任务对程序员不可见，作为程序员几乎不会在这个过程遇到问题，这项任务就是<code>重定位</code>。</p>
-<h3 id="链接器的工作过程"><a href="#链接器的工作过程" class="headerlink" title="链接器的工作过程"></a>链接器的工作过程</h3><p>通过拼图这个游戏的类比，我们给出链接器的工作过程：</p>
-<ol>
-<li>首先，链接器对给定的目标文件或库的集合进行符号决议以确保模块间的依赖是正确的。</li>
-<li>其次，链接器将给定的目标文件集合进行拼接打包成需要的库或最终可执行文件。</li>
-<li>最后，链接器对链接好的库或可执行文件进行重定位。</li>
-</ol>
-<p>接下来详细的讲解下每一个过程。首先讲解链接器的符号决议过程。在这个过程当中，链接器需要做的工作就是确保所有目标文件中的符号引用都有唯一的定义。要想理解这句话我们首先来看看一个典型的c文件里都有些什么。</p>
-<h3 id="c源文件中都有什么"><a href="#c源文件中都有什么" class="headerlink" title="c源文件中都有什么"></a>c源文件中都有什么</h3><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729220137.png" alt="c程序示例图"></p>
-<p>如图所示是一个典型的c源文件，该文件中的变量可以划分为两类：</p>
-<ul>
-<li><p>全局变量：比如x_global_uninit，x_global_init，fn_c。只要程序没有结束运行，全局变量都可以随时使用。注意，用static修饰的全局变量比如y_global_uninit，其生命周期也等同于程序的运行周期，只是这种全局变量只能在所被定义的文件当中使用，对其它文件不可见。</p>
-</li>
-<li><p>局部变量：比如y_local_uninit，y_local_init，局部局部变量的生命周期和全局变量不同，局部变量变量只能在相应的函数内部使用，当函数调用完成后该函数中的局部变量也就无法使用了。因为局部变量只存在于函数运行时的栈帧当中，函数调用完成后相应的栈帧被自动回收(该内容涉及到程序运行时的内存模型)。</p>
-</li>
-</ul>
-<h3 id="目标文件里有什么"><a href="#目标文件里有什么" class="headerlink" title="目标文件里有什么"></a>目标文件里有什么</h3><p>编译器的任务就是把人类可以理解的代码转换成机器可以执行的机器指令，源文件编译后形成对应的目标文件。源文件被编译后生成的目标文件中本质上只有两部分：</p>
-<ul>
-<li><p>代码部分：你可能会想，一个源文件中不都是代码吗，这里的代码指的是计算机可以执行的机器指令，也就是源文件中定义的所有函数。比如上图中定义的函数fn_b以及fn_c。</p>
-</li>
-<li><p>数据部分：源文件中定义的全局变量。如果是已经初始化后的全局变量，该全局变量的值也存在于数据部分。</p>
-</li>
-</ul>
-<p>到目前为止，可以把一个目标文件简单的理解为由两部分组成，代码部分中保存的是CPU可以执行的机器指令，这些机器指令来自程序员所定义的函数，编译器将这些定义的函数翻译成机器指令并存放在目标文件的代码部分。数据部分存放的是机器指令所操作的数据。因此目前，可以简单的将目标文件理解为一个只有两部分的文件，如图所示：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729220213.png" alt="目标文件组成示意图"></p>
-<p>你可能会好奇函数中定义的局部变量为什么没有放到目标文件的数据段当中，这是因为局部变量是函数私有的，局部变量只能在该函数内部使用而全局变量时没有这个限制的，所以函数私有的局部变量被放在了代码段中，作为机器指令的操作数。</p>
-<p>编译器在编译过程中遇到外部定义的全局变量或函数时，只要编译器能找到相应的变量声明就会在心里默念“all is well， all is well(一切顺利)“，从这里可以看出编译器的要求还是很低的，至于所使用变量的定义编译器是不会费力去四处搜索，而是愉快的继续接下来的编译。注意，这里再次强调一下，编译器在遇到外部定义的全局变量或者函数时只要能在当前文件找到其声明，编译器就认为编译正确。而寻找使用变量定义的这项任务就被留给了链接器。链接器的其中一项任务就是要确定所使用的变量要有其唯一的定义。虽然编译器给链接器留了一项任务，但为了让链接器工作的轻松一点编译器还是多做了一点工作的，这部分工作就是符号表(Symbol table)。</p>
-<h3 id="什么是符号表-Symbol-table"><a href="#什么是符号表-Symbol-table" class="headerlink" title="什么是符号表 (Symbol table)"></a>什么是符号表 (Symbol table)</h3><p>之前提到，虽然编译器很不厚道的给链接器留了一项任务，但是编译器为了链接器工作的轻松一点还是做了一点事情，这就是<code>符号表</code>。那符号表中保存的是什么呢，符号表中保存的信息有两部分：</p>
-<ul>
-<li>该目标文件中引用的全局变量以及函数</li>
-<li>该目标文件中定义的全局变量以及函数</li>
-</ul>
-<p>以上图中的代码为例，编译器在编译过程中每次遇到一个全局变量或者函数名都会在符号表中添加一项，最终编译器会统计出如下所示的一张符号表：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729220247.png" alt="符号表示意图"></p>
-<ul>
-<li>z_global以及fn_a是未定义的，因为在当前文件中，这两个变量仅仅是声明，编译器并没有找到其定义。剩余的变量编译器都可以在当前文件中找到其定义。</li>
-<li>fn_b以及fn_c为当前文件定义的函数，因为在代码段。</li>
-<li>剩余的符号都是全局变量，因此放在了数据段。</li>
-</ul>
-<p>有同学可能会问，为什么全局变量y_global_uninit ，y_global_init以及函数fn_b不可被其它目标文件引用，这是因为这些变量用static修饰过了，在C语言中经static修饰过的函数的函数以及变量都是当前文件私有的，对外部不可见，这里一定要注意。所以static这个关键字的用法就是，如果你认为一个变量只应该被当前文件使用而不暴露给外部，那么你就可以使用<code>static关键字</code>修饰一下。 </p>
-<p>本质上整个符号表只是想表达两件事：</p>
-<ul>
-<li>我能提供给其它文件使用的符号</li>
-<li>我需要其它文件提供给我使用的符号</li>
-</ul>
-<p>这里还有一个问题就是，编译器将统计的这张符号表放在哪里了呢？</p>
-<h3 id="符号表存放在哪里"><a href="#符号表存放在哪里" class="headerlink" title="符号表存放在哪里"></a>符号表存放在哪里</h3><p>在目标文件里有什么这一小节中，我们将一个目标文件简单的划分了两段，数据段和代码段，现在我们要向目标文件中再添加一段，而符号表也被编译器很贴心的放在目标文件中，因此一个目标文件可以理解为如图所示的三段，而符号表中的内容就是上一节当中编译器统计的表格。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729220335.png" alt="image-20210729220335315"></p>
-<p>有了符号表，链接器就可以进行符号决议了。</p>
-<h3 id="符号决议的过程"><a href="#符号决议的过程" class="headerlink" title="符号决议的过程"></a>符号决议的过程</h3><p>在上一节符号表中，我们知道符号表给链接器提供了两种信息，一个是当前目标文件可以提供给其它目标文件使用的符号，另一个其它目标文件需要提供给当前目标文件使用的符号。有了这些信息链接器就可以进行符号决议了。如图所示，假设链接器需要链接三个目标文件：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729220420.png" alt="链接三个目标文件示意图"></p>
-<p>链接器会依次扫描每一个给定的目标文件，同时链接器还维护了两个集合，一个是已定义符号集合D，另一个是未定义符合集合U，下面是链接器进行符合决议的过程：</p>
-<p>1，对于当前目标文件，查找其符号表，并将已定义的符号并添加到已定义符号集合D中。</p>
-<p>2，对于当前目标文件，查找其符号表，将每一个当前目标文件引用的符号与已定义符号集合D进行对比，如果该符号不在集合D中则将其添加到未定义符合集合U中。</p>
-<p>3，当所有文件都扫描完成后，如果为定义符号集合U不为空，则说明当前输入的目标文件集合中有未定义错误，链接器报错，整个编译过程终止。</p>
-<p>上面的过程看似复杂，其实用一句话概括就是只要每个目标文件所引用变量都能在其它目标文件中找到唯一的定义，整个链接过程就是正确的。</p>
-<p>如果你觉得上面的解释比较晦涩的话，你也可以将链接符号决议这个过程想象成如下的游戏：</p>
-<p>新学期开学后，幼儿园的小朋友们都带了礼物要和其它的小朋友们分享，同时每个小朋友也有自己的心愿单，每个小朋友都可以依照自己的心愿单去其它的小朋友那里拿礼物，整个过程结束后，每个小朋友都能拿到自己想要的礼物。</p>
-<p>在这个游戏当中，小朋友就好比目标文件，每个小朋友自己带的礼物就好比每个目标文件的已定义符号集合，心愿单就好比每个目标文件中未定义符号的集合。</p>
-<h3 id="举例说明-undefined-reference"><a href="#举例说明-undefined-reference" class="headerlink" title="举例说明 undefined reference"></a>举例说明 undefined reference</h3><p>假设我们写了一个math.c的数字计算程序，其中定义了一个add函数，该函数在main.c中被引用到，那么很简单，我们只需要在main.c中include写好的math.h头文件就可以使用add函数了，如图所示：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729221716.png" alt="引用示意图"></p>
-<p>但是由于粗心大意，一不小心把math.c中的add函数给注释掉了，当你在写完main.c、打算很潇洒的编译一下时，出现了很经典的undefined reference to <code>add(int, int)</code>错误，如图所示：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210729221746.png" alt="引用报错示意图"></p>
-<p>这个错误其实是这样产生的：</p>
-<ol>
-<li>链接器发现了你写的代码math.o中引用了外部定义的add函数(不要忘了，这是通过检查目标文件math.o中的符号表得到的信息)，所以链接器开始查找add函数到底是在哪里定义的。</li>
-<li>链接器转而去目标文件math.o的目标文件符号表中查找，没有找到add函数的定义。</li>
-<li>链接器转而去其它目标文件符号表中查找，同样没有找到add函数的定义。</li>
-<li>链接器在查找了所有目标文件的符号表后都没有找到add函数，因此链接器停止工作并报出错误undefined reference to &#96;add(int, int)’，如上图所示。</li>
-</ol>
-<p>因此如果你很清楚链接器符号决议这个过程的话就会进行如下排查：</p>
-<ol>
-<li>main.c中对add函数的函数名有没有写正确。</li>
-<li>链接命令中有没有包含math.o，如果没有添加上该目标文件。</li>
-<li>如果链接命令没有问题，查看math.c中定义的add函数定义是否有问题。</li>
-<li>如果是C和C++混合编程时，确保相应的位置添加了extern “C”。</li>
-</ol>
-<p>一般情况下经过这几个步骤的排查基本能够解决问题。</p>
-<p>所以当你再次看到undefined reference这样的错误的是时候，你就应该可以很从容的去解决这类问题了。</p>
-<blockquote>
-<p>参考资料来自于公众号《码农的荒岛求生》，此处整理仅供个人学习。</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>编译器</category>
-      </categories>
-      <tags>
-        <tag>链接器</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Next主题美化修改记录（一）</title>
-    <url>/posts/d87f7e0c.html</url>
-    <content><![CDATA[<p>基于 Next 主题 V8.10.1，第一波美化修改记录。</p>
-<p>主要修改为：</p>
-<ul>
-<li>添加文章结束分割线</li>
-<li>添加上吊猫个性化回到顶部</li>
-<li>添加畅言评论系统</li>
-</ul>
-<span id="more"></span>
-
-<h2 id="git-status-结果"><a href="#git-status-结果" class="headerlink" title="git status 结果"></a>git status 结果</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Changed files:</span><br><span class="line">	modified:   layout/_macro/post.njk</span><br><span class="line">	modified:   layout/_partials/footer.njk</span><br><span class="line">	modified:   layout/_partials/page/tags.njk</span><br><span class="line">	modified:   source/css/_common/components/back-to-top.styl</span><br><span class="line"></span><br><span class="line">Untracked files:</span><br><span class="line">	layout/_macro/passage-end-tag.njk</span><br></pre></td></tr></table></figure>
-<p>新文件 layout&#x2F;_macro&#x2F;passage-end-tag.njk 内容：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    &#123;% if not is_index %&#125;</span><br><span class="line">        &lt;div style=&quot;text-align:center;color: #ccc;font-size:14px;&quot;&gt;-------------     本文结束　&lt;i class=&quot;fa fa-heartbeat&quot;&gt;&lt;/i&gt;　步履不止     -------------&lt;/div&gt;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-
-<h2 id="git-diff-结果"><a href="#git-diff-结果" class="headerlink" title="git diff 结果"></a>git diff 结果</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">diff --git a/layout/_macro/post.njk b/layout/_macro/post.njk</span><br><span class="line">index 27851de..6c994b4 100644</span><br><span class="line">--- a/layout/_macro/post.njk</span><br><span class="line">+++ b/layout/_macro/post.njk</span><br><span class="line">@@ -102,6 +102,12 @@</span><br><span class="line">       &#123;&#123; partial(&#x27;_partials/post/post-related.njk&#x27;) &#125;&#125;</span><br><span class="line">     &#123;%- endif %&#125;</span><br><span class="line"> </span><br><span class="line">+&lt;div&gt;</span><br><span class="line">+  &#123;% if not is_index %&#125;</span><br><span class="line">+    &#123;% include &#x27;passage-end-tag.njk&#x27; %&#125;</span><br><span class="line">+  &#123;% endif %&#125;</span><br><span class="line">+&lt;/div&gt;</span><br><span class="line">+</span><br><span class="line">     &lt;footer class=&quot;post-footer&quot;&gt;</span><br><span class="line">       &#123;%- if is_index %&#125;</span><br><span class="line">         &lt;div class=&quot;post-eof&quot;&gt;&lt;/div&gt;</span><br><span class="line">diff --git a/layout/_partials/footer.njk b/layout/_partials/footer.njk</span><br><span class="line">index d39307a..a060418 100644</span><br><span class="line">--- a/layout/_partials/footer.njk</span><br><span class="line">+++ b/layout/_partials/footer.njk</span><br><span class="line">@@ -19,7 +19,7 @@</span><br><span class="line">   &lt;/span&gt;</span><br><span class="line">   &lt;span class=&quot;author&quot; itemprop=&quot;copyrightHolder&quot;&gt;&#123;&#123; theme.footer.copyright or author &#125;&#125;&lt;/span&gt;</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line">-</span><br><span class="line">+&lt;!--</span><br><span class="line"> &#123;%- if config.symbols_count_time.total_symbols or config.symbols_count_time.total_time %&#125;</span><br><span class="line"> &lt;div class=&quot;wordcount&quot;&gt;</span><br><span class="line">   &#123;%- if config.symbols_count_time.total_symbols %&#125;</span><br><span class="line">@@ -47,7 +47,7 @@</span><br><span class="line">   &#123;%- endif %&#125;</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line"> &#123;%- endif %&#125;</span><br><span class="line">-</span><br><span class="line">+--&gt;</span><br><span class="line"> &#123;%- if theme.busuanzi_count.enable %&#125;</span><br><span class="line"> &lt;div class=&quot;busuanzi-count&quot;&gt;</span><br><span class="line">   &#123;%- if theme.busuanzi_count.total_visitors %&#125;</span><br><span class="line">@@ -73,14 +73,14 @@</span><br><span class="line">   &#123;%- endif %&#125;</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line"> &#123;%- endif %&#125;</span><br><span class="line">-</span><br><span class="line">+&lt;!--</span><br><span class="line"> &#123;%- if theme.footer.powered %&#125;</span><br><span class="line">   &lt;div class=&quot;powered-by&quot;&gt;</span><br><span class="line">     &#123;%- set next_site = &#x27;https://theme-next.js.org&#x27; if theme.scheme === &#x27;Gemini&#x27; else &#x27;https://theme-next.js.org/&#x27; + theme.scheme | lower + &#x27;/&#x27; %&#125;</span><br><span class="line">     &#123;&#123;- __(&#x27;footer.powered&#x27;, next_url(&#x27;https://hexo.io&#x27;, &#x27;Hexo&#x27;) + &#x27; &amp; &#x27; + next_url(next_site, &#x27;NexT.&#x27; + theme.scheme)) &#125;&#125;</span><br><span class="line">   &lt;/div&gt;</span><br><span class="line"> &#123;%- endif %&#125;</span><br><span class="line">-</span><br><span class="line">+--&gt;</span><br><span class="line"> &#123;%- if theme.add_this_id %&#125;</span><br><span class="line">   &lt;div class=&quot;addthis_inline_share_toolbox&quot;&gt;</span><br><span class="line">     &lt;script src=&quot;//s7.addthis.com/js/300/addthis_widget.js#pubid=&#123;&#123; theme.add_this_id &#125;&#125;&quot; async=&quot;async&quot;&gt;&lt;/script&gt;</span><br><span class="line">diff --git a/layout/_partials/page/tags.njk b/layout/_partials/page/tags.njk</span><br><span class="line">index c6e55cc..7cbc75c 100644</span><br><span class="line">--- a/layout/_partials/page/tags.njk</span><br><span class="line">+++ b/layout/_partials/page/tags.njk</span><br><span class="line">@@ -13,4 +13,4 @@</span><br><span class="line">       &#125;)</span><br><span class="line">     &#125;&#125;</span><br><span class="line">   &lt;/div&gt;</span><br><span class="line">-&lt;/div&gt;</span><br><span class="line">+&lt;/div&gt;</span><br><span class="line">\ No newline at end of file</span><br><span class="line">diff --git a/source/css/_common/components/back-to-top.styl b/source/css/_common/components/back-to-top.styl</span><br><span class="line">index d1c9152..89af070 100644</span><br><span class="line">--- a/source/css/_common/components/back-to-top.styl</span><br><span class="line">+++ b/source/css/_common/components/back-to-top.styl</span><br><span class="line">@@ -43,3 +43,26 @@ if (hexo-config(&#x27;back2top.enable&#x27;)) &#123;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line">+</span><br><span class="line">+/* 这里已经注释掉，若想生效取消注释即可，其他不用设置</span><br><span class="line">+//自定义回到顶部样式-上吊猫</span><br><span class="line">+.back-to-top &#123;</span><br><span class="line">+  right: 60px;</span><br><span class="line">+  width: 70px;  //图片素材宽度</span><br><span class="line">+  height: 900px;  //图片素材高度</span><br><span class="line">+  top: -900px;</span><br><span class="line">+  bottom: unset;</span><br><span class="line">+  transition: all .5s ease-in-out;</span><br><span class="line">+  background: url(&quot;/images/scroll.png&quot;);</span><br><span class="line">+</span><br><span class="line">+  //隐藏箭头图标</span><br><span class="line">+  &gt; i &#123;</span><br><span class="line">+    display: none;</span><br><span class="line">+  &#125;</span><br><span class="line">+</span><br><span class="line">+  &amp;.back-to-top-on &#123;</span><br><span class="line">+    bottom: unset;</span><br><span class="line">+    top: 100vh &lt; (900px + 200px) ? calc( 100vh - 900px - 200px ) : 0px;</span><br><span class="line">+  &#125;</span><br><span class="line">+&#125;</span><br><span class="line">+*/</span><br><span class="line">\ No newline at end of file</span><br></pre></td></tr></table></figure>
-
-<h2 id="config-yml-修改情况"><a href="#config-yml-修改情况" class="headerlink" title="_config.yml 修改情况"></a>_config.yml 修改情况</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">24c24</span><br><span class="line">&lt;   #sidebar: source/_data/sidebar.njk</span><br><span class="line">---</span><br><span class="line">&gt;   sidebar: source/_data/sidebar.njk</span><br><span class="line">53,54c53,54</span><br><span class="line">&lt;   small: /images/favicon-16x16-next.png</span><br><span class="line">&lt;   medium: /images/favicon-32x32-next.png</span><br><span class="line">---</span><br><span class="line">&gt;   small: /images/favicon-50.png # favicon-16x16-next.png</span><br><span class="line">&gt;   medium: /images/favicon-100.png # favicon-32x32-next.png</span><br><span class="line">98,102c98,102</span><br><span class="line">&lt;   #home: / || fa fa-home</span><br><span class="line">&lt;   #about: /about/ || fa fa-user</span><br><span class="line">&lt;   #tags: /tags/ || fa fa-tags</span><br><span class="line">&lt;   #categories: /categories/ || fa fa-th</span><br><span class="line">&lt;   #archives: /archives/ || fa fa-archive</span><br><span class="line">---</span><br><span class="line">&gt;   home: / || fa fa-home</span><br><span class="line">&gt;   categories: /categories/ || fa fa-folder-open</span><br><span class="line">&gt;   tags: /tags/ || fa fa-tags</span><br><span class="line">&gt;   archives: /archives/ || fa fa-calendar # fa fa-archive</span><br><span class="line">&gt;   about: /about/ || fa fa-user</span><br><span class="line">120,121c120,121</span><br><span class="line">&lt;   position: left</span><br><span class="line">&lt;   #position: right</span><br><span class="line">---</span><br><span class="line">&gt;   #position: left</span><br><span class="line">&gt;   position: right</span><br><span class="line">143c143</span><br><span class="line">&lt;   url: #/images/avatar.gif</span><br><span class="line">---</span><br><span class="line">&gt;   url: /images/avatar.jpg</span><br><span class="line">145c145</span><br><span class="line">&lt;   rounded: false</span><br><span class="line">---</span><br><span class="line">&gt;   rounded: true</span><br><span class="line">147c147</span><br><span class="line">&lt;   rotated: false</span><br><span class="line">---</span><br><span class="line">&gt;   rotated: true</span><br><span class="line">157,158c157,158</span><br><span class="line">&lt;   #GitHub: https://github.com/yourname || fab fa-github</span><br><span class="line">&lt;   #E-Mail: mailto:yourname@gmail.com || fa fa-envelope</span><br><span class="line">---</span><br><span class="line">&gt;   #GitHub: https://github.com/liu-paopao || fab fa-github</span><br><span class="line">&gt;   #E-Mail: mailto:liupaopao520@163.com || fa fa-envelope</span><br><span class="line">170c170</span><br><span class="line">&lt;   icons_only: false</span><br><span class="line">---</span><br><span class="line">&gt;   icons_only: true</span><br><span class="line">212c212</span><br><span class="line">&lt;     name: fa fa-heart</span><br><span class="line">---</span><br><span class="line">&gt;     name: fa fa-heartbeat</span><br><span class="line">222c222</span><br><span class="line">&lt;   powered: true</span><br><span class="line">---</span><br><span class="line">&gt;   powered: false</span><br><span class="line">262a263</span><br><span class="line">&gt; </span><br><span class="line">264c265</span><br><span class="line">&lt; tag_icon: false</span><br><span class="line">---</span><br><span class="line">&gt; tag_icon: true</span><br><span class="line">375c376</span><br><span class="line">&lt;     enable: false</span><br><span class="line">---</span><br><span class="line">&gt;     enable: true</span><br><span class="line">384c385</span><br><span class="line">&lt;   scrollpercent: false</span><br><span class="line">---</span><br><span class="line">&gt;   scrollpercent: true</span><br><span class="line">409c410</span><br><span class="line">&lt;   permalink: https://github.com/yourname</span><br><span class="line">---</span><br><span class="line">&gt;   permalink: https://github.com/liu-paopao</span><br><span class="line">529c530</span><br><span class="line">&lt; fancybox: false</span><br><span class="line">---</span><br><span class="line">&gt; fancybox: true</span><br><span class="line">610,612c611,613</span><br><span class="line">&lt;   enable: false</span><br><span class="line">&lt;   appid:</span><br><span class="line">&lt;   appkey:</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br><span class="line">&gt;   appid: cyw09gPog</span><br><span class="line">&gt;   appkey: 4488e6b82bfe3d819f4971a5e5c115f4</span><br><span class="line">745c746</span><br><span class="line">&lt;   enable: false</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br><span class="line">857c858</span><br><span class="line">&lt;   enable: false</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>博客相关</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>vim学习笔记</title>
-    <url>/posts/102383ca.html</url>
-    <content><![CDATA[<h2 id="多行添加注释和取消注释"><a href="#多行添加注释和取消注释" class="headerlink" title="多行添加注释和取消注释"></a>多行添加注释和取消注释</h2><p><strong>正常模式 –&gt; 可视模式：</strong></p>
-<table>
-<thead>
-<tr>
-<th>指令</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>v</td>
-<td>可视模式</td>
-</tr>
-<tr>
-<td>ctrl+v</td>
-<td>可视块模式</td>
-</tr>
-<tr>
-<td>shift+v</td>
-<td>可视行模式</td>
-</tr>
-</tbody></table>
-<p>可视块模式有一个非常实用的作用：选多行进行注释</p>
-<ul>
-<li><p>多行添加注释：<br>- 光标置于行首<br>- <code>ctrl + v</code>，进入可视块模式<br>- 移动光标，选中的位置会有高亮显示<br>- <code>shift + i</code>，进入 insert 模式<br>- 输入<code>//</code><br>- <code>esc</code></p>
-</li>
-<li><p>多行取消注释：<br>- 光标置于行首<br>- <code>ctrl + v</code>，进入可视块模式<br>- 移动光标，选中的位置会有高亮显示<br>- 按<code>d</code></p>
-</li>
-</ul>
-<h2 id="同一窗口操作多个文件"><a href="#同一窗口操作多个文件" class="headerlink" title="同一窗口操作多个文件"></a>同一窗口操作多个文件</h2><ol>
-<li>同时打开两个文件并分割窗口</li>
-</ol>
-<p>上下分割：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ vim -o filename1 filename2  </span><br></pre></td></tr></table></figure>
-<p>左右分割：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ vim -O filename1 filename2</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>已打开一个文件，同时再打开另一个文件</li>
-</ol>
-<p>上下分割：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:vs filename</span><br></pre></td></tr></table></figure>
-<p>左右分割：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:sp filename</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>其中，vs可以用vsplit替换，sp可以用split替换。<br>如果finename不存在，则会新建该文件并打开。</p>
-</blockquote>
-<ol start="3">
-<li>切换窗口</li>
-</ol>
-<p>先<code>ctrl + w</code>开启窗口切换后，再选择按上下左右键进行跳转：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ctrl + w w  // 即按住ctrl键，再按两下w键。或者ctrl + w &lt;h|j|k|l&gt;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>即按住ctrl键，按一次w键，再按一次表示方向的h或j或k或l，则光标会切换到当前窗口的 左｜下｜上｜右 侧的窗口。</p>
-</blockquote>
-<ol start="4">
-<li>关闭 vim 窗口</li>
-</ol>
-<p>关闭光标所在的窗口：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:q</span><br></pre></td></tr></table></figure>
-<p>关闭所有窗口：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:qa</span><br></pre></td></tr></table></figure>
-<p>关闭除光标所在的窗口之外的其他窗口：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:only</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="统计字符串出现次数"><a href="#统计字符串出现次数" class="headerlink" title="统计字符串出现次数"></a>统计字符串出现次数</h2><ul>
-<li>命令</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:%s/pattern//gn</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>参数说明</li>
-</ul>
-<p> % ：指明操作区间，%表示全文本；可以使用1,$或者行区间代替<br> s：substitute，表示替换<br> pattern：要查找的字符串<br> &#x2F;&#x2F;：替代文本应该放在这里，两个斜杠中间没有任何字符表示无替代文本<br> g：替换该行所有出现的字符串，如果没有该参数则只替换该行第一次出现的地方<br> n：表示匹配的行数</p>
-<ul>
-<li>扩展</li>
-</ul>
-<p>统计k行到l行出现pattern的次数：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:k,ls/pattern//gn</span><br></pre></td></tr></table></figure>
-
-<p>统计在当前编辑文本出现的次数：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:%s/pattern//gn</span><br></pre></td></tr></table></figure>
-
-<p>统计在文件中出现的行数：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat file|greg –i pattern |wc –l</span><br></pre></td></tr></table></figure>
-
-<h2 id="鼠标选中不能复制"><a href="#鼠标选中不能复制" class="headerlink" title="鼠标选中不能复制"></a>鼠标选中不能复制</h2><p>vim中鼠标选中不能复制并进入可视模式，习惯了在vim中鼠标选中即复制的效果，对此问题从网上查了下发现是vim的默认配置导致的。</p>
-<ul>
-<li>解决方法：</li>
-</ul>
-<ol>
-<li><p>修改 vim 的默认配置文件</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /usr/share/vim/vim81/defaults.vim</span><br></pre></td></tr></table></figure></li>
-<li><p>输入 <code>/mouse</code> 搜索关键词 <code>mouse</code> ，定位到下面位置</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">if has(&#x27;mouse&#x27;)</span><br><span class="line">set mouse=a</span><br><span class="line">endif</span><br></pre></td></tr></table></figure>
-<p>将 <code>set mouse=a</code> 改为 <code>set mouse-=a</code>（在等号前面加上一个减号）</p>
-</li>
-<li><p>输入 <code>:wq!</code> 保存即可解决问题。</p>
-</li>
-</ol>
-<h2 id="删除多余空格"><a href="#删除多余空格" class="headerlink" title="删除多余空格"></a>删除多余空格</h2><ul>
-<li><p>删除行尾多余的空格和tab符号。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">%s/\s\+$//g</span><br></pre></td></tr></table></figure></li>
-</ul>
-<p>命令解释：</p>
-<blockquote>
-<p>【%s】表示全文替换<br>【%s&#x2F;str1&#x2F;str2&#x2F;g】表示将全文中<code>str1</code>替换成<code>str2</code><br>【\s+$】要替换的内容<code>str1</code>，其中<code>\s</code>表示空格和tab，<code>\+</code>表示一个或多个，<code>$</code>表示行尾（表示行末（$）前的一个或者多个（+）空格（\s））<br>【&#x2F;&#x2F;】替换后的内容<code>str2</code>，其中&#x2F;&#x2F;直接为空，表示替换为空，即达到删除效果<br>【g】表示全局替换（global）</p>
-</blockquote>
-<ul>
-<li><p>只删除行尾空格，不能删除tab</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">%s/ *$//g</span><br></pre></td></tr></table></figure>
-<p>&#x2F;和*中间有空格，只能删除行尾空格，对于tab不能删除</p>
-</li>
-</ul>
-<h2 id="vim新建文件自动添加头部注释"><a href="#vim新建文件自动添加头部注释" class="headerlink" title="vim新建文件自动添加头部注释"></a>vim新建文件自动添加头部注释</h2><ul>
-<li>修改<code>~/.vimrc</code>，在文件最后添加以下内容：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot; 【vim创建程序文件自动添加头部注释】</span><br><span class="line">&quot; 当新建.h .c .hpp .cpp .sh文件时自动调用SetTitle函数添加头部注释</span><br><span class="line">autocmd BufNewFile *.[ch],*.hpp,*.cpp,*.sh exec &quot;:call SetTitle()&quot;</span><br><span class="line">&quot; 定义.h .c .hpp .cpp注释格式</span><br><span class="line">func SetComment()</span><br><span class="line">	call setline(1,&quot;/*================================================================&quot;)</span><br><span class="line">	call append(line(&quot;.&quot;),   &quot;*  Author: paopao&quot;)</span><br><span class="line">	call append(line(&quot;.&quot;)+1, &quot;*  Date: &quot;.strftime(&quot;%Y-%m-%d&quot;))</span><br><span class="line">	call append(line(&quot;.&quot;)+2, &quot;*  Description: &quot;)</span><br><span class="line">	call append(line(&quot;.&quot;)+3, &quot;================================================================*/&quot;)</span><br><span class="line">	call append(line(&quot;.&quot;)+4, &quot;&quot;)</span><br><span class="line">endfunc</span><br><span class="line"></span><br><span class="line">&quot; 定义.sh注释格式</span><br><span class="line">func SetComment_sh()</span><br><span class="line">	call setline(3, &quot;#================================================================&quot;)</span><br><span class="line">	call setline(4, &quot;#&quot;)</span><br><span class="line">	call setline(5, &quot;#  Author: paopao&quot;)</span><br><span class="line">	call setline(6, &quot;#  Date: &quot;.strftime(&quot;%Y-%m-%d&quot;))</span><br><span class="line">	call setline(7, &quot;#  Description: &quot;)</span><br><span class="line">	call setline(8, &quot;#================================================================&quot;)</span><br><span class="line">	call setline(9, &quot;&quot;)</span><br><span class="line">endfunc</span><br><span class="line"></span><br><span class="line">&quot; 定义函数SetTitle，自动插入文件头</span><br><span class="line">func SetTitle()</span><br><span class="line">	if &amp;filetype == &#x27;sh&#x27;</span><br><span class="line">		call setline(1,&quot;#!/bin/sh&quot;)</span><br><span class="line">		call setline(2,&quot;&quot;)</span><br><span class="line">		call SetComment_sh()</span><br><span class="line">	else</span><br><span class="line">	     call SetComment()</span><br><span class="line">	     if expand(&quot;%:e&quot;) == &#x27;h&#x27;</span><br><span class="line">		call append(line(&quot;.&quot;)+5, &quot;#ifndef _&quot;.toupper(expand(&quot;%:t:r&quot;)).&quot;_H&quot;)</span><br><span class="line">		call append(line(&quot;.&quot;)+6, &quot;#define _&quot;.toupper(expand(&quot;%:t:r&quot;)).&quot;_H&quot;)</span><br><span class="line">		call append(line(&quot;.&quot;)+7, &quot;&quot;)</span><br><span class="line">		call append(line(&quot;.&quot;)+8, &quot;#endif //&quot;.toupper(expand(&quot;%:t:r&quot;)).&quot;_H&quot;)</span><br><span class="line">	     elseif expand(&quot;%:e&quot;) == &#x27;hpp&#x27;</span><br><span class="line">		call append(line(&quot;.&quot;)+5, &quot;#ifndef _&quot;.toupper(expand(&quot;%:t:r&quot;)).&quot;_HPP&quot;)</span><br><span class="line">		call append(line(&quot;.&quot;)+6, &quot;#define _&quot;.toupper(expand(&quot;%:t:r&quot;)).&quot;_HPP&quot;)</span><br><span class="line">		call append(line(&quot;.&quot;)+7, &quot;&quot;)</span><br><span class="line">		call append(line(&quot;.&quot;)+8, &quot;#endif //&quot;.toupper(expand(&quot;%:t:r&quot;)).&quot;_HPP&quot;)</span><br><span class="line">	     endif</span><br><span class="line">	endif</span><br><span class="line">endfunc</span><br></pre></td></tr></table></figure></li>
-<li>新建<code>a.sh</code>和<code>a.h</code>来测试效果：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ vim a.sh</span><br><span class="line"></span><br><span class="line">#!/bin/sh</span><br><span class="line"></span><br><span class="line">#================================================================</span><br><span class="line">#</span><br><span class="line">#  Author: paopao</span><br><span class="line">#  Date: 2022-04-30</span><br><span class="line">#  Description: </span><br><span class="line">#================================================================</span><br></pre></td></tr></table></figure>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ vim a.h</span><br><span class="line"></span><br><span class="line">/*================================================================</span><br><span class="line">*  Author: paopao</span><br><span class="line">*  Date: 2022-04-30</span><br><span class="line">*  Description: </span><br><span class="line">================================================================*/</span><br><span class="line"></span><br><span class="line">#ifndef _A_H</span><br><span class="line">#define _A_H</span><br><span class="line"></span><br><span class="line">#endif //A_H</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="底部状态行显示绝对路径和行列信息"><a href="#底部状态行显示绝对路径和行列信息" class="headerlink" title="底部状态行显示绝对路径和行列信息"></a>底部状态行显示绝对路径和行列信息</h2><ol>
-<li>打开vim配置文件<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim ~/.vimrc</span><br></pre></td></tr></table></figure></li>
-<li>修改方法</li>
-</ol>
-<ul>
-<li>方法1：复制下面内容到配置文件最后面</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot; 状态栏</span><br><span class="line">set laststatus=2 &quot; 总是显示状态栏</span><br><span class="line">highlight StatusLine cterm=bold ctermfg=yellow ctermbg=blue</span><br><span class="line">&quot; 获取当前路径，将$HOME转化为~</span><br><span class="line">function! CurDir()</span><br><span class="line"> let curdir = substitute(getcwd(), $HOME, &quot;~&quot;, &quot;g&quot;)</span><br><span class="line"> return curdir</span><br><span class="line">endfunction</span><br><span class="line">set statusline=[%n]\ %f%m%r%h\ \|\ \ pwd:\ %&#123;CurDir()&#125;\ \ \|%=\|\ %l,%c\ %p%%\ \|\ ascii=%b,hex=%b%&#123;((&amp;fenc==\&quot;\&quot;)?\&quot;\&quot;:\&quot;\ \|\ \&quot;.&amp;fenc)&#125;\ \|\ %&#123;$USER&#125;\ @\ %&#123;hostname()&#125;\</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>方法2：复制下面内容到配置文件最后面</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%] &quot;显示文件名：总行数，总的字符数</span><br><span class="line">set ruler &quot;在编辑过程中，在右下角显示光标位置的状态行</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>参数列表</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>%{n}*</td>
-<td>%对其余的行使用高亮显示组Usern，直到另一个%n*。数字n必须从1到9。用%<em>或%0</em>可以恢复正常的高亮显示。</td>
-</tr>
-<tr>
-<td>%&lt;</td>
-<td>如果状态行过长，在何处换行。缺省是在开头。</td>
-</tr>
-<tr>
-<td>%&#x3D;</td>
-<td>左对齐和右对齐项目之间的分割点。</td>
-</tr>
-<tr>
-<td>%</td>
-<td>字符%</td>
-</tr>
-<tr>
-<td>%B</td>
-<td>光标下字符的十六进制形式</td>
-</tr>
-<tr>
-<td>%F</td>
-<td>缓冲区的文件完整路径</td>
-</tr>
-<tr>
-<td>%H</td>
-<td>如果为帮助缓冲区则显示为HLP</td>
-</tr>
-<tr>
-<td>%L</td>
-<td>缓冲区中的行数</td>
-</tr>
-<tr>
-<td>%M</td>
-<td>如果缓冲区修改过则显示为+</td>
-</tr>
-<tr>
-<td>%N</td>
-<td>打印机页号</td>
-</tr>
-<tr>
-<td>%O</td>
-<td>以十六进制方式显示文件中的字符偏移</td>
-</tr>
-<tr>
-<td>%P</td>
-<td>文件中光标前的%</td>
-</tr>
-<tr>
-<td>%R</td>
-<td>如果缓冲区只读则为RO</td>
-</tr>
-<tr>
-<td>%V</td>
-<td>列数。如果与%c相同则为空字符串</td>
-</tr>
-<tr>
-<td>%W</td>
-<td>如果窗口为预览窗口则为PRV</td>
-</tr>
-<tr>
-<td>%Y</td>
-<td>缓冲区的文件类型，如vim</td>
-</tr>
-<tr>
-<td>%a</td>
-<td>如果编辑多行文本，这个字行串就是({current} of {arguments})，例如：(5 of 18)。如果在命令行中只有一行，这个字符串为空</td>
-</tr>
-<tr>
-<td>%b</td>
-<td>光标下的字符的十进制表示形式</td>
-</tr>
-<tr>
-<td>%c</td>
-<td>列号</td>
-</tr>
-<tr>
-<td>%f</td>
-<td>缓冲区的文件路径</td>
-</tr>
-<tr>
-<td>%h</td>
-<td>如果为帮助缓冲区显示为[Help]</td>
-</tr>
-<tr>
-<td>%l</td>
-<td>行号</td>
-</tr>
-<tr>
-<td>%m</td>
-<td>如果缓冲区已修改则表示为[+]</td>
-</tr>
-<tr>
-<td>%n</td>
-<td>缓冲区号</td>
-</tr>
-<tr>
-<td>%o</td>
-<td>在光标前的字符数（包括光标下的字符）</td>
-</tr>
-<tr>
-<td>%p</td>
-<td>文件中所在行的百分比</td>
-</tr>
-<tr>
-<td>%r</td>
-<td>如果缓冲区为只读则表示为[RO]</td>
-</tr>
-<tr>
-<td>%t</td>
-<td>文件名(无路径)</td>
-</tr>
-<tr>
-<td>%v</td>
-<td>虚列号</td>
-</tr>
-<tr>
-<td>%w</td>
-<td>如果为预览窗口则显示为[Preview]</td>
-</tr>
-<tr>
-<td>%y</td>
-<td>缓冲区的文件类型，如[vim]</td>
-</tr>
-<tr>
-<td>%{expr}</td>
-<td>表达式的结果</td>
-</tr>
-</tbody></table>
-]]></content>
-      <categories>
-        <category>Vim</category>
-      </categories>
-      <tags>
-        <tag>Vim</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>vim速查图_中英文版</title>
-    <url>/posts/6c0adc53.html</url>
-    <content><![CDATA[<h2 id="中文翻译版"><a href="#中文翻译版" class="headerlink" title="中文翻译版"></a>中文翻译版</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202203181645094.jpg" alt="vim速查图_中文版"></p>
-<h2 id="英文原版"><a href="#英文原版" class="headerlink" title="英文原版"></a>英文原版</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202203181645480.jpg" alt="vim速查图_英文版"></p>
-]]></content>
-      <categories>
-        <category>Vim</category>
-      </categories>
-      <tags>
-        <tag>Vim</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>git学习笔记</title>
     <url>/posts/21db94ec.html</url>
     <content><![CDATA[<h2 id="修改上次git-commit时间"><a href="#修改上次git-commit时间" class="headerlink" title="修改上次git commit时间"></a>修改上次git commit时间</h2><p>命令：</p>
@@ -1081,6 +819,32 @@
       </categories>
       <tags>
         <tag>GitHub</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Next主题美化修改记录（一）</title>
+    <url>/posts/d87f7e0c.html</url>
+    <content><![CDATA[<p>基于 Next 主题 V8.10.1，第一波美化修改记录。</p>
+<p>主要修改为：</p>
+<ul>
+<li>添加文章结束分割线</li>
+<li>添加上吊猫个性化回到顶部</li>
+<li>添加畅言评论系统</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="git-status-结果"><a href="#git-status-结果" class="headerlink" title="git status 结果"></a>git status 结果</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Changed files:</span><br><span class="line">	modified:   layout/_macro/post.njk</span><br><span class="line">	modified:   layout/_partials/footer.njk</span><br><span class="line">	modified:   layout/_partials/page/tags.njk</span><br><span class="line">	modified:   source/css/_common/components/back-to-top.styl</span><br><span class="line"></span><br><span class="line">Untracked files:</span><br><span class="line">	layout/_macro/passage-end-tag.njk</span><br></pre></td></tr></table></figure>
+<p>新文件 layout&#x2F;_macro&#x2F;passage-end-tag.njk 内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    &#123;% if not is_index %&#125;</span><br><span class="line">        &lt;div style=&quot;text-align:center;color: #ccc;font-size:14px;&quot;&gt;-------------     本文结束　&lt;i class=&quot;fa fa-heartbeat&quot;&gt;&lt;/i&gt;　步履不止     -------------&lt;/div&gt;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="git-diff-结果"><a href="#git-diff-结果" class="headerlink" title="git diff 结果"></a>git diff 结果</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">diff --git a/layout/_macro/post.njk b/layout/_macro/post.njk</span><br><span class="line">index 27851de..6c994b4 100644</span><br><span class="line">--- a/layout/_macro/post.njk</span><br><span class="line">+++ b/layout/_macro/post.njk</span><br><span class="line">@@ -102,6 +102,12 @@</span><br><span class="line">       &#123;&#123; partial(&#x27;_partials/post/post-related.njk&#x27;) &#125;&#125;</span><br><span class="line">     &#123;%- endif %&#125;</span><br><span class="line"> </span><br><span class="line">+&lt;div&gt;</span><br><span class="line">+  &#123;% if not is_index %&#125;</span><br><span class="line">+    &#123;% include &#x27;passage-end-tag.njk&#x27; %&#125;</span><br><span class="line">+  &#123;% endif %&#125;</span><br><span class="line">+&lt;/div&gt;</span><br><span class="line">+</span><br><span class="line">     &lt;footer class=&quot;post-footer&quot;&gt;</span><br><span class="line">       &#123;%- if is_index %&#125;</span><br><span class="line">         &lt;div class=&quot;post-eof&quot;&gt;&lt;/div&gt;</span><br><span class="line">diff --git a/layout/_partials/footer.njk b/layout/_partials/footer.njk</span><br><span class="line">index d39307a..a060418 100644</span><br><span class="line">--- a/layout/_partials/footer.njk</span><br><span class="line">+++ b/layout/_partials/footer.njk</span><br><span class="line">@@ -19,7 +19,7 @@</span><br><span class="line">   &lt;/span&gt;</span><br><span class="line">   &lt;span class=&quot;author&quot; itemprop=&quot;copyrightHolder&quot;&gt;&#123;&#123; theme.footer.copyright or author &#125;&#125;&lt;/span&gt;</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line">-</span><br><span class="line">+&lt;!--</span><br><span class="line"> &#123;%- if config.symbols_count_time.total_symbols or config.symbols_count_time.total_time %&#125;</span><br><span class="line"> &lt;div class=&quot;wordcount&quot;&gt;</span><br><span class="line">   &#123;%- if config.symbols_count_time.total_symbols %&#125;</span><br><span class="line">@@ -47,7 +47,7 @@</span><br><span class="line">   &#123;%- endif %&#125;</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line"> &#123;%- endif %&#125;</span><br><span class="line">-</span><br><span class="line">+--&gt;</span><br><span class="line"> &#123;%- if theme.busuanzi_count.enable %&#125;</span><br><span class="line"> &lt;div class=&quot;busuanzi-count&quot;&gt;</span><br><span class="line">   &#123;%- if theme.busuanzi_count.total_visitors %&#125;</span><br><span class="line">@@ -73,14 +73,14 @@</span><br><span class="line">   &#123;%- endif %&#125;</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line"> &#123;%- endif %&#125;</span><br><span class="line">-</span><br><span class="line">+&lt;!--</span><br><span class="line"> &#123;%- if theme.footer.powered %&#125;</span><br><span class="line">   &lt;div class=&quot;powered-by&quot;&gt;</span><br><span class="line">     &#123;%- set next_site = &#x27;https://theme-next.js.org&#x27; if theme.scheme === &#x27;Gemini&#x27; else &#x27;https://theme-next.js.org/&#x27; + theme.scheme | lower + &#x27;/&#x27; %&#125;</span><br><span class="line">     &#123;&#123;- __(&#x27;footer.powered&#x27;, next_url(&#x27;https://hexo.io&#x27;, &#x27;Hexo&#x27;) + &#x27; &amp; &#x27; + next_url(next_site, &#x27;NexT.&#x27; + theme.scheme)) &#125;&#125;</span><br><span class="line">   &lt;/div&gt;</span><br><span class="line"> &#123;%- endif %&#125;</span><br><span class="line">-</span><br><span class="line">+--&gt;</span><br><span class="line"> &#123;%- if theme.add_this_id %&#125;</span><br><span class="line">   &lt;div class=&quot;addthis_inline_share_toolbox&quot;&gt;</span><br><span class="line">     &lt;script src=&quot;//s7.addthis.com/js/300/addthis_widget.js#pubid=&#123;&#123; theme.add_this_id &#125;&#125;&quot; async=&quot;async&quot;&gt;&lt;/script&gt;</span><br><span class="line">diff --git a/layout/_partials/page/tags.njk b/layout/_partials/page/tags.njk</span><br><span class="line">index c6e55cc..7cbc75c 100644</span><br><span class="line">--- a/layout/_partials/page/tags.njk</span><br><span class="line">+++ b/layout/_partials/page/tags.njk</span><br><span class="line">@@ -13,4 +13,4 @@</span><br><span class="line">       &#125;)</span><br><span class="line">     &#125;&#125;</span><br><span class="line">   &lt;/div&gt;</span><br><span class="line">-&lt;/div&gt;</span><br><span class="line">+&lt;/div&gt;</span><br><span class="line">\ No newline at end of file</span><br><span class="line">diff --git a/source/css/_common/components/back-to-top.styl b/source/css/_common/components/back-to-top.styl</span><br><span class="line">index d1c9152..89af070 100644</span><br><span class="line">--- a/source/css/_common/components/back-to-top.styl</span><br><span class="line">+++ b/source/css/_common/components/back-to-top.styl</span><br><span class="line">@@ -43,3 +43,26 @@ if (hexo-config(&#x27;back2top.enable&#x27;)) &#123;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line">+</span><br><span class="line">+/* 这里已经注释掉，若想生效取消注释即可，其他不用设置</span><br><span class="line">+//自定义回到顶部样式-上吊猫</span><br><span class="line">+.back-to-top &#123;</span><br><span class="line">+  right: 60px;</span><br><span class="line">+  width: 70px;  //图片素材宽度</span><br><span class="line">+  height: 900px;  //图片素材高度</span><br><span class="line">+  top: -900px;</span><br><span class="line">+  bottom: unset;</span><br><span class="line">+  transition: all .5s ease-in-out;</span><br><span class="line">+  background: url(&quot;/images/scroll.png&quot;);</span><br><span class="line">+</span><br><span class="line">+  //隐藏箭头图标</span><br><span class="line">+  &gt; i &#123;</span><br><span class="line">+    display: none;</span><br><span class="line">+  &#125;</span><br><span class="line">+</span><br><span class="line">+  &amp;.back-to-top-on &#123;</span><br><span class="line">+    bottom: unset;</span><br><span class="line">+    top: 100vh &lt; (900px + 200px) ? calc( 100vh - 900px - 200px ) : 0px;</span><br><span class="line">+  &#125;</span><br><span class="line">+&#125;</span><br><span class="line">+*/</span><br><span class="line">\ No newline at end of file</span><br></pre></td></tr></table></figure>
+
+<h2 id="config-yml-修改情况"><a href="#config-yml-修改情况" class="headerlink" title="_config.yml 修改情况"></a>_config.yml 修改情况</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">24c24</span><br><span class="line">&lt;   #sidebar: source/_data/sidebar.njk</span><br><span class="line">---</span><br><span class="line">&gt;   sidebar: source/_data/sidebar.njk</span><br><span class="line">53,54c53,54</span><br><span class="line">&lt;   small: /images/favicon-16x16-next.png</span><br><span class="line">&lt;   medium: /images/favicon-32x32-next.png</span><br><span class="line">---</span><br><span class="line">&gt;   small: /images/favicon-50.png # favicon-16x16-next.png</span><br><span class="line">&gt;   medium: /images/favicon-100.png # favicon-32x32-next.png</span><br><span class="line">98,102c98,102</span><br><span class="line">&lt;   #home: / || fa fa-home</span><br><span class="line">&lt;   #about: /about/ || fa fa-user</span><br><span class="line">&lt;   #tags: /tags/ || fa fa-tags</span><br><span class="line">&lt;   #categories: /categories/ || fa fa-th</span><br><span class="line">&lt;   #archives: /archives/ || fa fa-archive</span><br><span class="line">---</span><br><span class="line">&gt;   home: / || fa fa-home</span><br><span class="line">&gt;   categories: /categories/ || fa fa-folder-open</span><br><span class="line">&gt;   tags: /tags/ || fa fa-tags</span><br><span class="line">&gt;   archives: /archives/ || fa fa-calendar # fa fa-archive</span><br><span class="line">&gt;   about: /about/ || fa fa-user</span><br><span class="line">120,121c120,121</span><br><span class="line">&lt;   position: left</span><br><span class="line">&lt;   #position: right</span><br><span class="line">---</span><br><span class="line">&gt;   #position: left</span><br><span class="line">&gt;   position: right</span><br><span class="line">143c143</span><br><span class="line">&lt;   url: #/images/avatar.gif</span><br><span class="line">---</span><br><span class="line">&gt;   url: /images/avatar.jpg</span><br><span class="line">145c145</span><br><span class="line">&lt;   rounded: false</span><br><span class="line">---</span><br><span class="line">&gt;   rounded: true</span><br><span class="line">147c147</span><br><span class="line">&lt;   rotated: false</span><br><span class="line">---</span><br><span class="line">&gt;   rotated: true</span><br><span class="line">157,158c157,158</span><br><span class="line">&lt;   #GitHub: https://github.com/yourname || fab fa-github</span><br><span class="line">&lt;   #E-Mail: mailto:yourname@gmail.com || fa fa-envelope</span><br><span class="line">---</span><br><span class="line">&gt;   #GitHub: https://github.com/liu-paopao || fab fa-github</span><br><span class="line">&gt;   #E-Mail: mailto:liupaopao520@163.com || fa fa-envelope</span><br><span class="line">170c170</span><br><span class="line">&lt;   icons_only: false</span><br><span class="line">---</span><br><span class="line">&gt;   icons_only: true</span><br><span class="line">212c212</span><br><span class="line">&lt;     name: fa fa-heart</span><br><span class="line">---</span><br><span class="line">&gt;     name: fa fa-heartbeat</span><br><span class="line">222c222</span><br><span class="line">&lt;   powered: true</span><br><span class="line">---</span><br><span class="line">&gt;   powered: false</span><br><span class="line">262a263</span><br><span class="line">&gt; </span><br><span class="line">264c265</span><br><span class="line">&lt; tag_icon: false</span><br><span class="line">---</span><br><span class="line">&gt; tag_icon: true</span><br><span class="line">375c376</span><br><span class="line">&lt;     enable: false</span><br><span class="line">---</span><br><span class="line">&gt;     enable: true</span><br><span class="line">384c385</span><br><span class="line">&lt;   scrollpercent: false</span><br><span class="line">---</span><br><span class="line">&gt;   scrollpercent: true</span><br><span class="line">409c410</span><br><span class="line">&lt;   permalink: https://github.com/yourname</span><br><span class="line">---</span><br><span class="line">&gt;   permalink: https://github.com/liu-paopao</span><br><span class="line">529c530</span><br><span class="line">&lt; fancybox: false</span><br><span class="line">---</span><br><span class="line">&gt; fancybox: true</span><br><span class="line">610,612c611,613</span><br><span class="line">&lt;   enable: false</span><br><span class="line">&lt;   appid:</span><br><span class="line">&lt;   appkey:</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br><span class="line">&gt;   appid: cyw09gPog</span><br><span class="line">&gt;   appkey: 4488e6b82bfe3d819f4971a5e5c115f4</span><br><span class="line">745c746</span><br><span class="line">&lt;   enable: false</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br><span class="line">857c858</span><br><span class="line">&lt;   enable: false</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>博客相关</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -1850,6 +1614,302 @@
       </categories>
       <tags>
         <tag>Markdown</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>vim学习笔记</title>
+    <url>/posts/102383ca.html</url>
+    <content><![CDATA[<h2 id="多行添加注释和取消注释"><a href="#多行添加注释和取消注释" class="headerlink" title="多行添加注释和取消注释"></a>多行添加注释和取消注释</h2><p><strong>正常模式 –&gt; 可视模式：</strong></p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>v</td>
+<td>可视模式</td>
+</tr>
+<tr>
+<td>ctrl+v</td>
+<td>可视块模式</td>
+</tr>
+<tr>
+<td>shift+v</td>
+<td>可视行模式</td>
+</tr>
+</tbody></table>
+<p>可视块模式有一个非常实用的作用：选多行进行注释</p>
+<ul>
+<li><p>多行添加注释：<br>- 光标置于行首<br>- <code>ctrl + v</code>，进入可视块模式<br>- 移动光标，选中的位置会有高亮显示<br>- <code>shift + i</code>，进入 insert 模式<br>- 输入<code>//</code><br>- <code>esc</code></p>
+</li>
+<li><p>多行取消注释：<br>- 光标置于行首<br>- <code>ctrl + v</code>，进入可视块模式<br>- 移动光标，选中的位置会有高亮显示<br>- 按<code>d</code></p>
+</li>
+</ul>
+<h2 id="同一窗口操作多个文件"><a href="#同一窗口操作多个文件" class="headerlink" title="同一窗口操作多个文件"></a>同一窗口操作多个文件</h2><ol>
+<li>同时打开两个文件并分割窗口</li>
+</ol>
+<p>上下分割：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ vim -o filename1 filename2  </span><br></pre></td></tr></table></figure>
+<p>左右分割：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ vim -O filename1 filename2</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>已打开一个文件，同时再打开另一个文件</li>
+</ol>
+<p>上下分割：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:vs filename</span><br></pre></td></tr></table></figure>
+<p>左右分割：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:sp filename</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>其中，vs可以用vsplit替换，sp可以用split替换。<br>如果finename不存在，则会新建该文件并打开。</p>
+</blockquote>
+<ol start="3">
+<li>切换窗口</li>
+</ol>
+<p>先<code>ctrl + w</code>开启窗口切换后，再选择按上下左右键进行跳转：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ctrl + w w  // 即按住ctrl键，再按两下w键。或者ctrl + w &lt;h|j|k|l&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>即按住ctrl键，按一次w键，再按一次表示方向的h或j或k或l，则光标会切换到当前窗口的 左｜下｜上｜右 侧的窗口。</p>
+</blockquote>
+<ol start="4">
+<li>关闭 vim 窗口</li>
+</ol>
+<p>关闭光标所在的窗口：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:q</span><br></pre></td></tr></table></figure>
+<p>关闭所有窗口：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:qa</span><br></pre></td></tr></table></figure>
+<p>关闭除光标所在的窗口之外的其他窗口：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:only</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="统计字符串出现次数"><a href="#统计字符串出现次数" class="headerlink" title="统计字符串出现次数"></a>统计字符串出现次数</h2><ul>
+<li>命令</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:%s/pattern//gn</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>参数说明</li>
+</ul>
+<p> % ：指明操作区间，%表示全文本；可以使用1,$或者行区间代替<br> s：substitute，表示替换<br> pattern：要查找的字符串<br> &#x2F;&#x2F;：替代文本应该放在这里，两个斜杠中间没有任何字符表示无替代文本<br> g：替换该行所有出现的字符串，如果没有该参数则只替换该行第一次出现的地方<br> n：表示匹配的行数</p>
+<ul>
+<li>扩展</li>
+</ul>
+<p>统计k行到l行出现pattern的次数：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:k,ls/pattern//gn</span><br></pre></td></tr></table></figure>
+
+<p>统计在当前编辑文本出现的次数：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:%s/pattern//gn</span><br></pre></td></tr></table></figure>
+
+<p>统计在文件中出现的行数：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat file|greg –i pattern |wc –l</span><br></pre></td></tr></table></figure>
+
+<h2 id="鼠标选中不能复制"><a href="#鼠标选中不能复制" class="headerlink" title="鼠标选中不能复制"></a>鼠标选中不能复制</h2><p>vim中鼠标选中不能复制并进入可视模式，习惯了在vim中鼠标选中即复制的效果，对此问题从网上查了下发现是vim的默认配置导致的。</p>
+<ul>
+<li>解决方法：</li>
+</ul>
+<ol>
+<li><p>修改 vim 的默认配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /usr/share/vim/vim81/defaults.vim</span><br></pre></td></tr></table></figure></li>
+<li><p>输入 <code>/mouse</code> 搜索关键词 <code>mouse</code> ，定位到下面位置</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">if has(&#x27;mouse&#x27;)</span><br><span class="line">set mouse=a</span><br><span class="line">endif</span><br></pre></td></tr></table></figure>
+<p>将 <code>set mouse=a</code> 改为 <code>set mouse-=a</code>（在等号前面加上一个减号）</p>
+</li>
+<li><p>输入 <code>:wq!</code> 保存即可解决问题。</p>
+</li>
+</ol>
+<h2 id="删除多余空格"><a href="#删除多余空格" class="headerlink" title="删除多余空格"></a>删除多余空格</h2><ul>
+<li><p>删除行尾多余的空格和tab符号。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">%s/\s\+$//g</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>命令解释：</p>
+<blockquote>
+<p>【%s】表示全文替换<br>【%s&#x2F;str1&#x2F;str2&#x2F;g】表示将全文中<code>str1</code>替换成<code>str2</code><br>【\s+$】要替换的内容<code>str1</code>，其中<code>\s</code>表示空格和tab，<code>\+</code>表示一个或多个，<code>$</code>表示行尾（表示行末（$）前的一个或者多个（+）空格（\s））<br>【&#x2F;&#x2F;】替换后的内容<code>str2</code>，其中&#x2F;&#x2F;直接为空，表示替换为空，即达到删除效果<br>【g】表示全局替换（global）</p>
+</blockquote>
+<ul>
+<li><p>只删除行尾空格，不能删除tab</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">%s/ *$//g</span><br></pre></td></tr></table></figure>
+<p>&#x2F;和*中间有空格，只能删除行尾空格，对于tab不能删除</p>
+</li>
+</ul>
+<h2 id="vim新建文件自动添加头部注释"><a href="#vim新建文件自动添加头部注释" class="headerlink" title="vim新建文件自动添加头部注释"></a>vim新建文件自动添加头部注释</h2><ul>
+<li>修改<code>~/.vimrc</code>，在文件最后添加以下内容：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot; 【vim创建程序文件自动添加头部注释】</span><br><span class="line">&quot; 当新建.h .c .hpp .cpp .sh文件时自动调用SetTitle函数添加头部注释</span><br><span class="line">autocmd BufNewFile *.[ch],*.hpp,*.cpp,*.sh exec &quot;:call SetTitle()&quot;</span><br><span class="line">&quot; 定义.h .c .hpp .cpp注释格式</span><br><span class="line">func SetComment()</span><br><span class="line">	call setline(1,&quot;/*================================================================&quot;)</span><br><span class="line">	call append(line(&quot;.&quot;),   &quot;*  Author: paopao&quot;)</span><br><span class="line">	call append(line(&quot;.&quot;)+1, &quot;*  Date: &quot;.strftime(&quot;%Y-%m-%d&quot;))</span><br><span class="line">	call append(line(&quot;.&quot;)+2, &quot;*  Description: &quot;)</span><br><span class="line">	call append(line(&quot;.&quot;)+3, &quot;================================================================*/&quot;)</span><br><span class="line">	call append(line(&quot;.&quot;)+4, &quot;&quot;)</span><br><span class="line">endfunc</span><br><span class="line"></span><br><span class="line">&quot; 定义.sh注释格式</span><br><span class="line">func SetComment_sh()</span><br><span class="line">	call setline(3, &quot;#================================================================&quot;)</span><br><span class="line">	call setline(4, &quot;#&quot;)</span><br><span class="line">	call setline(5, &quot;#  Author: paopao&quot;)</span><br><span class="line">	call setline(6, &quot;#  Date: &quot;.strftime(&quot;%Y-%m-%d&quot;))</span><br><span class="line">	call setline(7, &quot;#  Description: &quot;)</span><br><span class="line">	call setline(8, &quot;#================================================================&quot;)</span><br><span class="line">	call setline(9, &quot;&quot;)</span><br><span class="line">endfunc</span><br><span class="line"></span><br><span class="line">&quot; 定义函数SetTitle，自动插入文件头</span><br><span class="line">func SetTitle()</span><br><span class="line">	if &amp;filetype == &#x27;sh&#x27;</span><br><span class="line">		call setline(1,&quot;#!/bin/sh&quot;)</span><br><span class="line">		call setline(2,&quot;&quot;)</span><br><span class="line">		call SetComment_sh()</span><br><span class="line">	else</span><br><span class="line">	     call SetComment()</span><br><span class="line">	     if expand(&quot;%:e&quot;) == &#x27;h&#x27;</span><br><span class="line">		call append(line(&quot;.&quot;)+5, &quot;#ifndef _&quot;.toupper(expand(&quot;%:t:r&quot;)).&quot;_H&quot;)</span><br><span class="line">		call append(line(&quot;.&quot;)+6, &quot;#define _&quot;.toupper(expand(&quot;%:t:r&quot;)).&quot;_H&quot;)</span><br><span class="line">		call append(line(&quot;.&quot;)+7, &quot;&quot;)</span><br><span class="line">		call append(line(&quot;.&quot;)+8, &quot;#endif //&quot;.toupper(expand(&quot;%:t:r&quot;)).&quot;_H&quot;)</span><br><span class="line">	     elseif expand(&quot;%:e&quot;) == &#x27;hpp&#x27;</span><br><span class="line">		call append(line(&quot;.&quot;)+5, &quot;#ifndef _&quot;.toupper(expand(&quot;%:t:r&quot;)).&quot;_HPP&quot;)</span><br><span class="line">		call append(line(&quot;.&quot;)+6, &quot;#define _&quot;.toupper(expand(&quot;%:t:r&quot;)).&quot;_HPP&quot;)</span><br><span class="line">		call append(line(&quot;.&quot;)+7, &quot;&quot;)</span><br><span class="line">		call append(line(&quot;.&quot;)+8, &quot;#endif //&quot;.toupper(expand(&quot;%:t:r&quot;)).&quot;_HPP&quot;)</span><br><span class="line">	     endif</span><br><span class="line">	endif</span><br><span class="line">endfunc</span><br></pre></td></tr></table></figure></li>
+<li>新建<code>a.sh</code>和<code>a.h</code>来测试效果：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ vim a.sh</span><br><span class="line"></span><br><span class="line">#!/bin/sh</span><br><span class="line"></span><br><span class="line">#================================================================</span><br><span class="line">#</span><br><span class="line">#  Author: paopao</span><br><span class="line">#  Date: 2022-04-30</span><br><span class="line">#  Description: </span><br><span class="line">#================================================================</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ vim a.h</span><br><span class="line"></span><br><span class="line">/*================================================================</span><br><span class="line">*  Author: paopao</span><br><span class="line">*  Date: 2022-04-30</span><br><span class="line">*  Description: </span><br><span class="line">================================================================*/</span><br><span class="line"></span><br><span class="line">#ifndef _A_H</span><br><span class="line">#define _A_H</span><br><span class="line"></span><br><span class="line">#endif //A_H</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="底部状态行显示绝对路径和行列信息"><a href="#底部状态行显示绝对路径和行列信息" class="headerlink" title="底部状态行显示绝对路径和行列信息"></a>底部状态行显示绝对路径和行列信息</h2><ol>
+<li>打开vim配置文件<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim ~/.vimrc</span><br></pre></td></tr></table></figure></li>
+<li>修改方法</li>
+</ol>
+<ul>
+<li>方法1：复制下面内容到配置文件最后面</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot; 状态栏</span><br><span class="line">set laststatus=2 &quot; 总是显示状态栏</span><br><span class="line">highlight StatusLine cterm=bold ctermfg=yellow ctermbg=blue</span><br><span class="line">&quot; 获取当前路径，将$HOME转化为~</span><br><span class="line">function! CurDir()</span><br><span class="line"> let curdir = substitute(getcwd(), $HOME, &quot;~&quot;, &quot;g&quot;)</span><br><span class="line"> return curdir</span><br><span class="line">endfunction</span><br><span class="line">set statusline=[%n]\ %f%m%r%h\ \|\ \ pwd:\ %&#123;CurDir()&#125;\ \ \|%=\|\ %l,%c\ %p%%\ \|\ ascii=%b,hex=%b%&#123;((&amp;fenc==\&quot;\&quot;)?\&quot;\&quot;:\&quot;\ \|\ \&quot;.&amp;fenc)&#125;\ \|\ %&#123;$USER&#125;\ @\ %&#123;hostname()&#125;\</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>方法2：复制下面内容到配置文件最后面</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%] &quot;显示文件名：总行数，总的字符数</span><br><span class="line">set ruler &quot;在编辑过程中，在右下角显示光标位置的状态行</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>参数列表</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%{n}*</td>
+<td>%对其余的行使用高亮显示组Usern，直到另一个%n*。数字n必须从1到9。用%<em>或%0</em>可以恢复正常的高亮显示。</td>
+</tr>
+<tr>
+<td>%&lt;</td>
+<td>如果状态行过长，在何处换行。缺省是在开头。</td>
+</tr>
+<tr>
+<td>%&#x3D;</td>
+<td>左对齐和右对齐项目之间的分割点。</td>
+</tr>
+<tr>
+<td>%</td>
+<td>字符%</td>
+</tr>
+<tr>
+<td>%B</td>
+<td>光标下字符的十六进制形式</td>
+</tr>
+<tr>
+<td>%F</td>
+<td>缓冲区的文件完整路径</td>
+</tr>
+<tr>
+<td>%H</td>
+<td>如果为帮助缓冲区则显示为HLP</td>
+</tr>
+<tr>
+<td>%L</td>
+<td>缓冲区中的行数</td>
+</tr>
+<tr>
+<td>%M</td>
+<td>如果缓冲区修改过则显示为+</td>
+</tr>
+<tr>
+<td>%N</td>
+<td>打印机页号</td>
+</tr>
+<tr>
+<td>%O</td>
+<td>以十六进制方式显示文件中的字符偏移</td>
+</tr>
+<tr>
+<td>%P</td>
+<td>文件中光标前的%</td>
+</tr>
+<tr>
+<td>%R</td>
+<td>如果缓冲区只读则为RO</td>
+</tr>
+<tr>
+<td>%V</td>
+<td>列数。如果与%c相同则为空字符串</td>
+</tr>
+<tr>
+<td>%W</td>
+<td>如果窗口为预览窗口则为PRV</td>
+</tr>
+<tr>
+<td>%Y</td>
+<td>缓冲区的文件类型，如vim</td>
+</tr>
+<tr>
+<td>%a</td>
+<td>如果编辑多行文本，这个字行串就是({current} of {arguments})，例如：(5 of 18)。如果在命令行中只有一行，这个字符串为空</td>
+</tr>
+<tr>
+<td>%b</td>
+<td>光标下的字符的十进制表示形式</td>
+</tr>
+<tr>
+<td>%c</td>
+<td>列号</td>
+</tr>
+<tr>
+<td>%f</td>
+<td>缓冲区的文件路径</td>
+</tr>
+<tr>
+<td>%h</td>
+<td>如果为帮助缓冲区显示为[Help]</td>
+</tr>
+<tr>
+<td>%l</td>
+<td>行号</td>
+</tr>
+<tr>
+<td>%m</td>
+<td>如果缓冲区已修改则表示为[+]</td>
+</tr>
+<tr>
+<td>%n</td>
+<td>缓冲区号</td>
+</tr>
+<tr>
+<td>%o</td>
+<td>在光标前的字符数（包括光标下的字符）</td>
+</tr>
+<tr>
+<td>%p</td>
+<td>文件中所在行的百分比</td>
+</tr>
+<tr>
+<td>%r</td>
+<td>如果缓冲区为只读则表示为[RO]</td>
+</tr>
+<tr>
+<td>%t</td>
+<td>文件名(无路径)</td>
+</tr>
+<tr>
+<td>%v</td>
+<td>虚列号</td>
+</tr>
+<tr>
+<td>%w</td>
+<td>如果为预览窗口则显示为[Preview]</td>
+</tr>
+<tr>
+<td>%y</td>
+<td>缓冲区的文件类型，如[vim]</td>
+</tr>
+<tr>
+<td>%{expr}</td>
+<td>表达式的结果</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>Vim</category>
+      </categories>
+      <tags>
+        <tag>Vim</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>vim速查图_中英文版</title>
+    <url>/posts/6c0adc53.html</url>
+    <content><![CDATA[<h2 id="中文翻译版"><a href="#中文翻译版" class="headerlink" title="中文翻译版"></a>中文翻译版</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202203181645094.jpg" alt="vim速查图_中文版"></p>
+<h2 id="英文原版"><a href="#英文原版" class="headerlink" title="英文原版"></a>英文原版</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202203181645480.jpg" alt="vim速查图_英文版"></p>
+]]></content>
+      <categories>
+        <category>Vim</category>
+      </categories>
+      <tags>
+        <tag>Vim</tag>
       </tags>
   </entry>
   <entry>
