@@ -1,169 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>通过qemu+gdb实现跨架构调试</title>
-    <url>/posts/bf48f70d.html</url>
-    <content><![CDATA[<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>有时候身边只有 x86 架构的硬件环境，却想学习和测试 arm、mips 等其他架构特性，此时怎么办呢？众所周知，VMware 只能模拟同架构不同操作系统，对此可以通过 qemu 实现跨架构模拟。</p>
-<span id="more"></span>
-
-<h2 id="安装-qemu-user"><a href="#安装-qemu-user" class="headerlink" title="安装 qemu-user"></a>安装 qemu-user</h2><p>qemu 是一个支持跨平台虚拟化的虚拟机，有 user mode 和 system mode 两种配置方式。其中qemu 在system mode配置下模拟出整个计算机，可以在qemu之上运行一个操作系统。qemu 的system mode与常见的VMware和Virtualbox等虚拟机比较相似，但是qemu 的优势是可以跨指令集。例如，VMware和Virtualbox之类的工具通常只能在x86计算机上虚拟出一个x86计算机，而qemu 支持在x86上虚拟出一个ARM计算机。qemu在user mode配置下，可以运行跟当前平台指令集不同的平台可执行程序。例如可以用qemu在x86上运行ARM的可执行程序，但是两个平台必须是同一种操作系统，比如Linux。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install qemu-user</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装-gdb-multiarch"><a href="#安装-gdb-multiarch" class="headerlink" title="安装 gdb-multiarch"></a>安装 gdb-multiarch</h2><p>gdb-multiarch 是一个经过交叉编译后的、支持多架构版本的 gdb。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install gdb-multiarch</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装-aarch64-编译工具链"><a href="#安装-aarch64-编译工具链" class="headerlink" title="安装 aarch64 编译工具链"></a>安装 aarch64 编译工具链</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install gcc-aarch64-linux-gnu</span><br></pre></td></tr></table></figure>
-
-<h2 id="交叉编译测试用例"><a href="#交叉编译测试用例" class="headerlink" title="交叉编译测试用例"></a>交叉编译测试用例</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ ls</span><br><span class="line">hello.c</span><br><span class="line">lhx@ubuntu:~/test/qemu$ cat hello.c </span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">void hello()</span><br><span class="line">&#123;</span><br><span class="line">  printf(&quot;Hello World !\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">  hello();</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br><span class="line">lhx@ubuntu:~/test/qemu$ aarch64-linux-gnu-gcc -g -static hello.c </span><br><span class="line">lhx@ubuntu:~/test/qemu$ ls</span><br><span class="line">a.out  hello.c</span><br><span class="line">lhx@ubuntu:~/test/qemu$ file a.out </span><br><span class="line">a.out: ELF 64-bit LSB executable, ARM aarch64, version 1 (GNU/Linux), statically linked, BuildID[sha1]=e1fe3c59cad06eff9cab2729a00233bc10d763ce, for GNU/Linux 3.7.0, with debug_info, not stripped</span><br><span class="line">lhx@ubuntu:~/test/qemu$ qemu-aarch64 ./a.out </span><br><span class="line">Hello World !</span><br></pre></td></tr></table></figure>
-
-<h2 id="开始qemu-gdb跨架构调试"><a href="#开始qemu-gdb跨架构调试" class="headerlink" title="开始qemu+gdb跨架构调试"></a>开始qemu+gdb跨架构调试</h2><ul>
-<li>窗口1：启动 a.out<br>通过 qemu-aarch64 运行交叉编译的 a.out, 并指定 gdb 调试端口号为1234，然后等待 gdb 远程连接。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ qemu-aarch64 -g 1234 ./a.out</span><br><span class="line">Hello World !</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>-g port：该选项表示QEMU_GDB环境变量取值，即 等待gdb连接的端口号。</p>
-</blockquote>
-<ul>
-<li>窗口2：gdb 远程调试<br>通过 gdb-multiarch 启动 a.out，这里 a.out 用于读取和远程端一致的调试符号信息。连接上远程端口号后，便可以进行设断点、查看寄存器、反汇编等一系列调试操作。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ ls</span><br><span class="line">a.out  hello.c</span><br><span class="line">lhx@ubuntu:~/test/qemu$ gdb-multiarch -q a.out </span><br><span class="line">Reading symbols from a.out...</span><br><span class="line">(gdb) target remote localhost:1234</span><br><span class="line">Remote debugging using localhost:1234</span><br><span class="line">0x0000000000400558 in _start ()</span><br><span class="line">(gdb) b main</span><br><span class="line">Breakpoint 1 at 0x4006d4: file hello.c, line 10.</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Breakpoint 1, main () at hello.c:10</span><br><span class="line">10	  hello();</span><br><span class="line">(gdb) s</span><br><span class="line">hello () at hello.c:5</span><br><span class="line">5	  printf(&quot;Hello World !\n&quot;);</span><br><span class="line">(gdb) n</span><br><span class="line">6	&#125;</span><br><span class="line">(gdb) info registers </span><br><span class="line">x0             0xe                 14</span><br><span class="line">x1             0x1                 1</span><br><span class="line">x2             0x0                 0</span><br><span class="line">x3             0x48bf00            4767488</span><br><span class="line">x4             0xfbad2a84          4222429828</span><br><span class="line">x5             0x21a               538</span><br><span class="line">x6             0x10                16</span><br><span class="line">x7             0x7f7f7f7f7f7f7f7f  9187201950435737471</span><br><span class="line">x8             0x40                64</span><br><span class="line">x9             0x3fffffff          1073741823</span><br><span class="line">x10            0x20000000          536870912</span><br><span class="line">x11            0x10000             65536</span><br><span class="line">x12            0x48b000            4763648</span><br><span class="line">x13            0x410               1040</span><br><span class="line">x14            0x0                 0</span><br><span class="line">x15            0x48c738            4769592</span><br><span class="line">x16            0x40b998            4241816</span><br><span class="line">x17            0x416fc0            4288448</span><br><span class="line">x18            0x0                 0</span><br><span class="line">x19            0x400db8            4197816</span><br><span class="line">x20            0x400e80            4198016</span><br><span class="line">x21            0x0                 0</span><br><span class="line">x22            0x400280            4194944</span><br><span class="line">x23            0x489030            4755504</span><br><span class="line">x24            0x18                24</span><br><span class="line">x25            0x48b000            4763648</span><br><span class="line">x26            0x48b000            4763648</span><br><span class="line">x27            0x451000            4526080</span><br><span class="line">x28            0x0                 0</span><br><span class="line">x29            0x4000800260        274886296160</span><br><span class="line">x30            0x4006c0            4196032</span><br><span class="line">sp             0x4000800260        0x4000800260</span><br><span class="line">pc             0x4006c0            0x4006c0 &lt;hello+20&gt;</span><br><span class="line">cpsr           0x60000000          1610612736</span><br><span class="line">fpsr           0x0                 0</span><br><span class="line">fpcr           0x0                 0</span><br><span class="line"></span><br><span class="line">(gdb) bt</span><br><span class="line">#0  hello () at hello.c:6</span><br><span class="line">#1  0x00000000004006d8 in main () at hello.c:10</span><br><span class="line">(gdb) disassemble hello</span><br><span class="line">Dump of assembler code for function hello:</span><br><span class="line">   0x00000000004006ac &lt;+0&gt;:	stp	x29, x30, [sp, #-16]!</span><br><span class="line">   0x00000000004006b0 &lt;+4&gt;:	mov	x29, sp</span><br><span class="line">   0x00000000004006b4 &lt;+8&gt;:	adrp	x0, 0x451000 &lt;_nl_locale_subfreeres+552&gt;</span><br><span class="line">   0x00000000004006b8 &lt;+12&gt;:	add	x0, x0, #0x3e8</span><br><span class="line">   0x00000000004006bc &lt;+16&gt;:	bl	0x407350 &lt;puts&gt;</span><br><span class="line">   0x00000000004006c0 &lt;+20&gt;:	nop</span><br><span class="line">   0x00000000004006c4 &lt;+24&gt;:	ldp	x29, x30, [sp], #16</span><br><span class="line">   0x00000000004006c8 &lt;+28&gt;:	ret</span><br><span class="line">End of assembler dump.</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line">[Inferior 1 (process 1) exited normally]</span><br><span class="line">(gdb) </span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>调试调优</category>
-      </categories>
-      <tags>
-        <tag>GDB</tag>
-        <tag>qemu</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux中关于包安装命令apt、yum、dpkg、rpm的区别</title>
-    <url>/posts/7a422bf0.html</url>
-    <content><![CDATA[<h2 id="Linux两大派系"><a href="#Linux两大派系" class="headerlink" title="Linux两大派系"></a>Linux两大派系</h2><p>介绍这几个命令之前，需要先了解下Linux两大派系：Debian系列和RedHat系列。</p>
-<ul>
-<li>Debian系列：Debian、Ubuntu 等；国产包括深度uos、银河麒麟、普华等。</li>
-<li>RedHat系列：Redhat、Centos、Fedora 等；国产包括中标麒麟等。</li>
-</ul>
-<h2 id="两种包管理工具"><a href="#两种包管理工具" class="headerlink" title="两种包管理工具"></a>两种包管理工具</h2><p>两大派系都有自己的一套软件包管理工具和安装包格式。</p>
-<ul>
-<li>Debian系列的包管理工具是 apt（或apt-get），安装包格式 deb 包。</li>
-</ul>
-<p>deb 包安装命令：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo dpkg –i 软件包.deb</span><br></pre></td></tr></table></figure>
-<p>deb 包卸载命令：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo dpkg -r 软件包名</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>这里<code>r</code>表示 <code>remove package</code></p>
-</blockquote>
-<ul>
-<li>RedHat系列的包管理工具是 yum，安装包格式 rpm 包。</li>
-</ul>
-<p>rpm 包安装命令：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo rpm –ivh 软件包.rpm</span><br></pre></td></tr></table></figure>
-<p>rpm 包卸载命令：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Sudo rpm –e 软件包.rpm</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>这里<code>e</code>表示 <code>erase (uninstall) package</code></p>
-</blockquote>
-<h2 id="查看软件包依赖关系"><a href="#查看软件包依赖关系" class="headerlink" title="查看软件包依赖关系"></a>查看软件包依赖关系</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apt-cache depends 软件包 # 依赖哪些包</span><br><span class="line"></span><br><span class="line">apt-cache rdepends 软件包 # 被哪些包依赖</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum deplist 软件包 # 依赖哪些包</span><br><span class="line">或者 rpm -qR 软件包 # 查软件包依赖哪些包，R表示requires</span><br><span class="line"></span><br><span class="line">rpm -e --test 软件包 # 被哪些包依赖</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>通过–test进行测试删除，查看是否有依赖关系,如果有会阻止删除</p>
-</blockquote>
-<h2 id="apt和dpkg区别"><a href="#apt和dpkg区别" class="headerlink" title="apt和dpkg区别"></a>apt和dpkg区别</h2><ul>
-<li>apt是会解决和安装模块的依赖问题，并会咨询软件仓库，是在线安装</li>
-<li>dpkg只能安装本地的deb文件，不会关心ubuntu软件仓库的软件，不会解决模块的依赖关系</li>
-</ul>
-<h2 id="总结表格"><a href="#总结表格" class="headerlink" title="总结表格"></a>总结表格</h2><table>
-<thead>
-<tr>
-<th>Linux派系</th>
-<th>Debian系列</th>
-<th>RedHat系列</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>安装包格式</td>
-<td>deb包</td>
-<td>rpm包</td>
-</tr>
-<tr>
-<td>包管理命令</td>
-<td>dpkg</td>
-<td>rpm</td>
-</tr>
-<tr>
-<td>安装命令</td>
-<td>dpkg –i xx.deb</td>
-<td>rpm –ivh xx.rpm</td>
-</tr>
-<tr>
-<td>卸载命令</td>
-<td>dpkg -r xx.deb</td>
-<td>rpm –e xx.rpm</td>
-</tr>
-<tr>
-<td>包管理工具</td>
-<td>apt</td>
-<td>yum</td>
-</tr>
-<tr>
-<td>安装&#x2F;卸载命令</td>
-<td>apt install&#x2F;remove xx</td>
-<td>yum install&#x2F;remove xx</td>
-</tr>
-<tr>
-<td>查询安装包</td>
-<td>dpkg -l | grep xx</td>
-<td>rpm –qa | grep xx</td>
-</tr>
-<tr>
-<td>查询依赖哪些</td>
-<td>apt-cache depends xx</td>
-<td>yum deplist xx</td>
-</tr>
-<tr>
-<td>查询被哪些依赖</td>
-<td>apt-cache rdepends xx</td>
-<td>rpm -e –test xx</td>
-</tr>
-</tbody></table>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Linux和Windows下查看文件哈希值</title>
-    <url>/posts/b6b9c575.html</url>
-    <content><![CDATA[<h2 id="哈希值介绍"><a href="#哈希值介绍" class="headerlink" title="哈希值介绍"></a>哈希值介绍</h2><p>哈希值是文件内容经过哈希函数的计算，返回的一个独一无二的字符串。哪怕原始内容只改动一个字节，哈希码也会完全不同。用户下载软件后，只要计算一下哈希码，再跟作者给出的哈希码比较一下，就会知道软件有没有被改动。</p>
-<p>目前，常用的三种哈希函数是 MD5、SHA1 和 SHA256。安全性：SHA256 &gt; SHA1 &gt; MD5。</p>
-<h2 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h2><ul>
-<li>md5sum 文件名</li>
-<li>sha1sum 文件名</li>
-<li>sha256sum 文件名</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ md5sum a.txt </span><br><span class="line">905138a85e85e74344e90d25dba7299e  a.txt</span><br><span class="line"></span><br><span class="line">$ sha1sum a.txt </span><br><span class="line">b1fda0e52e8099d2aeb80f57bb91548cace3093f  a.txt</span><br><span class="line"></span><br><span class="line">$ sha256sum a.txt </span><br><span class="line">a4bf1f6be616bf6a0de2ff6264de43a64bb768d38c783ec2bc74b5d4dcf5f889  a.txt</span><br></pre></td></tr></table></figure>
-
-<h2 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h2><ul>
-<li>certutil -hashfile 文件名  MD5</li>
-<li>certutil -hashfile 文件名  SHA1</li>
-<li>certutil -hashfile 文件名  SHA256</li>
-</ul>
-<blockquote>
-<p>【certutil 用法】<br>  CertUtil [选项] -hashfile InFile [HashAlgorithm]   通过文件生成并显示加密哈希<br>  哈希算法（大小写都可以）: MD2 MD4 MD5 SHA1 SHA256 SHA384 SHA512</p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&gt; certutil -hashfile a.txt md5</span><br><span class="line">MD5 的 a.txt 哈希:</span><br><span class="line">905138a85e85e74344e90d25dba7299e</span><br><span class="line">CertUtil: -hashfile 命令成功完成。</span><br><span class="line"></span><br><span class="line">&gt; certutil -hashfile a.txt sha1</span><br><span class="line">SHA1 的 a.txt 哈希:</span><br><span class="line">b1fda0e52e8099d2aeb80f57bb91548cace3093f</span><br><span class="line">CertUtil: -hashfile 命令成功完成。</span><br><span class="line"></span><br><span class="line">&gt; certutil -hashfile a.txt sha256</span><br><span class="line">SHA256 的 a.txt 哈希:</span><br><span class="line">a4bf1f6be616bf6a0de2ff6264de43a64bb768d38c783ec2bc74b5d4dcf5f889</span><br><span class="line">CertUtil: -hashfile 命令成功完成。</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>gcc编译选项汇总</title>
     <url>/posts/ec6fe1fe.html</url>
     <content><![CDATA[<p>-shared； Create a shared library &#x2F;* 创建共享库时需要添加的编译选项 *&#x2F;<br>因为共享库的代码都是位置无关的，所以通常还需要添加编译选项-fPIC。</p>
@@ -233,6 +70,80 @@
       </tags>
   </entry>
   <entry>
+    <title>gcc和g++的区别和联系</title>
+    <url>/posts/1e93b3bd.html</url>
+    <content><![CDATA[<p>Linux 系统下开发 C&#x2F;C++ 程序时，会用到GCC (GNU Compiler Collection，GNU 编译工具集合)，其包含了编译器、连接器等工具。GCC工具集里，编译时会用到 gcc 和 g++两个工具，两者之间既有区别，又有联系，下面简单总结一下。</p>
+<span id="more"></span>
+
+<h2 id="gcc和g-的区别"><a href="#gcc和g-的区别" class="headerlink" title="gcc和g++的区别"></a>gcc和g++的区别</h2><ul>
+<li><p>gcc和g++含义不同：<br>gcc（小写形式）通常表示 GNU C 语言编译器，g++ 表示 GNU C++ 语言编译器。<br>在编译 C&#x2F;C++ 程序时，gcc 会调用C编译器，g++会调用C++编译器。</p>
+</li>
+<li><p>对<code>.c</code>和<code>.cpp</code>文件处理方式不同：<br>gcc会把<code>.c</code>文件当作C程序，把<code>.cpp</code>文件当作C++程序。<br>g++会把<code>.c</code>和<code>.cpp</code>文件都当成C++程序处理。</p>
+</li>
+<li><p>链接方式不同：<br>gcc不会链接C++库（如STL标准库）。<br>g++会自动链接C++库。</p>
+</li>
+<li><p>预处理时的宏不同：<br>g++会自动添加一些预处理的宏（如__cplusplus），但是gcc不会。</p>
+</li>
+</ul>
+<h2 id="gcc和g-使用建议"><a href="#gcc和g-使用建议" class="headerlink" title="gcc和g++使用建议"></a>gcc和g++使用建议</h2><ul>
+<li><p>gcc和g++都可以用来编译 C和C++代码。</p>
+</li>
+<li><p>如果开发纯C语言的程序，建议使用gcc。如果开发C&#x2F;C++程序，而且还会用到C++标准库，建议使用g++。</p>
+</li>
+<li><p>由于C和C++语法上的区别和兼容性，g++成功编译的程序，gcc可能会报错；gcc报错的程序，改用g++可能编译成功。</p>
+</li>
+</ul>
+<h2 id="gcc和g-安装方式"><a href="#gcc和g-安装方式" class="headerlink" title="gcc和g++安装方式"></a>gcc和g++安装方式</h2><h3 id="apt-安装"><a href="#apt-安装" class="headerlink" title="apt 安装"></a>apt 安装</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install gcc g++</span><br></pre></td></tr></table></figure>
+
+<h3 id="yum-安装"><a href="#yum-安装" class="headerlink" title="yum 安装"></a>yum 安装</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo yum install gcc gcc-c++</span><br></pre></td></tr></table></figure>
+
+<p>最后，可以通过<code>gcc -v</code>和<code>g++ -v</code>命令验证是否安装成功。</p>
+]]></content>
+      <categories>
+        <category>编译工具链</category>
+      </categories>
+      <tags>
+        <tag>gcc</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>通过qemu+gdb实现跨架构调试</title>
+    <url>/posts/bf48f70d.html</url>
+    <content><![CDATA[<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>有时候身边只有 x86 架构的硬件环境，却想学习和测试 arm、mips 等其他架构特性，此时怎么办呢？众所周知，VMware 只能模拟同架构不同操作系统，对此可以通过 qemu 实现跨架构模拟。</p>
+<span id="more"></span>
+
+<h2 id="安装-qemu-user"><a href="#安装-qemu-user" class="headerlink" title="安装 qemu-user"></a>安装 qemu-user</h2><p>qemu 是一个支持跨平台虚拟化的虚拟机，有 user mode 和 system mode 两种配置方式。其中qemu 在system mode配置下模拟出整个计算机，可以在qemu之上运行一个操作系统。qemu 的system mode与常见的VMware和Virtualbox等虚拟机比较相似，但是qemu 的优势是可以跨指令集。例如，VMware和Virtualbox之类的工具通常只能在x86计算机上虚拟出一个x86计算机，而qemu 支持在x86上虚拟出一个ARM计算机。qemu在user mode配置下，可以运行跟当前平台指令集不同的平台可执行程序。例如可以用qemu在x86上运行ARM的可执行程序，但是两个平台必须是同一种操作系统，比如Linux。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install qemu-user</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装-gdb-multiarch"><a href="#安装-gdb-multiarch" class="headerlink" title="安装 gdb-multiarch"></a>安装 gdb-multiarch</h2><p>gdb-multiarch 是一个经过交叉编译后的、支持多架构版本的 gdb。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install gdb-multiarch</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装-aarch64-编译工具链"><a href="#安装-aarch64-编译工具链" class="headerlink" title="安装 aarch64 编译工具链"></a>安装 aarch64 编译工具链</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install gcc-aarch64-linux-gnu</span><br></pre></td></tr></table></figure>
+
+<h2 id="交叉编译测试用例"><a href="#交叉编译测试用例" class="headerlink" title="交叉编译测试用例"></a>交叉编译测试用例</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ ls</span><br><span class="line">hello.c</span><br><span class="line">lhx@ubuntu:~/test/qemu$ cat hello.c </span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">void hello()</span><br><span class="line">&#123;</span><br><span class="line">  printf(&quot;Hello World !\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">  hello();</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br><span class="line">lhx@ubuntu:~/test/qemu$ aarch64-linux-gnu-gcc -g -static hello.c </span><br><span class="line">lhx@ubuntu:~/test/qemu$ ls</span><br><span class="line">a.out  hello.c</span><br><span class="line">lhx@ubuntu:~/test/qemu$ file a.out </span><br><span class="line">a.out: ELF 64-bit LSB executable, ARM aarch64, version 1 (GNU/Linux), statically linked, BuildID[sha1]=e1fe3c59cad06eff9cab2729a00233bc10d763ce, for GNU/Linux 3.7.0, with debug_info, not stripped</span><br><span class="line">lhx@ubuntu:~/test/qemu$ qemu-aarch64 ./a.out </span><br><span class="line">Hello World !</span><br></pre></td></tr></table></figure>
+
+<h2 id="开始qemu-gdb跨架构调试"><a href="#开始qemu-gdb跨架构调试" class="headerlink" title="开始qemu+gdb跨架构调试"></a>开始qemu+gdb跨架构调试</h2><ul>
+<li>窗口1：启动 a.out<br>通过 qemu-aarch64 运行交叉编译的 a.out, 并指定 gdb 调试端口号为1234，然后等待 gdb 远程连接。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ qemu-aarch64 -g 1234 ./a.out</span><br><span class="line">Hello World !</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>-g port：该选项表示QEMU_GDB环境变量取值，即 等待gdb连接的端口号。</p>
+</blockquote>
+<ul>
+<li>窗口2：gdb 远程调试<br>通过 gdb-multiarch 启动 a.out，这里 a.out 用于读取和远程端一致的调试符号信息。连接上远程端口号后，便可以进行设断点、查看寄存器、反汇编等一系列调试操作。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ ls</span><br><span class="line">a.out  hello.c</span><br><span class="line">lhx@ubuntu:~/test/qemu$ gdb-multiarch -q a.out </span><br><span class="line">Reading symbols from a.out...</span><br><span class="line">(gdb) target remote localhost:1234</span><br><span class="line">Remote debugging using localhost:1234</span><br><span class="line">0x0000000000400558 in _start ()</span><br><span class="line">(gdb) b main</span><br><span class="line">Breakpoint 1 at 0x4006d4: file hello.c, line 10.</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Breakpoint 1, main () at hello.c:10</span><br><span class="line">10	  hello();</span><br><span class="line">(gdb) s</span><br><span class="line">hello () at hello.c:5</span><br><span class="line">5	  printf(&quot;Hello World !\n&quot;);</span><br><span class="line">(gdb) n</span><br><span class="line">6	&#125;</span><br><span class="line">(gdb) info registers </span><br><span class="line">x0             0xe                 14</span><br><span class="line">x1             0x1                 1</span><br><span class="line">x2             0x0                 0</span><br><span class="line">x3             0x48bf00            4767488</span><br><span class="line">x4             0xfbad2a84          4222429828</span><br><span class="line">x5             0x21a               538</span><br><span class="line">x6             0x10                16</span><br><span class="line">x7             0x7f7f7f7f7f7f7f7f  9187201950435737471</span><br><span class="line">x8             0x40                64</span><br><span class="line">x9             0x3fffffff          1073741823</span><br><span class="line">x10            0x20000000          536870912</span><br><span class="line">x11            0x10000             65536</span><br><span class="line">x12            0x48b000            4763648</span><br><span class="line">x13            0x410               1040</span><br><span class="line">x14            0x0                 0</span><br><span class="line">x15            0x48c738            4769592</span><br><span class="line">x16            0x40b998            4241816</span><br><span class="line">x17            0x416fc0            4288448</span><br><span class="line">x18            0x0                 0</span><br><span class="line">x19            0x400db8            4197816</span><br><span class="line">x20            0x400e80            4198016</span><br><span class="line">x21            0x0                 0</span><br><span class="line">x22            0x400280            4194944</span><br><span class="line">x23            0x489030            4755504</span><br><span class="line">x24            0x18                24</span><br><span class="line">x25            0x48b000            4763648</span><br><span class="line">x26            0x48b000            4763648</span><br><span class="line">x27            0x451000            4526080</span><br><span class="line">x28            0x0                 0</span><br><span class="line">x29            0x4000800260        274886296160</span><br><span class="line">x30            0x4006c0            4196032</span><br><span class="line">sp             0x4000800260        0x4000800260</span><br><span class="line">pc             0x4006c0            0x4006c0 &lt;hello+20&gt;</span><br><span class="line">cpsr           0x60000000          1610612736</span><br><span class="line">fpsr           0x0                 0</span><br><span class="line">fpcr           0x0                 0</span><br><span class="line"></span><br><span class="line">(gdb) bt</span><br><span class="line">#0  hello () at hello.c:6</span><br><span class="line">#1  0x00000000004006d8 in main () at hello.c:10</span><br><span class="line">(gdb) disassemble hello</span><br><span class="line">Dump of assembler code for function hello:</span><br><span class="line">   0x00000000004006ac &lt;+0&gt;:	stp	x29, x30, [sp, #-16]!</span><br><span class="line">   0x00000000004006b0 &lt;+4&gt;:	mov	x29, sp</span><br><span class="line">   0x00000000004006b4 &lt;+8&gt;:	adrp	x0, 0x451000 &lt;_nl_locale_subfreeres+552&gt;</span><br><span class="line">   0x00000000004006b8 &lt;+12&gt;:	add	x0, x0, #0x3e8</span><br><span class="line">   0x00000000004006bc &lt;+16&gt;:	bl	0x407350 &lt;puts&gt;</span><br><span class="line">   0x00000000004006c0 &lt;+20&gt;:	nop</span><br><span class="line">   0x00000000004006c4 &lt;+24&gt;:	ldp	x29, x30, [sp], #16</span><br><span class="line">   0x00000000004006c8 &lt;+28&gt;:	ret</span><br><span class="line">End of assembler dump.</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line">[Inferior 1 (process 1) exited normally]</span><br><span class="line">(gdb) </span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>调试调优</category>
+      </categories>
+      <tags>
+        <tag>gdb</tag>
+        <tag>qemu</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>学习笔记1：单片机最小系统设计</title>
     <url>/posts/56027b49.html</url>
     <content><![CDATA[<h2 id="1、单片机概念"><a href="#1、单片机概念" class="headerlink" title="1、单片机概念"></a>1、单片机概念</h2><p>单片机：一种集成电路芯片，是单片微型计算机的简称。单片机由微处理器CPU、存储器ROM和RAM、输入输出IO接口电路组成，构成了一个既小巧又完善的计算机硬件系统。</p>
@@ -283,43 +194,6 @@
       <categories>
         <category>其他</category>
       </categories>
-  </entry>
-  <entry>
-    <title>gcc和g++的区别和联系</title>
-    <url>/posts/1e93b3bd.html</url>
-    <content><![CDATA[<p>Linux 系统下开发 C&#x2F;C++ 程序时，会用到GCC (GNU Compiler Collection，GNU 编译工具集合)，其包含了编译器、连接器等工具。GCC工具集里，编译时会用到 gcc 和 g++两个工具，两者之间既有区别，又有联系，下面简单总结一下。</p>
-<span id="more"></span>
-
-<h2 id="gcc和g-的区别"><a href="#gcc和g-的区别" class="headerlink" title="gcc和g++的区别"></a>gcc和g++的区别</h2><ul>
-<li><p>gcc和g++含义不同：<br>gcc（小写形式）通常表示 GNU C 语言编译器，g++ 表示 GNU C++ 语言编译器。<br>在编译 C&#x2F;C++ 程序时，gcc 会调用C编译器，g++会调用C++编译器。</p>
-</li>
-<li><p>对<code>.c</code>和<code>.cpp</code>文件处理方式不同：<br>gcc会把<code>.c</code>文件当作C程序，把<code>.cpp</code>文件当作C++程序。<br>g++会把<code>.c</code>和<code>.cpp</code>文件都当成C++程序处理。</p>
-</li>
-<li><p>链接方式不同：<br>gcc不会链接C++库（如STL标准库）。<br>g++会自动链接C++库。</p>
-</li>
-<li><p>预处理时的宏不同：<br>g++会自动添加一些预处理的宏（如__cplusplus），但是gcc不会。</p>
-</li>
-</ul>
-<h2 id="gcc和g-使用建议"><a href="#gcc和g-使用建议" class="headerlink" title="gcc和g++使用建议"></a>gcc和g++使用建议</h2><ul>
-<li><p>gcc和g++都可以用来编译 C和C++代码。</p>
-</li>
-<li><p>如果开发纯C语言的程序，建议使用gcc。如果开发C&#x2F;C++程序，而且还会用到C++标准库，建议使用g++。</p>
-</li>
-<li><p>由于C和C++语法上的区别和兼容性，g++成功编译的程序，gcc可能会报错；gcc报错的程序，改用g++可能编译成功。</p>
-</li>
-</ul>
-<h2 id="gcc和g-安装方式"><a href="#gcc和g-安装方式" class="headerlink" title="gcc和g++安装方式"></a>gcc和g++安装方式</h2><h3 id="apt-安装"><a href="#apt-安装" class="headerlink" title="apt 安装"></a>apt 安装</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install gcc g++</span><br></pre></td></tr></table></figure>
-
-<h3 id="yum-安装"><a href="#yum-安装" class="headerlink" title="yum 安装"></a>yum 安装</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo yum install gcc gcc-c++</span><br></pre></td></tr></table></figure>
-
-<p>最后，可以通过<code>gcc -v</code>和<code>g++ -v</code>命令验证是否安装成功。</p>
-]]></content>
-      <categories>
-        <category>编译工具链</category>
-      </categories>
-      <tags>
-        <tag>gcc</tag>
-      </tags>
   </entry>
   <entry>
     <title>龙芯服务器重装UOS系统+搭建本地仓库源</title>
@@ -639,6 +513,7 @@
         <category>调试调优</category>
       </categories>
       <tags>
+        <tag>gdb</tag>
         <tag>glibc</tag>
       </tags>
   </entry>
@@ -710,7 +585,7 @@
         <category>Git</category>
       </categories>
       <tags>
-        <tag>Git</tag>
+        <tag>git</tag>
       </tags>
   </entry>
   <entry>
@@ -732,7 +607,7 @@
         <category>Git</category>
       </categories>
       <tags>
-        <tag>Git</tag>
+        <tag>git</tag>
       </tags>
   </entry>
   <entry>
@@ -1110,9 +985,6 @@
       <categories>
         <category>Linux</category>
       </categories>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
   </entry>
   <entry>
     <title>Linux下段错误生成core文件的相关配置</title>
@@ -1177,6 +1049,129 @@
       <tags>
         <tag>coredump</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Linux中关于包安装命令apt、yum、dpkg、rpm的区别</title>
+    <url>/posts/7a422bf0.html</url>
+    <content><![CDATA[<h2 id="Linux两大派系"><a href="#Linux两大派系" class="headerlink" title="Linux两大派系"></a>Linux两大派系</h2><p>介绍这几个命令之前，需要先了解下Linux两大派系：Debian系列和RedHat系列。</p>
+<ul>
+<li>Debian系列：Debian、Ubuntu 等；国产包括深度uos、银河麒麟、普华等。</li>
+<li>RedHat系列：Redhat、Centos、Fedora 等；国产包括中标麒麟等。</li>
+</ul>
+<h2 id="两种包管理工具"><a href="#两种包管理工具" class="headerlink" title="两种包管理工具"></a>两种包管理工具</h2><p>两大派系都有自己的一套软件包管理工具和安装包格式。</p>
+<ul>
+<li>Debian系列的包管理工具是 apt（或apt-get），安装包格式 deb 包。</li>
+</ul>
+<p>deb 包安装命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo dpkg –i 软件包.deb</span><br></pre></td></tr></table></figure>
+<p>deb 包卸载命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo dpkg -r 软件包名</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这里<code>r</code>表示 <code>remove package</code></p>
+</blockquote>
+<ul>
+<li>RedHat系列的包管理工具是 yum，安装包格式 rpm 包。</li>
+</ul>
+<p>rpm 包安装命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo rpm –ivh 软件包.rpm</span><br></pre></td></tr></table></figure>
+<p>rpm 包卸载命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Sudo rpm –e 软件包.rpm</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这里<code>e</code>表示 <code>erase (uninstall) package</code></p>
+</blockquote>
+<h2 id="查看软件包依赖关系"><a href="#查看软件包依赖关系" class="headerlink" title="查看软件包依赖关系"></a>查看软件包依赖关系</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apt-cache depends 软件包 # 依赖哪些包</span><br><span class="line"></span><br><span class="line">apt-cache rdepends 软件包 # 被哪些包依赖</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum deplist 软件包 # 依赖哪些包</span><br><span class="line">或者 rpm -qR 软件包 # 查软件包依赖哪些包，R表示requires</span><br><span class="line"></span><br><span class="line">rpm -e --test 软件包 # 被哪些包依赖</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>通过–test进行测试删除，查看是否有依赖关系,如果有会阻止删除</p>
+</blockquote>
+<h2 id="apt和dpkg区别"><a href="#apt和dpkg区别" class="headerlink" title="apt和dpkg区别"></a>apt和dpkg区别</h2><ul>
+<li>apt是会解决和安装模块的依赖问题，并会咨询软件仓库，是在线安装</li>
+<li>dpkg只能安装本地的deb文件，不会关心ubuntu软件仓库的软件，不会解决模块的依赖关系</li>
+</ul>
+<h2 id="总结表格"><a href="#总结表格" class="headerlink" title="总结表格"></a>总结表格</h2><table>
+<thead>
+<tr>
+<th>Linux派系</th>
+<th>Debian系列</th>
+<th>RedHat系列</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>安装包格式</td>
+<td>deb包</td>
+<td>rpm包</td>
+</tr>
+<tr>
+<td>包管理命令</td>
+<td>dpkg</td>
+<td>rpm</td>
+</tr>
+<tr>
+<td>安装命令</td>
+<td>dpkg –i xx.deb</td>
+<td>rpm –ivh xx.rpm</td>
+</tr>
+<tr>
+<td>卸载命令</td>
+<td>dpkg -r xx.deb</td>
+<td>rpm –e xx.rpm</td>
+</tr>
+<tr>
+<td>包管理工具</td>
+<td>apt</td>
+<td>yum</td>
+</tr>
+<tr>
+<td>安装&#x2F;卸载命令</td>
+<td>apt install&#x2F;remove xx</td>
+<td>yum install&#x2F;remove xx</td>
+</tr>
+<tr>
+<td>查询安装包</td>
+<td>dpkg -l | grep xx</td>
+<td>rpm –qa | grep xx</td>
+</tr>
+<tr>
+<td>查询依赖哪些</td>
+<td>apt-cache depends xx</td>
+<td>yum deplist xx</td>
+</tr>
+<tr>
+<td>查询被哪些依赖</td>
+<td>apt-cache rdepends xx</td>
+<td>rpm -e –test xx</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Linux和Windows下查看文件哈希值</title>
+    <url>/posts/b6b9c575.html</url>
+    <content><![CDATA[<h2 id="哈希值介绍"><a href="#哈希值介绍" class="headerlink" title="哈希值介绍"></a>哈希值介绍</h2><p>哈希值是文件内容经过哈希函数的计算，返回的一个独一无二的字符串。哪怕原始内容只改动一个字节，哈希码也会完全不同。用户下载软件后，只要计算一下哈希码，再跟作者给出的哈希码比较一下，就会知道软件有没有被改动。</p>
+<p>目前，常用的三种哈希函数是 MD5、SHA1 和 SHA256。安全性：SHA256 &gt; SHA1 &gt; MD5。</p>
+<h2 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h2><ul>
+<li>md5sum 文件名</li>
+<li>sha1sum 文件名</li>
+<li>sha256sum 文件名</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ md5sum a.txt </span><br><span class="line">905138a85e85e74344e90d25dba7299e  a.txt</span><br><span class="line"></span><br><span class="line">$ sha1sum a.txt </span><br><span class="line">b1fda0e52e8099d2aeb80f57bb91548cace3093f  a.txt</span><br><span class="line"></span><br><span class="line">$ sha256sum a.txt </span><br><span class="line">a4bf1f6be616bf6a0de2ff6264de43a64bb768d38c783ec2bc74b5d4dcf5f889  a.txt</span><br></pre></td></tr></table></figure>
+
+<h2 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h2><ul>
+<li>certutil -hashfile 文件名  MD5</li>
+<li>certutil -hashfile 文件名  SHA1</li>
+<li>certutil -hashfile 文件名  SHA256</li>
+</ul>
+<blockquote>
+<p>【certutil 用法】<br>  CertUtil [选项] -hashfile InFile [HashAlgorithm]   通过文件生成并显示加密哈希<br>  哈希算法（大小写都可以）: MD2 MD4 MD5 SHA1 SHA256 SHA384 SHA512</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&gt; certutil -hashfile a.txt md5</span><br><span class="line">MD5 的 a.txt 哈希:</span><br><span class="line">905138a85e85e74344e90d25dba7299e</span><br><span class="line">CertUtil: -hashfile 命令成功完成。</span><br><span class="line"></span><br><span class="line">&gt; certutil -hashfile a.txt sha1</span><br><span class="line">SHA1 的 a.txt 哈希:</span><br><span class="line">b1fda0e52e8099d2aeb80f57bb91548cace3093f</span><br><span class="line">CertUtil: -hashfile 命令成功完成。</span><br><span class="line"></span><br><span class="line">&gt; certutil -hashfile a.txt sha256</span><br><span class="line">SHA256 的 a.txt 哈希:</span><br><span class="line">a4bf1f6be616bf6a0de2ff6264de43a64bb768d38c783ec2bc74b5d4dcf5f889</span><br><span class="line">CertUtil: -hashfile 命令成功完成。</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
   </entry>
   <entry>
     <title>Next主题美化修改记录（一）</title>
