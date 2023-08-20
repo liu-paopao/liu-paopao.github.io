@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-100.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-50.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="需求有时候身边只有 x86 架构的硬件环境，却想学习和测试 arm、mips 等其他架构特性，此时怎么办呢？众所周知，VMware 只能模拟同架构不同操作系统，对此可以通过 qemu 实现跨架构模拟。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过 qemu+gdb 实现跨架构调试">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/bf48f70d.html">
+<meta property="og:site_name" content="PaoPao&#39;s Blog">
+<meta property="og:description" content="需求有时候身边只有 x86 架构的硬件环境，却想学习和测试 arm、mips 等其他架构特性，此时怎么办呢？众所周知，VMware 只能模拟同架构不同操作系统，对此可以通过 qemu 实现跨架构模拟。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-05-08T06:59:28.000Z">
+<meta property="article:modified_time" content="2023-02-24T06:41:42.493Z">
+<meta property="article:author" content="paopao">
+<meta property="article:tag" content="qemu">
+<meta property="article:tag" content="GDB">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://liu-paopao.github.io/posts/bf48f70d.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/bf48f70d.html","path":"posts/bf48f70d.html","title":"通过 qemu+gdb 实现跨架构调试"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>通过 qemu+gdb 实现跨架构调试 | PaoPao's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">PaoPao's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9C%80%E6%B1%82"><span class="nav-number">1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-qemu-user"><span class="nav-number">2.</span> <span class="nav-text">安装 qemu-user</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-gdb-multiarch"><span class="nav-number">3.</span> <span class="nav-text">安装 gdb-multiarch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-aarch64-%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7%E9%93%BE"><span class="nav-number">4.</span> <span class="nav-text">安装 aarch64 编译工具链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B"><span class="nav-number">5.</span> <span class="nav-text">交叉编译测试用例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8Bqemu-gdb%E8%B7%A8%E6%9E%B6%E6%9E%84%E8%B0%83%E8%AF%95"><span class="nav-number">6.</span> <span class="nav-text">开始 qemu+gdb 跨架构调试</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="paopao"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">paopao</p>
+  <div class="site-description" itemprop="description">Stay hungry, stay foolish.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+<!-- none-select-br -->
+
+<p></p>
+
+<!-- hitokoto -->
+
+<div class="hitokoto-title">
+	<i class="fa fa-paragraph"></i>
+	<b>一言</b>
+</div>
+
+<div id="hitokoto">:D 获取中...</div>
+<i id="hitofrom">:D 获取中...</i>
+
+<script src="https://cdn.jsdelivr.net/npm/bluebird@3/js/browser/bluebird.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@2.0.3/fetch.min.js"></script>
+<script>
+  fetch('https://v1.hitokoto.cn')
+    .then(function (res){
+      return res.json();
+    })
+    .then(function (data) {
+      var hitokoto = document.getElementById('hitokoto');
+      hitokoto.innerText = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + data.hitokoto;
+      var hitofrom = document.getElementById('hitofrom');
+      hitofrom.innerText = "——" + data.from + '\xa0'; 
+    })
+    .catch(function (err) {
+      console.error(err);
+    })
+</script>
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/bf48f70d.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="通过 qemu+gdb 实现跨架构调试 | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          通过 qemu+gdb 实现跨架构调试
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-05-08 14:59:28" itemprop="dateCreated datePublished" datetime="2022-05-08T14:59:28+08:00">2022-05-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-02-24 14:41:42" itemprop="dateModified" datetime="2023-02-24T14:41:42+08:00">2023-02-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%B0%83%E8%AF%95%E8%B0%83%E4%BC%98/" itemprop="url" rel="index"><span itemprop="name">调试调优</span></a>
+        </span>
+    </span>
+
+  
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>832</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>有时候身边只有 x86 架构的硬件环境，却想学习和测试 arm、mips 等其他架构特性，此时怎么办呢？众所周知，VMware 只能模拟同架构不同操作系统，对此可以通过 qemu 实现跨架构模拟。</p>
+<span id="more"></span>
+
+<h2 id="安装-qemu-user"><a href="#安装-qemu-user" class="headerlink" title="安装 qemu-user"></a>安装 qemu-user</h2><p>qemu 是一个支持跨平台虚拟化的虚拟机，有 user mode 和 system mode 两种配置方式。其中 qemu 在 system mode 配置下模拟出整个计算机，可以在 qemu 之上运行一个操作系统。qemu 的 system mode 与常见的 VMware 和 Virtualbox 等虚拟机比较相似，但是 qemu 的优势是可以跨指令集。例如，VMware 和 Virtualbox 之类的工具通常只能在 x86 计算机上虚拟出一个 x86 计算机，而 qemu 支持在 x86 上虚拟出一个 ARM 计算机。qemu 在 user mode 配置下，可以运行跟当前平台指令集不同的平台可执行程序。例如可以用 qemu 在 x86 上运行 ARM 的可执行程序，但是两个平台必须是同一种操作系统，比如 Linux。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install qemu-user</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="安装-gdb-multiarch"><a href="#安装-gdb-multiarch" class="headerlink" title="安装 gdb-multiarch"></a>安装 gdb-multiarch</h2><p>gdb-multiarch 是一个经过交叉编译后的、支持多架构版本的 gdb。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install gdb-multiarch</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="安装-aarch64-编译工具链"><a href="#安装-aarch64-编译工具链" class="headerlink" title="安装 aarch64 编译工具链"></a>安装 aarch64 编译工具链</h2><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install gcc-aarch64-linux-gnu</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="交叉编译测试用例"><a href="#交叉编译测试用例" class="headerlink" title="交叉编译测试用例"></a>交叉编译测试用例</h2><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ ls</span><br><span class="line">hello.c</span><br><span class="line">lhx@ubuntu:~/test/qemu$ cat hello.c </span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">void hello()</span><br><span class="line">{</span><br><span class="line">  printf("Hello World !\n");</span><br><span class="line">}</span><br><span class="line">int main()</span><br><span class="line">{</span><br><span class="line">  hello();</span><br><span class="line">  return 0;</span><br><span class="line">}</span><br><span class="line">lhx@ubuntu:~/test/qemu$ aarch64-linux-gnu-gcc -g -static hello.c </span><br><span class="line">lhx@ubuntu:~/test/qemu$ ls</span><br><span class="line">a.out  hello.c</span><br><span class="line">lhx@ubuntu:~/test/qemu$ file a.out </span><br><span class="line">a.out: ELF 64-bit LSB executable, ARM aarch64, version 1 (GNU/Linux), statically linked, BuildID[sha1]=e1fe3c59cad06eff9cab2729a00233bc10d763ce, for GNU/Linux 3.7.0, with debug_info, not stripped</span><br><span class="line">lhx@ubuntu:~/test/qemu$ qemu-aarch64 ./a.out </span><br><span class="line">Hello World !</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="开始qemu-gdb跨架构调试"><a href="#开始qemu-gdb跨架构调试" class="headerlink" title="开始qemu+gdb跨架构调试"></a>开始 qemu+gdb 跨架构调试</h2><ul>
+<li>窗口 1：启动 a.out<br>通过 qemu-aarch64 运行交叉编译的 a.out, 并指定 gdb 调试端口号为 1234，然后等待 gdb 远程连接。</li>
+</ul>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ qemu-aarch64 -g 1234 ./a.out</span><br><span class="line">Hello World !</span><br></pre></td></tr></tbody></table></figure>
+<blockquote>
+<p>-g port：该选项表示 QEMU_GDB 环境变量取值，即 等待 gdb 连接的端口号。</p>
+</blockquote>
+<ul>
+<li>窗口 2：gdb 远程调试<br>通过 gdb-multiarch 启动 a.out，这里 a.out 用于读取和远程端一致的调试符号信息。连接上远程端口号后，便可以进行设断点、查看寄存器、反汇编等一系列调试操作。</li>
+</ul>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line">lhx@ubuntu:~/test/qemu$ ls</span><br><span class="line">a.out  hello.c</span><br><span class="line">lhx@ubuntu:~/test/qemu$ gdb-multiarch -q a.out </span><br><span class="line">Reading symbols from a.out...</span><br><span class="line">(gdb) target remote localhost:1234</span><br><span class="line">Remote debugging using localhost:1234</span><br><span class="line">0x0000000000400558 in _start ()</span><br><span class="line">(gdb) b main</span><br><span class="line">Breakpoint 1 at 0x4006d4: file hello.c, line 10.</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Breakpoint 1, main () at hello.c:10</span><br><span class="line">10	  hello();</span><br><span class="line">(gdb) s</span><br><span class="line">hello () at hello.c:5</span><br><span class="line">5	  printf("Hello World !\n");</span><br><span class="line">(gdb) n</span><br><span class="line">6	}</span><br><span class="line">(gdb) info registers </span><br><span class="line">x0             0xe                 14</span><br><span class="line">x1             0x1                 1</span><br><span class="line">x2             0x0                 0</span><br><span class="line">x3             0x48bf00            4767488</span><br><span class="line">x4             0xfbad2a84          4222429828</span><br><span class="line">x5             0x21a               538</span><br><span class="line">x6             0x10                16</span><br><span class="line">x7             0x7f7f7f7f7f7f7f7f  9187201950435737471</span><br><span class="line">x8             0x40                64</span><br><span class="line">x9             0x3fffffff          1073741823</span><br><span class="line">x10            0x20000000          536870912</span><br><span class="line">x11            0x10000             65536</span><br><span class="line">x12            0x48b000            4763648</span><br><span class="line">x13            0x410               1040</span><br><span class="line">x14            0x0                 0</span><br><span class="line">x15            0x48c738            4769592</span><br><span class="line">x16            0x40b998            4241816</span><br><span class="line">x17            0x416fc0            4288448</span><br><span class="line">x18            0x0                 0</span><br><span class="line">x19            0x400db8            4197816</span><br><span class="line">x20            0x400e80            4198016</span><br><span class="line">x21            0x0                 0</span><br><span class="line">x22            0x400280            4194944</span><br><span class="line">x23            0x489030            4755504</span><br><span class="line">x24            0x18                24</span><br><span class="line">x25            0x48b000            4763648</span><br><span class="line">x26            0x48b000            4763648</span><br><span class="line">x27            0x451000            4526080</span><br><span class="line">x28            0x0                 0</span><br><span class="line">x29            0x4000800260        274886296160</span><br><span class="line">x30            0x4006c0            4196032</span><br><span class="line">sp             0x4000800260        0x4000800260</span><br><span class="line">pc             0x4006c0            0x4006c0 &lt;hello+20&gt;</span><br><span class="line">cpsr           0x60000000          1610612736</span><br><span class="line">fpsr           0x0                 0</span><br><span class="line">fpcr           0x0                 0</span><br><span class="line"></span><br><span class="line">(gdb) bt</span><br><span class="line">#0  hello () at hello.c:6</span><br><span class="line">#1  0x00000000004006d8 in main () at hello.c:10</span><br><span class="line">(gdb) disassemble hello</span><br><span class="line">Dump of assembler code for function hello:</span><br><span class="line">   0x00000000004006ac &lt;+0&gt;:	stp	x29, x30, [sp, #-16]!</span><br><span class="line">   0x00000000004006b0 &lt;+4&gt;:	mov	x29, sp</span><br><span class="line">   0x00000000004006b4 &lt;+8&gt;:	adrp	x0, 0x451000 &lt;_nl_locale_subfreeres+552&gt;</span><br><span class="line">   0x00000000004006b8 &lt;+12&gt;:	add	x0, x0, #0x3e8</span><br><span class="line">   0x00000000004006bc &lt;+16&gt;:	bl	0x407350 &lt;puts&gt;</span><br><span class="line">   0x00000000004006c0 &lt;+20&gt;:	nop</span><br><span class="line">   0x00000000004006c4 &lt;+24&gt;:	ldp	x29, x30, [sp], #16</span><br><span class="line">   0x00000000004006c8 &lt;+28&gt;:	ret</span><br><span class="line">End of assembler dump.</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line">[Inferior 1 (process 1) exited normally]</span><br><span class="line">(gdb) </span><br></pre></td></tr></tbody></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+<br>
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　👣　步履不止　　-------------</div>
+<br>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/qemu/" rel="tag"><i class="fa fa-tag"></i> qemu</a>
+              <a href="/tags/GDB/" rel="tag"><i class="fa fa-tag"></i> GDB</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/ec6fe1fe.html" rel="prev" title="gcc 编译选项汇总">
+                  <i class="fa fa-angle-left"></i> gcc 编译选项汇总
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/1f76836b.html" rel="next" title="本地电脑同时关联 GitHub 和 Gitee">
+                  本地电脑同时关联 GitHub 和 Gitee <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heartbeat"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">paopao</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">75k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:33</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyw09gPog","appkey":"4488e6b82bfe3d819f4971a5e5c115f4","count":true}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+
+</body>
+</html>

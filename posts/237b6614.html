@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-100.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-50.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="若想实现 dyninst 离线安装，只需要把源码目录下 cmake&#x2F;packages.cmake 依赖包的下载规则改下，把 URL 改成 SOURCE_DIR。然后在对应的路径下放上解压的依赖源码。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实现 dyninst 离线安装">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/237b6614.html">
+<meta property="og:site_name" content="PaoPao&#39;s Blog">
+<meta property="og:description" content="若想实现 dyninst 离线安装，只需要把源码目录下 cmake&#x2F;packages.cmake 依赖包的下载规则改下，把 URL 改成 SOURCE_DIR。然后在对应的路径下放上解压的依赖源码。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-02-24T06:44:28.000Z">
+<meta property="article:modified_time" content="2023-02-24T06:59:37.728Z">
+<meta property="article:author" content="paopao">
+<meta property="article:tag" content="dyninst">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://liu-paopao.github.io/posts/237b6614.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/237b6614.html","path":"posts/237b6614.html","title":"实现 dyninst 离线安装"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>实现 dyninst 离线安装 | PaoPao's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">PaoPao's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="paopao"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">paopao</p>
+  <div class="site-description" itemprop="description">Stay hungry, stay foolish.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+<!-- none-select-br -->
+
+<p></p>
+
+<!-- hitokoto -->
+
+<div class="hitokoto-title">
+	<i class="fa fa-paragraph"></i>
+	<b>一言</b>
+</div>
+
+<div id="hitokoto">:D 获取中...</div>
+<i id="hitofrom">:D 获取中...</i>
+
+<script src="https://cdn.jsdelivr.net/npm/bluebird@3/js/browser/bluebird.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@2.0.3/fetch.min.js"></script>
+<script>
+  fetch('https://v1.hitokoto.cn')
+    .then(function (res){
+      return res.json();
+    })
+    .then(function (data) {
+      var hitokoto = document.getElementById('hitokoto');
+      hitokoto.innerText = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + data.hitokoto;
+      var hitofrom = document.getElementById('hitofrom');
+      hitofrom.innerText = "——" + data.from + '\xa0'; 
+    })
+    .catch(function (err) {
+      console.error(err);
+    })
+</script>
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/237b6614.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="实现 dyninst 离线安装 | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          实现 dyninst 离线安装
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-02-24 14:44:28 / 修改时间：14:59:37" itemprop="dateCreated datePublished" datetime="2023-02-24T14:44:28+08:00">2023-02-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%B0%83%E8%AF%95%E8%B0%83%E4%BC%98/" itemprop="url" rel="index"><span itemprop="name">调试调优</span></a>
+        </span>
+    </span>
+
+  
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>315</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>若想实现 dyninst 离线安装，只需要把源码目录下 cmake/packages.cmake 依赖包的下载规则改下，把 URL 改成 SOURCE_DIR。然后在对应的路径下放上解压的依赖源码。</p>
+<span id="more"></span>
+
+<p>提前下载并解压好依赖源码包：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">lhx@vm:~/dyninst/packages$ ls</span><br><span class="line">binutils-2.23         boost_1_61_0      dwarf-20130126  elfutils-0.168.tar.bz2</span><br><span class="line">binutils-2.23.tar.gz  boost_1_61_0.zip  elfutils-0.168  libdwarf-20130126.tar.gz</span><br><span class="line">lhx@vm:~/dyninst/packages$ pwd</span><br><span class="line">/home/lhx/dyninst/packages</span><br><span class="line">lhx@vm:~/dyninst/packages$ </span><br></pre></td></tr></tbody></table></figure>
+
+<p>cmake/packages.cmake 具体修改如下：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">diff --git a/packages.cmake b/packages.cmake</span><br><span class="line">index c9fb42a..23c8d56 100644</span><br><span class="line">--- a/packages.cmake</span><br><span class="line">+++ b/packages.cmake</span><br><span class="line">@@ -6,7 +6,7 @@ if (UNIX)</span><br><span class="line">     include(ExternalProject)</span><br><span class="line">     ExternalProject_Add(LibElf</span><br><span class="line">       PREFIX ${CMAKE_BINARY_DIR}/libelf</span><br><span class="line">-      URL https://sourceware.org/elfutils/ftp/0.168/elfutils-0.168.tar.bz2</span><br><span class="line">+      SOURCE_DIR /home/lhx/dyninst/packages/elfutils-0.168</span><br><span class="line">       CONFIGURE_COMMAND &lt;SOURCE_DIR&gt;/configure --enable-shared --prefix=${CMAKE_BINARY_DIR}/libelf</span><br><span class="line">       BUILD_COMMAND make -C libelf</span><br><span class="line">       INSTALL_COMMAND make -C libelf install</span><br><span class="line">@@ -36,7 +36,7 @@ if (UNIX)</span><br><span class="line">       DEPENDS libelf_imp</span><br><span class="line">       #	URL http://reality.sgiweb.org/davea/libdwarf-20130126.tar.gz</span><br><span class="line">       #	URL http://sourceforge.net/p/libdwarf/code/ci/20130126/tarball</span><br><span class="line">-      URL http://www.paradyn.org/libdwarf/libdwarf-20130126.tar.gz</span><br><span class="line">+      SOURCE_DIR /home/lhx/dyninst/packages/dwarf-20130126</span><br><span class="line">       #	GIT_REPOSITORY git://git.code.sf.net/p/libdwarf/code libdwarf-code</span><br><span class="line">       #	GIT_TAG 20130126</span><br><span class="line">       CONFIGURE_COMMAND CFLAGS=-I${LIBELF_INCLUDE_DIR} LDFLAGS=-L${CMAKE_BINARY_DIR}/libelf/lib &lt;SOURCE_DIR&gt;/libdwarf/configure --enable-shared</span><br><span class="line">@@ -65,7 +65,7 @@ if (UNIX)</span><br><span class="line">       include(ExternalProject)</span><br><span class="line">       ExternalProject_Add(LibIberty</span><br><span class="line"> 	PREFIX ${CMAKE_BINARY_DIR}/binutils</span><br><span class="line">-	URL http://ftp.gnu.org/gnu/binutils/binutils-2.23.tar.gz</span><br><span class="line">+	SOURCE_DIR /home/lhx/dyninst/packages/binutils-2.23</span><br><span class="line"> 	CONFIGURE_COMMAND CFLAGS=-fPIC CPPFLAGS=-fPIC PICFLAG=-fPIC &lt;SOURCE_DIR&gt;/libiberty/configure --prefix=${CMAKE_BINARY_DIR}/libiberty --enable-shared</span><br><span class="line"> 	BUILD_COMMAND make all</span><br><span class="line"> 	INSTALL_DIR ${CMAKE_BINARY_DIR}/libiberty</span><br><span class="line">@@ -167,8 +167,7 @@ if(NOT Boost_FOUND)</span><br><span class="line">   include(ExternalProject)</span><br><span class="line">   ExternalProject_Add(boost</span><br><span class="line">     PREFIX ${CMAKE_BINARY_DIR}/boost</span><br><span class="line">-    URL http://downloads.sourceforge.net/project/boost/boost/1.61.0/boost_1_61_0.zip</span><br><span class="line">-    URL_MD5 015ae4afa6f3e597232bfe1dab949ace</span><br><span class="line">+    SOURCE_DIR /home/lhx/dyninst/packages/boost_1_61_0</span><br><span class="line">           BUILD_IN_SOURCE 1</span><br><span class="line">     CONFIGURE_COMMAND ${BOOST_BOOTSTRAP} --prefix=${CMAKE_INSTALL_PREFIX}</span><br><span class="line">     BUILD_COMMAND ${BOOST_BUILD} ${BOOST_ARGS} stage</span><br></pre></td></tr></tbody></table></figure>
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+<br>
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　👣　步履不止　　-------------</div>
+<br>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/dyninst/" rel="tag"><i class="fa fa-tag"></i> dyninst</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/84787fbd.html" rel="prev" title="解决 dyninst-9.3.2 编译过程报错问题">
+                  <i class="fa fa-angle-left"></i> 解决 dyninst-9.3.2 编译过程报错问题
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/9aaf53d7.html" rel="next" title="解决 dyninst-12.3.0 最新版编译依赖报错问题">
+                  解决 dyninst-12.3.0 最新版编译依赖报错问题 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heartbeat"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">paopao</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">75k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:33</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyw09gPog","appkey":"4488e6b82bfe3d819f4971a5e5c115f4","count":true}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-100.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-50.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="链接器可以操作的最小单元为目标文件，也就是说无论是静态库、动态库、可执行文件，都是基于目标文件构建出来的。目标文件就好比乐高积木中最小的零部件。 给定目标文件以及链接选项，链接器可以生成两种库，分别是静态库以及动态库，如图所示，给定同样的目标文件，链接器可以生成两种不同类型的库，接下来我们分别介绍。  静态库假设这样一个应用场景，基础设计团队设计了好多实用并且功能强大的工具函数，业务团队需要用到里">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搞懂链接器 2：库与可执行文件的生成">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/7173be3f.html">
+<meta property="og:site_name" content="PaoPao&#39;s Blog">
+<meta property="og:description" content="链接器可以操作的最小单元为目标文件，也就是说无论是静态库、动态库、可执行文件，都是基于目标文件构建出来的。目标文件就好比乐高积木中最小的零部件。 给定目标文件以及链接选项，链接器可以生成两种库，分别是静态库以及动态库，如图所示，给定同样的目标文件，链接器可以生成两种不同类型的库，接下来我们分别介绍。  静态库假设这样一个应用场景，基础设计团队设计了好多实用并且功能强大的工具函数，业务团队需要用到里">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730085852.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730090423.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730090432.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730090553.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730090957.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730091106.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730101021.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730101148.png">
+<meta property="article:published_time" content="2021-07-29T13:31:12.000Z">
+<meta property="article:modified_time" content="2023-01-09T09:06:12.993Z">
+<meta property="article:author" content="paopao">
+<meta property="article:tag" content="链接器">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730085852.png">
+
+
+<link rel="canonical" href="https://liu-paopao.github.io/posts/7173be3f.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://liu-paopao.github.io/posts/7173be3f.html","path":"posts/7173be3f.html","title":"搞懂链接器 2：库与可执行文件的生成"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>搞懂链接器 2：库与可执行文件的生成 | PaoPao's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">PaoPao's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E5%BA%93"><span class="nav-number">1.</span> <span class="nav-text">静态库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E8%BF%9E%E6%8E%A5"><span class="nav-number">2.</span> <span class="nav-text">静态连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5%E4%B8%8B%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E7%9A%84%E7%94%9F%E6%88%90"><span class="nav-number">3.</span> <span class="nav-text">静态链接下可执行文件的生成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%BA%93"><span class="nav-number">4.</span> <span class="nav-text">动态库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E3%80%82"><span class="nav-number">5.</span> <span class="nav-text">动态链接。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%BA%93vs%E9%9D%99%E6%80%81%E5%BA%93"><span class="nav-number">6.</span> <span class="nav-text">动态库 vs 静态库</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="paopao"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">paopao</p>
+  <div class="site-description" itemprop="description">Stay hungry, stay foolish.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+<!-- none-select-br -->
+
+<p></p>
+
+<!-- hitokoto -->
+
+<div class="hitokoto-title">
+	<i class="fa fa-paragraph"></i>
+	<b>一言</b>
+</div>
+
+<div id="hitokoto">:D 获取中...</div>
+<i id="hitofrom">:D 获取中...</i>
+
+<script src="https://cdn.jsdelivr.net/npm/bluebird@3/js/browser/bluebird.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@2.0.3/fetch.min.js"></script>
+<script>
+  fetch('https://v1.hitokoto.cn')
+    .then(function (res){
+      return res.json();
+    })
+    .then(function (data) {
+      var hitokoto = document.getElementById('hitokoto');
+      hitokoto.innerText = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + data.hitokoto;
+      var hitofrom = document.getElementById('hitofrom');
+      hitofrom.innerText = "——" + data.from + '\xa0'; 
+    })
+    .catch(function (err) {
+      console.error(err);
+    })
+</script>
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/7173be3f.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="搞懂链接器 2：库与可执行文件的生成 | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          搞懂链接器 2：库与可执行文件的生成
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-29 21:31:12" itemprop="dateCreated datePublished" datetime="2021-07-29T21:31:12+08:00">2021-07-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-01-09 17:06:12" itemprop="dateModified" datetime="2023-01-09T17:06:12+08:00">2023-01-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E8%AF%91%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">编译器</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Changyan：</span>
+    
+    <a title="搞懂链接器 2：库与可执行文件的生成" href="/posts/7173be3f.html#SOHUCS" itemprop="discussionUrl">
+      <span id="sourceId::6244018f66c957e5d37dcf615fadcca2" class="cy_cmt_count" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>7.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>26 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>链接器可以操作的最小单元为目标文件，也就是说无论是静态库、动态库、可执行文件，都是基于目标文件构建出来的。目标文件就好比乐高积木中最小的零部件。</p>
+<p>给定目标文件以及链接选项，链接器可以生成两种库，分别是静态库以及动态库，如图所示，给定同样的目标文件，链接器可以生成两种不同类型的库，接下来我们分别介绍。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730085852.png" alt="库生成示意图"></p>
+<h2 id="静态库"><a href="#静态库" class="headerlink" title="静态库"></a>静态库</h2><p>假设这样一个应用场景，基础设计团队设计了好多实用并且功能强大的工具函数，业务团队需要用到里面的各种函数。每次新添加其中一个函数，业务团队都要去找相应的实现文件并修改链接选项。使用静态库就可以解决这个问题。静态库在 Windows 下是以.lib 为后缀的文件，Linux 下是以.a 为后缀的文件。</p>
+<p>为解决上述问题，基础设计团队可以提前将工具函数集合打包编译链接成为静态库提供给业务团队使用，业务团队在使用时只要链接该静态库就可以了，每次新使用一个工具函数的时候，只要该函数在此静态库中就无需进行任何修改。</p>
+<p>你可以简单的将静态库理解为由一堆目标文件打包而成， 使用者只需要使用其中的函数而无需关注该函数来自哪个目标文件（找到函数实现所在的目标文件是链接器来完成的，从这里也可以看出，不是所有静态库中的目标文件都会用到，而是用到哪个链接器就链接哪个）。静态库极大方便了对其它团队所写代码的使用。</p>
+<h2 id="静态连接"><a href="#静态连接" class="headerlink" title="静态连接"></a>静态连接</h2><p>静态库是链接器通过静态链接将其和其它目标文件合并生成可执行文件的，如下图一所示，而静态库只不过是将多个目标文件进行了打包，在链接时只取静态库中所用到的目标文件，因此，你可以将静态链接想象成如下图 2 所示的过程。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730090423.png" alt="image-20210730090423254"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730090432.png" alt="image-20210730090431921"></p>
+<p>静态库是使用库的最简单的方法，如果你想使用别人的代码，找到这些代码的静态库并简单的和你的程序链接就可以了。静态链接生成的可执行文件在运行时不依赖任何其它代码，要理解这句话，我们需要知道静态链接下，可执行文件是如何生成的。</p>
+<h2 id="静态链接下可执行文件的生成"><a href="#静态链接下可执行文件的生成" class="headerlink" title="静态链接下可执行文件的生成"></a>静态链接下可执行文件的生成</h2><p>在上一节中我们知道，可以将静态链接简单的理解为链接器将使用到的目标文件集合进行拼装，拼装之后就生成了可执行文件，同时我们在目标文件里有什么这一节中知道，目标文件分成了三段，代码段，数据段，符号表，那么在静态链接下可执行文件的生成过程如图所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730090553.png" alt="image-20210730090553480"></p>
+<p>从上图中我们可以看到可执行文件的特点：</p>
+<ul>
+<li>可执行文件和目标文件一样，也是由代码段和数据段组成。</li>
+<li>每个目标文件中的数据段都合并到了可执行文件的数据段，每个目标文件当中的代码段都合并到了可执行文件的代码段。</li>
+<li>目标文件当中的符号表并没有合并到可执行文件当中，因为可执行文件不需要这些字段。</li>
+</ul>
+<p>可执行文件和目标文件没有什么本质的不同，可执行文件区别于目标文件的地方在于，可执行文件有一个入口函数，这个函数也就是我们在 C 语言当中定义的 main 函数，main 函数在执行过程中会用到所有可执行文件当中的代码和数据。而这个 main 函数是被谁调用执行的呢，答案就是操作系统 (Operating System)，这也是后面文章当中要重点介绍的内容。</p>
+<p>现在你应该对可执行文件有一个比较形象的认知了吧。你可以把可执行文件生成的过程想象成装订一本书，一本书中通常有好多章节，这些章节是你自己写的，且一本书不可避免的要引用其它著作。静态链接这个过程就好比不但要装订你自己写的文章，而且也把你引用的其它人的著作也直接装订进了你的书里，这里不考虑版权问题 :)，这些工作完成后，只需要按一下订书器，一本书就制作完成啦。</p>
+<p>在这个比喻中，你写的各个章节就好比你写的代码，引用的其它人的著作就好比使用其它人的静态库，装订成一本书就好比可执行文件的生成。</p>
+<p>静态链接是使用库的最简单最直观的形式， 从静态链接生成可执行文件的过程中可以看到，静态链接会将用到的目标文件直接合并到可执行文件当中，想象一下，如果有这样的一种静态库，几乎所有的程序都要使用到，也就是说，生成的所有可执行文件当中都有一份一模一样的代码和数据，这将是对硬盘和内存的极大浪费，假设一个静态库为 2M，那么 500 个可执行文件就有 1G 的数据是重复的。如何解决这个问题呢，答案就是使用动态库。</p>
+<h2 id="动态库"><a href="#动态库" class="headerlink" title="动态库"></a>动态库</h2><p>在前三小节中我们了解了静态库、静态链接以及使用静态链接下可执行文件是如何生成的。接下来我们讲解一下动态库，那么什么是动态库？</p>
+<p><code>动态库(Dynamic Library)</code>，又叫<code>共享库(Shared Library)</code>，动态链接库等，在 Windows 下就是我们常见的大名鼎鼎的 DLL 文件了，Windows 系统下大量使用了动态库。在 Linux 下动态库是以.so 为后缀的文件，同时以 lib 为前缀，比如进行数字计算的动态库 Math，编译链接后产生的动态库就叫做 libMath.so。从名字中我们知道动态库也是库，本质上动态库同样包含我们已经熟悉的代码段、数据段、符号表。只不过动态库的使用方式以及使用时间和静态库不太一样。</p>
+<p>在前面几个小节中我们知道，使用静态库时，静态库的代码段和数据段都会直接打包 copy 到可执行文件当中，使用静态库无疑会增大可执行文件的大小，同时如果程序都需要某种类型的静态库，比如 libc，使用静态链接的话，每个可执行文件当中都会有一份同样的 libc 代码和数据的拷贝，如图所示，动态库的出现解决了此类问题。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730090957.png" alt="image-20210730090956928"></p>
+<p>动态库允许使用该库的可执行文件仅仅包含对动态库的引用而无需将该库拷贝到可执行文件当中。也就是说，同静态库进行整体拷贝的方式不同，对于动态库的使用仅仅需要可执行文件当中包含必要的信息即可，为了方便理解，你可以将可执行文件当中保存的必要信息仅仅理解为需要记录动态库的名字就可以了，如图所示，同静态库相比，动态库的使用减少了可执行文件的大小。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730091106.png" alt="image-20210730091106648"></p>
+<p>从上面这张图中可以看出，动态库的使用解决了静态链接当中可执行文件过大的问题。我们在前几节中将静态链接生成可执行文件的过程比作了装订一本书，静态链接将引用的其它人的著作也装订到了书里，而动态链接可以想象成作者仅仅在引用的地方写了一句话，比如引用了《码农的荒岛求生》，那么作者就在引用的地方写上 “此处参考《码农的荒岛求生》”，那么读者在读到这里的时候会自己去找到码农的荒岛求生这本书并查找相应的内容，其实这个过程就是动态链接的基本思想了。</p>
+<p>到这里我们就可以回答之前提到过的问题了，helloworld 程序中的 printf 函数到底是在哪里定义的，答案就是该函数是在 libc.so 当中定义的，Linux 下编译链接生成可执行文件时会默认动态链接 libc.so (Windows 下也是同样的道理)，使用 ldd 命令就会发现每个可执行文件都依赖 libc.so。因此虽然你从没有看到过 printf 的定义也可以正确的使用这个函数。</p>
+<h2 id="动态链接。"><a href="#动态链接。" class="headerlink" title="动态链接。"></a>动态链接。</h2><p>我们知道静态库在编译链接期间就被打包 copy 到了可执行文件，也就是说静态库其实是在编译期间 (Compile time) 链接使用的，那么动态库又是在什么时候才链接使用的呢，动态链接可以在两种情况下被链接使用，分别是 load-time dynamic linking (加载时动态链接) 以及 run-time dynamic linking (运行时动态链接)，接下来我们分别讲解一下。</p>
+<ul>
+<li>load-time dynamic linking (加载时动态链接)</li>
+</ul>
+<p>首先可能有的同学会问，什么是 load-time 呢，load_time 翻译过来也就是加载时，那么什么又是加载呢？</p>
+<p>我们大家都玩过游戏，当我们打开游戏的时候经常会跳出来一句话：“加载中，请稍后。。。” 和这里的加载意思差不多。这里的加载指的是程序的加载，而所谓程序的加载就是把可执行文件从磁盘搬到内存的过程，因为程序最终都是在内存中被执行的。至于这个过程的详解内容我会在接下来的文章《加载器与可执行文件》一文中给大家详细讲解。在这里我们只需要简单的把加载理解为程序从磁盘复制到内存的过程，加载时动态链接就出现在这个过程。</p>
+<p>当把可执行文件复制到内存后，且在程序开始运行之前，操作系统会查找可执行文件依赖的动态库信息 (主要是动态库的名字以及存放路径)，找到该动态库后就将该动态库从磁盘搬到内存，并进行符号决议，如果这个过程没有问题，那么一切准备工作就绪，程序就可以开始执行了，如果找不到相应的动态库或者符号决议失败，那么会有相应的错误信息报告为用户，程序运行失败。比如 Windows 下比较常见的启动错误问题，就是因为没有找到依赖的动态库。Linux 下同样会有类似信息提示用户程序启动失败。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730101021.png" alt="image-20210730101021256"></p>
+<p>到这里，同学们应该对加载时动态链接应该有一个比较清晰的了解了。从总体上看，加载时动态链接可以分为两个阶段：阶段一，将动态库信息写入可执行文件；阶段二，加载可执行文件时依据动态库信息进行动态链接。</p>
+<p><em>阶段一，将动态库信息写入可执行文件</em></p>
+<p>在编译链接生成可执行文件时，需要将使用的动态库加入到链接选项当中，比如在 Linux 下引用 libMath.so，就需要将 libMath.so 加入到链接选项当中（比如 libMath.so 放到了 /usr/lib 下，那么使用命令 gcc … -lMath -L/user/lib … 进行编译链接），所以使用这种方式生成的可执行文件中保存了依赖的动态库信息，在 Linux 可使用一个简单的命令 ldd 来查看。</p>
+<p><em>阶段二：加载可执行文件时依据动态库信息进行动态链接</em></p>
+<p>由于在阶段一生成的可执行文件中保存了动态库信息，当可执行文件加载完成后，就可以依据此信息进行中动态库的查找以及符号决议了。</p>
+<p>通过这个过程也可以清楚的看到静态库和动态库的区别，使用动态库的可执行文件当中仅仅保留相应信息，动态库的链接过程被推迟到了程序启动加载时。</p>
+<p>为加深你对加载时动态链接这个过程的理解，我们用一个类比来结束本小节，沿用前几节读书的例子，我们正在读的书中引用了《码农的荒岛求生》以及其它著作，那么加载时动态链接就好比，读者开始准备读这本书的时候（还没有真正的读）就把所有该书当中引用的资料著作都找齐放到一旁准备查看，当我们真正看到引用其它文献的地方时就可以直接在一旁找到该著作啦。在这个类比当中，开始读书前的准备工作就好比加载时动态链接。</p>
+<p>接下来我们讲解第二种动态链接，run-time dynamic linking (运行时动态链接) 。</p>
+<ul>
+<li>run-time dynamic linking (运行时动态链接)</li>
+</ul>
+<p>上一小节中我们看到如果我们想使用加载时动态链接，那么在编译链接生成可执行文件阶段时需要告诉编译器所依赖的动态库信息，而 run-time dynamic linking 运行时动态链接则不需要在编译链接时提供动态库信息，也就是说，在可执行文件被启动运行之前，可执行文件对所依赖的动态库信息一无所知，只有当程序运行到需要调用动态库所提供的代码时才会启动动态链接过程。</p>
+<p>我们在上一节中介绍了 load-time，也就是程序加载时，那么程序加载完成后就开始程序执行了，那么所谓 run-time (运行时) 指的就是从程序开始被 CPU 执行到程序执行完成退出的这段时间。</p>
+<p>所以运行时动态链接这种方式对于 “动态链接” 阐释的更加淋漓尽致，因为可执行文件在启动运行之前都不知道需要依赖哪些动态库，只在运行时根据代码的需要再进行动态链接。同加载时动态链接相比，运行时动态链接将链接这个过程再次推迟往后推迟，推迟到了程序运行时。</p>
+<p>由于在编译链接生成可执行文件的过程中没有提供所依赖的动态库信息，因此这项任务就留给了程序员，在代码当中如果需要使用某个动态库所提供的函数，我们可以使用特定的 API 来运行时加载动态库，在 Windows 下通过 LoadLibrary 或者 LoadLibraryEx，在 Linux 下通过使用 dlopen、dlsym、dlclose 这样一组函数在运行时链接动态库。当这些 API 被调用后，同样是首先去找这些动态库，将其从磁盘 copy 到内存，然后查找程序依赖的函数是否在动态库中定义。这些过程完成后动态库中的代码就可以被正常使用了。</p>
+<p>相对于加载时动态链接，运行时动态链接更加灵活，同时将动态链接过程推迟到运行时可以加快程序的启动速度。</p>
+<p>为了和加载时动态链接作比对，我们继续使用上一小节当中读书的例子，加载时动态链接就好比在开始准备读一本书之前，将该书中所有引用到的资料文献找齐全，而运行时动态链接则不需要这个过程，运行时动态链接就好比直接拿起一本书开始看，看到有引用的参考文献时再去找该资料，找到后查看该文献然后继续读我们的书。从这个例子当中运行时动态链接更像是我们平时读书时的样子。</p>
+<p>至此，两种动态链接的形式我们就都已经清楚了，接下来我们看一下动态链接下生成的可执行文件。</p>
+<p>动态链接下可执行文件的生成</p>
+<p>在静态链接下，链接器通过将各个目标文件的代码段和数据段合并拷贝到可执行文件，因此静态链接下可执行文件当中包含了所依赖的所有代码和数据，而与之对比的动态链接下可执行文件又是什么样的呢？</p>
+<p>其实我们在动态库这一节中已经了解了动态链接下可执行文件的生成，即，在动态链接下，链接器并不是将动态库中的代码和数据拷贝到可执行文件中，而是将动态库的必要信息写入了可执行文件，这样当可执行文件在加载时就可以根据此信息进行动态链接了。为方便理解，我们将该信息仅仅认为是动态库都名字，真实情况当然要更复杂一点，这里我们以 Linux 下可执行文件即 ELF 文件为例（这一系列的文章重点关注最本质的原理思想，所以这里讨论的同样适合 Windows 下的可执行文件即 exe 文件）。</p>
+<p>在前几节中我们将可执行文件简单的划分为了两段，数据段和代码段，在这里我们继续丰富可执行文件中的内容，如图所示，在动态链接下，可执行文件当中会新增两段，即 dynamic 段以及 GOT（Global offset table）段，这两段内容就是是我们之前所说的必要信息。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/20210730101148.png" alt="image-20210730101148719"></p>
+<p>dynamic 段中保存了可执行文件依赖哪些动态库，动态链接符号表的位置以及重定位表的位置等信息。关于 dynamic 以及 GOT 段的作用限于篇幅就不重点阐述了。如果你对 GOT 段的具体作用很好奇的话，欢迎关注微信公共账号，码农的荒岛求生。</p>
+<p>当加载可执行文件时，操作系统根据 dynamic 段中的信息即可找到使用的动态库，从而完成动态链接。</p>
+<p>这里需要强调一点，在编译链接过程中，可以同时使用动态库以及静态库。这两种库的使用并不冲突，那么在这种情况下生成的可执行文件中，可执行文件中包含了静态库的数据和代码，以及动态库的必要信息。</p>
+<p>至此，关于静态库，静态链接，动态库，动态链接就讲述到这，那么接下来的问题就是静态库和动态库都有什么样的优缺点。</p>
+<h2 id="动态库vs静态库"><a href="#动态库vs静态库" class="headerlink" title="动态库vs静态库"></a>动态库 vs 静态库</h2><p>在计算机的历史当中，最开始程序只能静态链接，但是人们很快发现，静态链接生成的可执行文件存在磁盘空间浪费问题，因为对于每个程序都需要依赖的 libc 库，在静态链接下每个可执行文件当中都有一份 libc 代码和数据的拷贝，为解决该问题才提出动态库。</p>
+<p>在前几节我们知道，动态链接下可执行文件当中仅仅保留动态库的必要信息，因此解决了静态链接下磁盘浪费问题。动态库的强大之处不仅仅于此，我们知道对于现代计算机系统，比如 PC，通常会运行成百上千个程序（进程），且程序只有被加载到内存中才可以使用，如果使用静态链接那么在内存中就会有成百上千份同样的 libc 代码，这对于宝贵的内存资源同样是极大的浪费，而使用动态链接，内存中只需要有一份 libc 代码，所有的程序（进程）共享这一份代码，因此极大的节省了内存资源，这也是为什么动态库又叫共享库。</p>
+<p>动态库还有另外一个强大之处，那就是如果我们修改了动态库的代码，我们只需要重新编译动态库就可以了而无需重新新编译我们自己的程序，因为可执行文件当中仅仅保留了动态库的必要信息，重新编译动态库后这些必要都信息是不会改变的（只要不修改动态库的名字和动态库导出的供可执行文件使用的函数），编译好新的动态库后只需要简单的替换原有动态库，下一次运行程序时就可以使用新的动态库了，因此动态库的这种特性极大的方便了程序升级和 bug 修复。我们平时使用都客户端程序，比如我们常用 QQ，输入法，播放器，都利用了动态库的这一优点，原因就在于方便升级以 bug 修复，只需要更新相应的动态库就可以了。</p>
+<p>动态库的优点不止于此，我们知道动态链接可以出现在运行时（run-time dynamic link），动态链接的这种特性可以用于扩展程序能力，那么如何扩展呢？你肯定听说过一样神器，没错，就是插件。你有没有想过插件是怎么实现的？实现插件时，我们只需要实现几个规定好的几个函数，我们的插件就可以运行了，可这是怎么做到的呢，答案就在于运行时动态链接，可以将插件以动态的都方式实现。我们知道使用运行时动态链接无需在编译链接期间告诉链接器所使用的动态库信息，可执行文件对此一无所知，只有当运行时才知道使用什么动态库，以及使用了动态库中哪些函数，但是在编译链接可执行文件时又怎么知道插件中定义了哪些函数呢，因此所有的插件实现函数必须都有一个统一的格式，程序在运行时需要加载所有插件（动态库），然后调用所有插件的入口函数（统一的格式），这样我们写的插件就可以被执行起来了。</p>
+<p>动态库都强大优势还体现在多语言编程上。我们知道使用 Python 可以快速进行开发，但 Python 的性能无法同 C/C++ 相比 (因为 Python 是解释型语言，至于什么是解释型语言我会在后面码农的荒岛求生系列文章当中给大家详细讲解)，有没有办法可以兼具 Python 的快速开发能力以及 C/C++ 的高性能呢，答案是可以的，我们可以将 C/C++ 代码编译链接成动态库，这样 python 就可以直接调用动态库中的函数了。不但 Python，Perl 以及 Java 等都可以通过动态库的形式调用 C/C++ 代码。动态库的使用使得同一个项目不同语言混合编程成为可能，而且动态库的使用更大限度的实现了代码复用。</p>
+<p>了解了动态库的这么多优点，那么动态库就没有缺点吗，当然是有的。</p>
+<p>首先由于动态库是程序加载时或运行是才进行链接的，因此同静态链接相比，使用动态链接的程序在性能上要稍弱于静态链接，这时因为对于加载时动态链接，这无疑会减慢程序都启动速度，而对于运行时链接，当首次调用到动态库的函数时，程序会被暂停，当链接过程结束后才可以继续进行。且动态库中的代码是地址无关代码（Position-Idependent Code，PIC），之所以动态库中的代码是地址无关代码是因为动态库又被成为共享库，所有的程序都可以调用动态库中的代码，因此在使用动态库中的代码时程序要多做一些工作，这里我们不再具体展开讲解到底程序多做了哪些工作，对此感兴趣当同学可以参考 CSAPP（深入理解计算机系统）。这里我们说动态链接的程序性能相比静态链接稍弱，但是这里的性能损失是微乎其微的，同动态库可以带来的好处相比，我们可以完全忽略这里的性能损失，同学们可以放心的使用动态库。</p>
+<p>动态库的一个优点其实也是它的缺点，即动态链接下的可执行文件不可以被独立运行（这里讨论的是加载时动态链接，load-time dynamic link），换句话说就是，如果没有提供所依赖的动态库或者所提供的动态库版本和可执行文件所依赖的不兼容，程序是无法启动的。动态库的依赖问题会给程序的安装部署带来麻烦，在 Linux 环境下尤其严重，以笔者曾参与开发维护的一个虚拟桌面系统为例，我们在开发过程中依赖的一些比较有名的第三方库默认不会随着安装包发布，这就会导致用户在较低版本 Linux 中安装时经常会出现程序无法启动的问题，原因就在于我们编译链接使用都动态库和用户 Linux 系统中都动态库不兼容。解决这个问题的方法通常有两种，一个是用户升级系统中都动态库，另一个是我们讲需要都第三方库随安装包一起发布，当然这是在取得许可的情况下。</p>
+<p>在了解了动态库的优缺点后，接下来我们来看一下静态库。</p>
+<p>静态链接是最古老也是最简单的链接技术。静态链接都最大优点就是使用简单，编译好的可执行文件是完备的，即静态链接下的可执行文件不需要依赖任何其它的库，因为静态链接下，链接器将所有依赖的代码和数据都写入到了最终的可执行文件当中，这就消除了动态链接下的库依赖问题，没有了库都依赖问题就意味着程序都安装部署都得到了极大都简化。请大家不要小看这一点，这对当今那些拥有海量用户的后端系统来说至关重要，比如类似微信这种量级的系统，其后端会部署在成千上万台机器上，这么多的机器其系统的安装部署以及升级会给运维带来极大挑战，而静态链接下的可执行文件由于不依赖任何库，因为部署非常方便，仅仅用一个新的可执行文件进行覆盖就可以了，因此极大的简化了系统部署以及升级。笔者之前所在的某电商广告后端系统就完全使用静态链接来简化部署升级。</p>
+<p>而静态库的缺点相信大家都已经清楚了，那就是静态链接会导致可执行文件过大，且多个程序静态链接同一个静态库的话会导致磁盘浪费的问题。</p>
+<p>到这里关于静态库和动态库的讨论就告一段落了，相信大家对于这两种链接类型都有了清晰都认知。接下来让我们稍作休息，开始链接器的下一个重要功能，重定位。</p>
+
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+<br>
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　👣　步履不止　　-------------</div>
+<br>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%93%BE%E6%8E%A5%E5%99%A8/" rel="tag"><i class="fa fa-tag"></i> 链接器</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/600f79ea.html" rel="prev" title="搞懂链接器 1：链接器定义和符号决议">
+                  <i class="fa fa-angle-left"></i> 搞懂链接器 1：链接器定义和符号决议
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/6748ea9.html" rel="next" title="搞懂链接器 3：重定位">
+                  搞懂链接器 3：重定位 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="SOHUCS" sid="6244018f66c957e5d37dcf615fadcca2"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heartbeat"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">paopao</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">75k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:33</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyw09gPog","appkey":"4488e6b82bfe3d819f4971a5e5c115f4","count":true}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+
+</body>
+</html>

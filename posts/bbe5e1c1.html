@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-100.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-50.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="brpc 引入 m:n 的线程模型，固定的内核线程调度运行大量的 bthread 以避免内核线程上下文切换带来的开销。bthread 类似协程，即用户态线程，bthread 的切换不会陷入内核，不会进行一系列内存同步等耗时操作，因此 bthread 的切换在 100-200ns，相比内核线程的微秒级别有着数量级的提升。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="brpc 中 bthread 源码分析">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/bbe5e1c1.html">
+<meta property="og:site_name" content="PaoPao&#39;s Blog">
+<meta property="og:description" content="brpc 引入 m:n 的线程模型，固定的内核线程调度运行大量的 bthread 以避免内核线程上下文切换带来的开销。bthread 类似协程，即用户态线程，bthread 的切换不会陷入内核，不会进行一系列内存同步等耗时操作，因此 bthread 的切换在 100-200ns，相比内核线程的微秒级别有着数量级的提升。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212222333311.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212222338350.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212222338002.png">
+<meta property="article:published_time" content="2022-12-22T11:11:25.000Z">
+<meta property="article:modified_time" content="2023-02-10T09:04:47.741Z">
+<meta property="article:author" content="paopao">
+<meta property="article:tag" content="协程">
+<meta property="article:tag" content="boost">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212222333311.png">
+
+
+<link rel="canonical" href="https://liu-paopao.github.io/posts/bbe5e1c1.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/bbe5e1c1.html","path":"posts/bbe5e1c1.html","title":"brpc 中 bthread 源码分析"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>brpc 中 bthread 源码分析 | PaoPao's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">PaoPao's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#brpc%E7%9A%84%E7%B2%BE%E5%8D%8E%E5%85%A8%E5%9C%A8bthread"><span class="nav-number">1.</span> <span class="nav-text">brpc 的精华全在 bthread</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="paopao"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">paopao</p>
+  <div class="site-description" itemprop="description">Stay hungry, stay foolish.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+<!-- none-select-br -->
+
+<p></p>
+
+<!-- hitokoto -->
+
+<div class="hitokoto-title">
+	<i class="fa fa-paragraph"></i>
+	<b>一言</b>
+</div>
+
+<div id="hitokoto">:D 获取中...</div>
+<i id="hitofrom">:D 获取中...</i>
+
+<script src="https://cdn.jsdelivr.net/npm/bluebird@3/js/browser/bluebird.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@2.0.3/fetch.min.js"></script>
+<script>
+  fetch('https://v1.hitokoto.cn')
+    .then(function (res){
+      return res.json();
+    })
+    .then(function (data) {
+      var hitokoto = document.getElementById('hitokoto');
+      hitokoto.innerText = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + data.hitokoto;
+      var hitofrom = document.getElementById('hitofrom');
+      hitofrom.innerText = "——" + data.from + '\xa0'; 
+    })
+    .catch(function (err) {
+      console.error(err);
+    })
+</script>
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/bbe5e1c1.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="brpc 中 bthread 源码分析 | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          brpc 中 bthread 源码分析
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-12-22 19:11:25" itemprop="dateCreated datePublished" datetime="2022-12-22T19:11:25+08:00">2022-12-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-02-10 17:04:47" itemprop="dateModified" datetime="2023-02-10T17:04:47+08:00">2023-02-10</time>
+    </span>
+
+  
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>brpc 引入 m:n 的线程模型，固定的内核线程调度运行大量的 bthread 以避免内核线程上下文切换带来的开销。bthread 类似协程，即用户态线程，bthread 的切换不会陷入内核，不会进行一系列内存同步等耗时操作，因此 bthread 的切换在 100-200ns，相比内核线程的微秒级别有着数量级的提升。</p>
+<span id="more"></span>
+
+<h2 id="brpc的精华全在bthread"><a href="#brpc的精华全在bthread" class="headerlink" title="brpc的精华全在bthread"></a>brpc 的精华全在 bthread</h2><p>有人说 brpc 的精华全在 bthread 上了，bthread 可以理解为 “协程”。pthread 大家都不陌生，是 POSIX 标准中定义的一套线程模型。在 Linux 系统上，其实没有真正的线程，其采用的是 LWP（轻量级进程）实现的线程。而 bthread 是 brpc 实现的一套 “协程”，当然这并不是传统意义上的协程。就像 1 个进程可以开辟 N 个线程一样。传统意义上的协程是一个线程中开辟多个协程，也就是通常意义的 N:1 协程。而 bthread 是 M:N 的 “协程”，每个 bthread 之间的平等的，所谓的 M:N 是指协程可以在线程间迁移。Go 语言的 goroutine 也是 M:N 的。</p>
+<p><code>incubator-brpc/src/bthread/stack_inl.h</code>:</p>
+<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">void</span> <span class="title">jump_stack</span><span class="params">(ContextualStack* from, ContextualStack* to)</span> </span>{</span><br><span class="line">    <span class="built_in">bthread_jump_fcontext</span>(&amp;from-&gt;context, to-&gt;context, <span class="number">0</span><span class="comment">/*not skip remained*/</span>);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>incubator-brpc/src/bthread/context.h</code>:</p>
+<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">void</span>* <span class="type">bthread_fcontext_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> __cplusplus</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span>{</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">intptr_t</span> BTHREAD_CONTEXT_CALL_CONVENTION</span></span><br><span class="line"><span class="function"><span class="title">bthread_jump_fcontext</span><span class="params">(<span class="type">bthread_fcontext_t</span> * ofc, <span class="type">bthread_fcontext_t</span> nfc,</span></span></span><br><span class="line"><span class="params"><span class="function">                      <span class="type">intptr_t</span> vp, <span class="type">bool</span> preserve_fpu = <span class="literal">false</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="type">bthread_fcontext_t</span> BTHREAD_CONTEXT_CALL_CONVENTION</span></span><br><span class="line"><span class="function"><span class="title">bthread_make_fcontext</span><span class="params">(<span class="type">void</span>* sp, <span class="type">size_t</span> size, <span class="type">void</span> (* fn)( <span class="type">intptr_t</span>))</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> __cplusplus</span></span><br><span class="line">};</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>bthread_jump_fcontext () 其实是汇编函数，在 bthread/context.cpp 中，功能就是进行栈上下文的切换（跳转）。与之配套的还有一个 bthread_make_fcontext ()，负责创建 bthread 的栈上下文。这两个函数是实现栈上下文切换的核心。它们的代码其实并非 brpc 的原创，而是出自开源项目 <a target="_blank" rel="noopener" href="https://github.com/twlostow/libcontext">libcontext</a>。libcontext 是 boost::context 的简化实现。libcontext - a slightly more portable version of boost::context。</p>
+<p>首先看下协程栈的结构，如下，context 指向协程栈顶，stacktype 表示栈的类型 (大小)，storage 为栈空间。<br>栈分配时会通过 mmap 匿名映射一段空间，然后将高地址位赋值给 bottom。</p>
+<p><code>incubator-brpc/src/bthread/stack.h</code>:</p>
+<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">ContextualStack</span> {</span><br><span class="line">    <span class="type">bthread_fcontext_t</span> context;</span><br><span class="line">    StackType stacktype;</span><br><span class="line">    StackStorage storage;</span><br><span class="line">};</span><br><span class="line">……</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">StackStorage</span> {</span><br><span class="line">     <span class="type">int</span> stacksize;</span><br><span class="line">     <span class="type">int</span> guardsize;</span><br><span class="line">    <span class="type">void</span>* bottom;</span><br><span class="line">    <span class="type">unsigned</span> valgrind_stack_id;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Clears all members.</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">zeroize</span><span class="params">()</span> </span>{</span><br><span class="line">        stacksize = <span class="number">0</span>;</span><br><span class="line">        guardsize = <span class="number">0</span>;</span><br><span class="line">        bottom = <span class="literal">NULL</span>;</span><br><span class="line">        valgrind_stack_id = <span class="number">0</span>;</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line">……</span><br><span class="line"><span class="comment">// Jump from stack `from' to stack `to'. `from' must be the stack of callsite</span></span><br><span class="line"><span class="comment">// (to save contexts before jumping)</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">jump_stack</span><span class="params">(ContextualStack* from, ContextualStack* to)</span></span>;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>接着看下创建一个 bthread 的过程，函数入参分别为协程栈底，栈大小，以及这个 bthread 要执行的函数，返回值，即 context 为协程栈顶，具体看如下代码。</p>
+<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">context = <span class="built_in">bthread_make_fcontext</span>(storage.bottom, storage.stacksize, entry);</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">if</span> defined(BTHREAD_CONTEXT_PLATFORM_linux_x86_64) &amp;&amp; defined(BTHREAD_CONTEXT_COMPILER_gcc)</span></span><br><span class="line">__asm (</span><br><span class="line"><span class="string">".text\n"</span></span><br><span class="line"><span class="string">".globl bthread_make_fcontext\n"</span></span><br><span class="line"><span class="string">".type bthread_make_fcontext,@function\n"</span></span><br><span class="line"><span class="string">".align 16\n"</span></span><br><span class="line"><span class="string">"bthread_make_fcontext:\n"</span></span><br><span class="line"><span class="string">"    movq  %rdi, %rax\n"</span></span><br><span class="line"><span class="string">"    andq  $-16, %rax\n"</span></span><br><span class="line"><span class="string">"    leaq  -0x48(%rax), %rax\n"</span></span><br><span class="line"><span class="string">"    movq  %rdx, 0x38(%rax)\n"</span></span><br><span class="line"><span class="string">"    stmxcsr  (%rax)\n"</span></span><br><span class="line"><span class="string">"    fnstcw   0x4(%rax)\n"</span></span><br><span class="line"><span class="string">"    leaq  finish(%rip), %rcx\n"</span></span><br><span class="line"><span class="string">"    movq  %rcx, 0x40(%rax)\n"</span></span><br><span class="line"><span class="string">"    ret \n"</span></span><br><span class="line"><span class="string">"finish:\n"</span></span><br><span class="line"><span class="string">"    xorq  %rdi, %rdi\n"</span></span><br><span class="line"><span class="string">"    call  _exit@PLT\n"</span></span><br><span class="line"><span class="string">"    hlt\n"</span></span><br><span class="line"><span class="string">".size bthread_make_fcontext,.-bthread_make_fcontext\n"</span></span><br><span class="line"><span class="string">".section .note.GNU-stack,\"\",%progbits\n"</span></span><br><span class="line"><span class="string">".previous\n"</span></span><br><span class="line">);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li>将 rdi 赋值给 rax，rdi 保存的是第一个参数，即 stack 的 bottom</li>
+<li> 对 rax 进行 16 字节对齐</li>
+<li>将 rax 下移 72 字节</li>
+<li>将 rdx 保存至 rax + 56，rdx 为第三个参数，即函数 fn 的地址</li>
+<li>保存 MXCSR 寄存器 (sse 浮点数运算状态寄存器，32 位) 到 rax 所在位置</li>
+<li>将 FPU 控制字的当前值存储到 rax + 4</li>
+<li> 计算 finish 的绝对地址，保存到 rcx 中</li>
+<li>将 rcx 保存到 rax + 64</li>
+<li> 函数退出</li>
+<li> rax 保存的是栈顶，因此 context 现在指向协程栈的栈顶</li>
+</ul>
+<p>这一过程如下图所示：上面为高地址，下面为低地址；左侧为调用此函数的 bthread/pthread 栈，右侧为执行完成后，新 bthread 栈空间结构，大框表示 64 位，小框表示 32 位，这里关于各个寄存器在栈中保存的位置是为了和协程切换函数里保持一致，具体下面会提到。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212222333311.png" alt="img"></p>
+<p>接下来看下协程的切换过程，首先看下代码，ofc 为旧协程的栈顶，nfc 为新协程的栈顶。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">inline void jump_stack(ContextualStack* from, ContextualStack* to) {</span><br><span class="line">    bthread_jump_fcontext(&amp;from-&gt;context, to-&gt;context, 0/*not skip remained*/);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">#if defined(BTHREAD_CONTEXT_PLATFORM_linux_x86_64) &amp;&amp; defined(BTHREAD_CONTEXT_COMPILER_gcc)</span><br><span class="line">__asm (</span><br><span class="line">".text\n"</span><br><span class="line">".globl bthread_jump_fcontext\n"</span><br><span class="line">".type bthread_jump_fcontext,@function\n"</span><br><span class="line">".align 16\n"</span><br><span class="line">"bthread_jump_fcontext:\n"</span><br><span class="line">"    pushq  %rbp  \n"</span><br><span class="line">"    pushq  %rbx  \n"</span><br><span class="line">"    pushq  %r15  \n"</span><br><span class="line">"    pushq  %r14  \n"</span><br><span class="line">"    pushq  %r13  \n"</span><br><span class="line">"    pushq  %r12  \n"</span><br><span class="line">"    leaq  -0x8(%rsp), %rsp\n"</span><br><span class="line">"    cmp  $0, %rcx\n"</span><br><span class="line">"    je  1f\n"</span><br><span class="line">"    stmxcsr  (%rsp)\n"</span><br><span class="line">"    fnstcw   0x4(%rsp)\n"</span><br><span class="line">"1:\n"</span><br><span class="line">"    movq  %rsp, (%rdi)\n"</span><br><span class="line">"    movq  %rsi, %rsp\n"</span><br><span class="line">"    cmp  $0, %rcx\n"</span><br><span class="line">"    je  2f\n"</span><br><span class="line">"    ldmxcsr  (%rsp)\n"</span><br><span class="line">"    fldcw  0x4(%rsp)\n"</span><br><span class="line">"2:\n"</span><br><span class="line">"    leaq  0x8(%rsp), %rsp\n"</span><br><span class="line">"    popq  %r12  \n"</span><br><span class="line">"    popq  %r13  \n"</span><br><span class="line">"    popq  %r14  \n"</span><br><span class="line">"    popq  %r15  \n"</span><br><span class="line">"    popq  %rbx  \n"</span><br><span class="line">"    popq  %rbp  \n"</span><br><span class="line">"    popq  %r8\n"</span><br><span class="line">"    movq  %rdx, %rax\n"</span><br><span class="line">"    movq  %rdx, %rdi\n"</span><br><span class="line">"    jmp  *%r8\n"</span><br><span class="line">".size bthread_jump_fcontext,.-bthread_jump_fcontext\n"</span><br><span class="line">".section .note.GNU-stack,\"\",%progbits\n"</span><br><span class="line">".previous\n"</span><br><span class="line">);</span><br><span class="line">#endif</span><br></pre></td></tr></tbody></table></figure>
+
+<p>先将对应寄存器 push 到旧的协程栈中<br>将 rsp 下移 8 字节<br>比较 rcx 和 0，因为 rcx 为 0，所以 zf 为 1<br>因为 zf 为 1，所以跳转<br>将 rsp 保存至 rdi 中，rsp 指向当前协程栈栈顶，rdi 为第一个入参，即 ofc<br>将 rsi 保存到 rsp 中，rsi 为第二个参数，即 nfc，此时栈顶指针 rsp 指向了新的协程栈<br>将 rsp 上移 8 字节<br>将协程栈中 r12-rbp 依次 pop 到对应寄存器<br>将 rdx 保存到 rax，rdx 为第三个参数，rax 为返回值<br>将 rdx 保存到 rdi，rdi 为第一个入参，因此将作为新协程运行的入参<br>跳转到 r8 对应的寄存器运行。<br>在协程切换过程中有两种情况，第一种为新协程是通过 bthread_make_fcontext 函数刚刚创建的栈，另一种是已经运行过的栈，这两种过程分别如下图所示</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212222338350.png" alt="img"></p>
+<p>上图表示切换到新协程的过程，因为 pop 到 r8 的是 fn，所以接下来会运行创建协程时的函数 fn，当协程运行结束后 ret 时会 pop rip，此时便会执行 finish。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212222338002.png" alt="img"></p>
+<p>上图表示切换到已经运行一段时间的协程的过程，因为右侧协程在上一次被切换的时候会将下一条指令地址 push 到栈中，然后在这次切换过程中被 pop 到 r8，因此便会继续执行上次被切换后的代码。</p>
+
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+<br>
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　👣　步履不止　　-------------</div>
+<br>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%8D%8F%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> 协程</a>
+              <a href="/tags/boost/" rel="tag"><i class="fa fa-tag"></i> boost</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/f7a57140.html" rel="prev" title="brpc 中 bthread 协程切换测试用例">
+                  <i class="fa fa-angle-left"></i> brpc 中 bthread 协程切换测试用例
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/cf8666f9.html" rel="next" title="boost 协程接口变化">
+                  boost 协程接口变化 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heartbeat"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">paopao</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">75k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:33</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyw09gPog","appkey":"4488e6b82bfe3d819f4971a5e5c115f4","count":true}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+
+</body>
+</html>

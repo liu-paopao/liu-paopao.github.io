@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-100.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-50.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="RPM 命令一、RPM 介绍 1. 什么是 rpm ？ rpm 即 RedHat Package Management，是 RedHat 的发明之一 2. 为什么需要 rpm ？ 在一个操作系统下，需要安装实现各种功能的软件包。这些软件包一般都有各自的程序，但是同时也有错综复杂的依赖关系。同时还需要 解决软件包的版本，以及安装，配置，卸载的自动化问题。为了解决 这些问题，RedHat 针对自己的系">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RPM 介绍">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/22588541.html">
+<meta property="og:site_name" content="PaoPao&#39;s Blog">
+<meta property="og:description" content="RPM 命令一、RPM 介绍 1. 什么是 rpm ？ rpm 即 RedHat Package Management，是 RedHat 的发明之一 2. 为什么需要 rpm ？ 在一个操作系统下，需要安装实现各种功能的软件包。这些软件包一般都有各自的程序，但是同时也有错综复杂的依赖关系。同时还需要 解决软件包的版本，以及安装，配置，卸载的自动化问题。为了解决 这些问题，RedHat 针对自己的系">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-17T10:10:04.000Z">
+<meta property="article:modified_time" content="2021-09-17T10:11:46.666Z">
+<meta property="article:author" content="paopao">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://liu-paopao.github.io/posts/22588541.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://liu-paopao.github.io/posts/22588541.html","path":"posts/22588541.html","title":"RPM 介绍"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>RPM 介绍 | PaoPao's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">PaoPao's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RPM-%E5%91%BD%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">RPM 命令</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="paopao"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">paopao</p>
+  <div class="site-description" itemprop="description">Stay hungry, stay foolish.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+<!-- none-select-br -->
+
+<p></p>
+
+<!-- hitokoto -->
+
+<div class="hitokoto-title">
+	<i class="fa fa-paragraph"></i>
+	<b>一言</b>
+</div>
+
+<div id="hitokoto">:D 获取中...</div>
+<i id="hitofrom">:D 获取中...</i>
+
+<script src="https://cdn.jsdelivr.net/npm/bluebird@3/js/browser/bluebird.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@2.0.3/fetch.min.js"></script>
+<script>
+  fetch('https://v1.hitokoto.cn')
+    .then(function (res){
+      return res.json();
+    })
+    .then(function (data) {
+      var hitokoto = document.getElementById('hitokoto');
+      hitokoto.innerText = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + data.hitokoto;
+      var hitofrom = document.getElementById('hitofrom');
+      hitofrom.innerText = "——" + data.from + '\xa0'; 
+    })
+    .catch(function (err) {
+      console.error(err);
+    })
+</script>
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/22588541.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="RPM 介绍 | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RPM 介绍
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-09-17 18:10:04 / 修改时间：18:11:46" itemprop="dateCreated datePublished" datetime="2021-09-17T18:10:04+08:00">2021-09-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Changyan：</span>
+    
+    <a title="RPM 介绍" href="/posts/22588541.html#SOHUCS" itemprop="discussionUrl">
+      <span id="sourceId::01f8ef51f599adc8fd3f5975cfa02d85" class="cy_cmt_count" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="RPM-命令"><a href="#RPM-命令" class="headerlink" title="RPM 命令"></a>RPM 命令</h1><p><strong>一、RPM 介绍</strong></p>
+<p>1. 什么是 rpm ？</p>
+<p>rpm 即 RedHat Package Management，是 RedHat 的发明之一</p>
+<p>2. 为什么需要 rpm ？</p>
+<p>在一个操作系统下，需要安装实现各种功能的软件包。这些软件包一般都有各自的程序，<br>但是同时也有错综复杂的依赖关系。同时还需要 解决软件包的版本，以及安装，配置，<br>卸载的自动化问题。为了解决 这些问题，RedHat 针对自己的系统提出了一个较好的办法<br>来管理成千 上百的软件。这就是 RPM 管理系统。在系统中安装了 rpm 管理系统以后，<br>只要是符合 rpm 文件标准的打包程序都可以方便地安装、升级、卸载。</p>
+<p>3. 是不是所有的 linux 都使用 rpm ？</p>
+<p>任何系统都需要包管理系统，因此很多 linux 都使用 rpm 系统。 rpm 系统是 Redhat Linux 和<br>Fedora Core 的软件包管理器，但是 Mandriva、SuSE 等 Linux 发行版也都使用 rpm。由于 rpm<br>的源程序可以在别的系统上进行编译，所以有可能在别的系统上也使用 rpm。除了 rpm，<br>其他一些系统也有自己的软件包管理程序， 例如 debian 的 deb 包。</p>
+<p>4.rpm 包的文件名为什么那么长 ？</p>
+<p>rpm 包的文件名中包含了这个软件包的版本信息，操作系统信息，硬件要求等等。<br>比如 mypackage-1.1-2RH.i386.rpm，其中 mypackage 是在系统中登记的软件包的名字 1.1<br>是软件的版本号，2 是发行号，RH 表示用于 RH 操作系统。i386 表示用于 intel x86 平台。</p>
+<p>5. 软件包文件名中的 i386,i686 是什么意思</p>
+<p>rpm 软件包的文件名中，不仅包含了软件名称，版本信息，还包括了适用的硬件架构的信息。</p>
+<p>i386 指这个软件包适用于 intel 80386 以上的 x86 架构的计算机 (AI32)<br>i686 指这个软件包适用于 intel 80686 以上 (奔腾 pro 以上) 的 x86 架构的计算机 (IA32)<br>noarch 指这个软件包与硬件架构无关，可以通用。</p>
+<p>i686 软件包通常针对 CPU 进行了优化，现在通常配置的机器都可以使用 i686 软件包。</p>
+<p>6. 不同操作系统发行的 rpm 包可否混用？</p>
+<p>对于已经编译成二进制的 rpm 包，由于操作系统环境不同，一般不能混用。<br>对于以 src.rpm 发行的软件包，由于需要安装时进行本地编译，所以通常可以在不同系统下安装。</p>
+<p><strong>二、RPM 包管理的用途</strong></p>
+<p>1、可以安装、删除、升级和管理以 rpm 包形式发布的软件；<br>2、可以查询某个 rpm 包中包含哪些文件，以及某个指定文件属于哪个 rpm 包；<br>3、可以在查询系统中的某个 rpm 包是否已安装以及其版本；<br>4、作为开发者可以把自己开发的软件打成 rpm 包发布；<br>5、依赖性的检查，查询安装某个 rpm 包时，需要哪些其它的 rpm 包。</p>
+<p>注：RPM 软件的安装、删除、更新只有 root 权限才能使用；<br>对于查询功能任何用户都可以操作。</p>
+<p><strong>三、rpm 的一点简单用法</strong></p>
+<p>rpm 的一般格式：</p>
+<p>rpm [选项] [rpm 软件包]</p>
+<p>1、初始化 rpm 数据库（可以省略）</p>
+<p>rpm –initdb<br>rpm –rebuilddb % 注：这个要花好长时间</p>
+<p>% 注：有时 rpm 系统出了问题，不能安装和查询，大多是这里出了问题。</p>
+<p>2、RPM 软件包管理的查询功能：</p>
+<p>rpm -q [select-options] [query-options]</p>
+<p>RPM 的查询功能是极为强大，是极为重要的功能之一；这里举几个常用的例子，更为详细的具体的，请参考 man rpm</p>
+<p><em>对系统中已安装软件的查询</em></p>
+<p>1）查询系统已安装的软件</p>
+<p>语法：rpm -q 软件名</p>
+<p>例：rpm -q gaim<br>% -q 就是 –query，此选项表示询问系统是不是安装了 gaim 软件包；<br>% 如果已安装会有信息输出；如果没有安装，会输出 gaim 没有安装的信息；</p>
+<p>% 查看系统中所有已经安装的包，要加 -a 参数<br>rpm -qa</p>
+<p>% 如果分页查看，再加一个管道 | 和 more 命令<br>rpm -qa |more</p>
+<p>% 如果要查找某个软件包，可以用 grep 抽取出来<br>rpm -qa |grep mplayer</p>
+<p>2）查询一个已经安装的文件属于哪个软件包；</p>
+<p>语法: rpm -qf 文件名</p>
+<p>注：文件名所在的绝对路径要指出</p>
+<p>例：rpm -qf /usr/lib/libacl.la</p>
+<p>3）查询已安装软件包都安装到何处；</p>
+<p>语法：rpm -ql 软件包名</p>
+<p>例：rpm -ql mplayer</p>
+<p>4）查询一个已安装软件包的信息</p>
+<p>语法： rpm -qi 软件包名</p>
+<p>例：rpm -qi mplayer</p>
+<p>5）查看一下已安装软件的配置文件；</p>
+<p>语法格式：rpm -qc 软件名</p>
+<p>例：rpm -qc mplayer</p>
+<p>6）查看一个已经安装软件的文档安装位置：</p>
+<p>语法格式： rpm -qd 软件名</p>
+<p>例：rpm -qd mplayer</p>
+<p>7）查看一下已安装软件所依赖的软件包及文件；</p>
+<p>语法格式： rpm -qR 软件名</p>
+<p>例：rpm -qR mplayer</p>
+<p><strong>注</strong>：可以把几个参数组合起来用，如 rpm -qil mplayer</p>
+<p><em>对于未安装的软件包的查看</em> : 查看的前提是当前目录下已存在一个.rpm 文件。</p>
+<p>1）查看一个软件包的用途、版本等信息；</p>
+<p>语法： rpm -qpi file.rpm</p>
+<p>例：rpm -qpi mplayer-1.0pre7try2-2.i386.rpm</p>
+<p>2）查看一件软件包所包含的文件；</p>
+<p>语法： rpm -qpl file.rpm</p>
+<p>例：rpm -qpl mplayer-1.0pre7try2-2.i386.rpm</p>
+<p>3）查看软件包的文档所在的位置；</p>
+<p>语法： rpm -qpd file.rpm</p>
+<p>例：rpm -qpd mplayer-1.0pre7try2-2.i386.rpm</p>
+<p>4）查看一个软件包的配置文件；</p>
+<p>语法： rpm -qpc file.rpm</p>
+<p>例：rpm -qpc mplayer-1.0pre7try2-2.i386.rpm</p>
+<p>5）查看一个软件包的依赖关系</p>
+<p>语法： rpm -qpR file.rpm</p>
+<p>例：rpm -qpR mplayer-1.0pre7try2-2.i386.rpm</p>
+<p>3、软件包的安装、升级、删除等； <em>安装和升级一个 rpm 包</em></p>
+<p>语法：<br>rpm -ivh file.rpm % 这个是用来安装一个新的 rpm 包<br>rpm -Uvh file.rpm % 这是用来升级一个 rpm 包</p>
+<p>% 如果有依赖关系的，需解决依赖关系。<br>% 如果找不到依赖关系的包，可以用下面的命令强制安装：</p>
+<p>rpm -ivh –nodeps –force file.rpm<br>rpm -Uvh –nodeps –force file.rpm</p>
+<p>例：<br>rpm -ivh –test mplayer-1.0pre7try2-2.i386.rpm<br>% –test 表示测试，并不真正安装。</p>
+<p>rpm -ivh –relocate /=/usr/local/mplayer mplayer-1.0pre7try2-2.i386.rpm<br>% 为软件包指定安装目录：要加 –relocate 参数<br>% 安装在指定目录中的程序如何调用呢？<br>% 通常可执行程序都放在安装目录下的 bin 或者 sbin 目录中。</p>
+<p><em>删除一个 rpm 包</em></p>
+<p>首先查出需要删除的 rpm 包，然后用下面的命令来卸载：</p>
+<p>rpm -e 软件包名</p>
+<p>例：rpm -e mplayer % 卸载 mplayer<br>% 如果有其它的 rpm 依赖于该 rpm 包，系统会出现警告。<br>% 如果一定要卸载，可以用选项 –nodeps 忽略依赖关系。但最好不要这么做。</p>
+<p><strong>四、RPM 管理包管理器支持网络安装和查询</strong></p>
+<p>rpm [选项] rpm 包的 http 或者 ftp 的地址</p>
+<p>比如我们想通过 Fedora Core 4.0 的一个镜像查询、安装软件包。</p>
+<p>rpm -qpi <a target="_blank" rel="noopener" href="http://mirrors.kernel.org/.../RPMS/rsh-0.17-29.rpm">http://mirrors.kernel.org/.../RPMS/rsh-0.17-29.rpm</a><br>% 查询</p>
+<p>rpm -ivh <a target="_blank" rel="noopener" href="http://mirrors.kernel.org/.../RPMS/rsh-0.17-29.rpm">http://mirrors.kernel.org/.../RPMS/rsh-0.17-29.rpm</a><br>% 安装</p>
+<p><strong>五、对已安装 rpm 包查询的一点补充</strong></p>
+<p>可以用 locate 来查询一些软件的安装位置，可能需要先运行 updatedb 来更新已安装软件库</p>
+<p><strong>六、从 rpm 软件包抽取文件</strong></p>
+<p>rpm2cpio xxx.rpm | cpio -idmv<br>% i 表示提取文件，v 表示指示执行进程<br>% d 表示根据包中文件原来的路径建立目录<br>% m 表示保持文件的更新时间</p>
+
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+<br>
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　👣　步履不止　　-------------</div>
+<br>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/659154a1.html" rel="prev" title="搞懂链接器 4：大型项目的构建过程">
+                  <i class="fa fa-angle-left"></i> 搞懂链接器 4：大型项目的构建过程
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/e8c622c9.html" rel="next" title="龙芯服务器重装 UOS 系统 + 搭建本地仓库源">
+                  龙芯服务器重装 UOS 系统 + 搭建本地仓库源 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="SOHUCS" sid="01f8ef51f599adc8fd3f5975cfa02d85"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heartbeat"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">paopao</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">75k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:33</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyw09gPog","appkey":"4488e6b82bfe3d819f4971a5e5c115f4","count":true}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+
+</body>
+</html>

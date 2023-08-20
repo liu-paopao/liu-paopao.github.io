@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-100.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-50.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="前言 之前一直在 Typora 上记录自己的笔记，但是发现 markdown 格式的笔记在插入图片时，仅能采用两种方法：1）在线图床，2）本地路径，即图片并不是像 Word 那样集成在文档内的，因此经过一番研究，发现了最新版的 Typora 已经支持在线图床功能，遂写此篇教程帮助后人构建自己的在线图床 markdown 笔记。 所需软件typora https:&#x2F;&#x2F;typora.io&#x2F; picgo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Typora+Picgo+Gitee 构建网络图床笔记">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/80f1815e.html">
+<meta property="og:site_name" content="PaoPao&#39;s Blog">
+<meta property="og:description" content="前言 之前一直在 Typora 上记录自己的笔记，但是发现 markdown 格式的笔记在插入图片时，仅能采用两种方法：1）在线图床，2）本地路径，即图片并不是像 Word 那样集成在文档内的，因此经过一番研究，发现了最新版的 Typora 已经支持在线图床功能，遂写此篇教程帮助后人构建自己的在线图床 markdown 笔记。 所需软件typora https:&#x2F;&#x2F;typora.io&#x2F; picgo">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-be88c425ba401a71e9c91dca74f0d262_720w.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-daba73811b87533f8f032169d3d11d9a_720w.png">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-f374bec8d90d87c2f7683c1133064166_720w.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-270b499aeadae15d014215b32b1204c8_720w.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-1fd1e0c2ef8c48f1d85a5a04b8566714_720w.png">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-dceba8a3986c7df4dbc3f8cb1e8ca60e_720w.jpg">
+<meta property="article:published_time" content="2021-05-21T14:39:08.000Z">
+<meta property="article:modified_time" content="2023-06-20T08:58:40.312Z">
+<meta property="article:author" content="paopao">
+<meta property="article:tag" content="Markdown">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic3.zhimg.com/80/v2-be88c425ba401a71e9c91dca74f0d262_720w.jpg">
+
+
+<link rel="canonical" href="https://liu-paopao.github.io/posts/80f1815e.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://liu-paopao.github.io/posts/80f1815e.html","path":"posts/80f1815e.html","title":"Typora+Picgo+Gitee 构建网络图床笔记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Typora+Picgo+Gitee 构建网络图床笔记 | PaoPao's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">PaoPao's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%80%E9%9C%80%E8%BD%AF%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">所需软件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E6%93%8D%E4%BD%9C"><span class="nav-number">2.</span> <span class="nav-text">具体操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Typora%E9%85%8D%E7%BD%AE"><span class="nav-number">2.1.</span> <span class="nav-text">Typora 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%9B%BE%E5%BA%8A%E9%85%8D%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">网络图床配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9D%9F"><span class="nav-number">3.</span> <span class="nav-text">结束</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="paopao"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">paopao</p>
+  <div class="site-description" itemprop="description">Stay hungry, stay foolish.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+<!-- none-select-br -->
+
+<p></p>
+
+<!-- hitokoto -->
+
+<div class="hitokoto-title">
+	<i class="fa fa-paragraph"></i>
+	<b>一言</b>
+</div>
+
+<div id="hitokoto">:D 获取中...</div>
+<i id="hitofrom">:D 获取中...</i>
+
+<script src="https://cdn.jsdelivr.net/npm/bluebird@3/js/browser/bluebird.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@2.0.3/fetch.min.js"></script>
+<script>
+  fetch('https://v1.hitokoto.cn')
+    .then(function (res){
+      return res.json();
+    })
+    .then(function (data) {
+      var hitokoto = document.getElementById('hitokoto');
+      hitokoto.innerText = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + data.hitokoto;
+      var hitofrom = document.getElementById('hitofrom');
+      hitofrom.innerText = "——" + data.from + '\xa0'; 
+    })
+    .catch(function (err) {
+      console.error(err);
+    })
+</script>
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/80f1815e.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Typora+Picgo+Gitee 构建网络图床笔记 | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Typora+Picgo+Gitee 构建网络图床笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-05-21 22:39:08" itemprop="dateCreated datePublished" datetime="2021-05-21T22:39:08+08:00">2021-05-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-06-20 16:58:40" itemprop="dateModified" datetime="2023-06-20T16:58:40+08:00">2023-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%98%E8%85%BE%E6%97%A5%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">折腾日记</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Changyan：</span>
+    
+    <a title="Typora+Picgo+Gitee 构建网络图床笔记" href="/posts/80f1815e.html#SOHUCS" itemprop="discussionUrl">
+      <span id="sourceId::4abc12a7c736e12bc506dc520b254318" class="cy_cmt_count" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>777</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><strong>前言</strong></p>
+<p>之前一直在 Typora 上记录自己的笔记，但是发现 markdown 格式的笔记在插入图片时，仅能采用两种方法：1）在线图床，2）本地路径，即图片并不是像 Word 那样集成在文档内的，因此经过一番研究，发现了最新版的 Typora 已经支持在线图床功能，遂写此篇教程帮助后人构建自己的在线图床 markdown 笔记。</p>
+<h2 id="所需软件"><a href="#所需软件" class="headerlink" title="所需软件"></a><strong>所需软件</strong></h2><p>typora</p>
+<p><a href="https://link.zhihu.com/?target=https://typora.io/">https://typora.io/</a></p>
+<p>picgo</p>
+<p><a href="https://link.zhihu.com/?target=https://github.com/Molunerfinn/PicGo/releases">https://github.com/Molunerfinn/PicGo/releases</a></p>
+<p>建议选择 2.2.2 正式版本，beta 版本可能会存在不稳定的风险。</p>
+<p><img src="https://pic3.zhimg.com/80/v2-be88c425ba401a71e9c91dca74f0d262_720w.jpg" alt="img"></p>
+<p>Gitee</p>
+<p>由于国内连接 github 时网络偶尔存在不稳定的情况，于是采用了 gitee 作为 github 图床的替代，但整体教程是一样的</p>
+<p><a href="https://link.zhihu.com/?target=https://gitee.com/">https://gitee.com/</a></p>
+<p><img src="https://pic3.zhimg.com/80/v2-daba73811b87533f8f032169d3d11d9a_720w.png" alt="img"></p>
+<h2 id="具体操作"><a href="#具体操作" class="headerlink" title="具体操作"></a><strong>具体操作</strong></h2><p>主要是分为两部分操作，第一部分是 Typora 的配置，第二部分是 Picgo+Gitee 的在线图床配置</p>
+<h3 id="Typora配置"><a href="#Typora配置" class="headerlink" title="Typora配置"></a><strong>Typora 配置</strong></h3><p>打开 Typora 后，点击菜单栏 - 文件 - 偏好设置</p>
+<p>找到其中的 “图像” 设置，将其设置为如下内容</p>
+<p><img src="https://pic3.zhimg.com/80/v2-f374bec8d90d87c2f7683c1133064166_720w.jpg" alt="img"></p>
+<p>1）<strong>插入图片时… <strong>下边的选择框内选择</strong>上传图片</strong></p>
+<p>2）勾选上 “<strong>对本地位置的图片应用上述规则</strong>”</p>
+<p>3）上传服务选择 <strong>PicGo(app)</strong></p>
+<p>4）将 <strong>PicGo 路径</strong>项设置为本地 PicGo 的安装路径</p>
+<p>这样，我们就把 Typora 配置好了，下面我们进行 PicGo+Gitee 的网络图床构建</p>
+<h3 id="网络图床配置"><a href="#网络图床配置" class="headerlink" title="网络图床配置"></a><strong>网络图床配置</strong></h3><p>首先，安装好 PicGo 之后，我们需要给 PicGo 配置插件以支持 Gitee 图床</p>
+<p><strong>注意</strong>：你必须安装 <a href="https://link.zhihu.com/?target=https://nodejs.org/en/">Node.js</a> 之后才能安装 PicGo 的插件，因为 PicGo 要使用 <code>npm</code> 来安装插件。</p>
+<p>安装好 Nodejs 后，点开左边的<strong>插件设置</strong>一栏，在输入框内输入 “github plus”，如下</p>
+<p><img src="https://pic1.zhimg.com/80/v2-270b499aeadae15d014215b32b1204c8_720w.jpg" alt="img"></p>
+<p>点击安装此插件，之后左侧选项栏<strong>图床设置</strong>会多一个 <strong>githubplus</strong></p>
+<p><img src="https://pic1.zhimg.com/80/v2-1fd1e0c2ef8c48f1d85a5a04b8566714_720w.png" alt="img"></p>
+<p>接下来我们配置 Gitee 仓库以存储图片</p>
+<p>1）进入 <a href="https://link.zhihu.com/?target=https://gitee.com/">https://gitee.com/</a>，没有账号的话，先注册账号，注册以后登录，新建一个<strong>公开仓库</strong>，名字为 picgo（可以自己起其他名字）</p>
+<p>2）点击右上角，进入<strong>设置</strong>，在左侧的<strong>安全设置 - 私人令牌</strong>处生成新令牌。（注意：生成的新令牌只会显示一次，一定要保存好！！！）</p>
+<p>我们需要做的如下：</p>
+<p>1）回到 picgo，按照如下进行设置</p>
+<p><img src="https://pic3.zhimg.com/80/v2-dceba8a3986c7df4dbc3f8cb1e8ca60e_720w.jpg" alt="img"></p>
+<p>其中的 repo 为 <strong>UserName / 仓库名称</strong> 格式</p>
+<p>branch 填入 master</p>
+<p>Token 为刚才在 Gitee 生成的私人令牌，粘贴到这里就行</p>
+<p>path 为仓库下用于存储图片的路径，这个可以自行选择</p>
+<p>最下边的 origin 部分选择 gitee（默认是 github）</p>
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a><strong>结束</strong></h2><p>经过上述操作，我们就把 typora+picgo+gitee 成功配置好了，之后当我们将本地的图片粘贴到 markdown 文档内的时候，typora 会自动将图片上传到刚才我们配置好的 gitee 仓库内，并自动把 markdown 文档内的本地路径转化为 gitee 的图片外链，便于我们以后进行多端访问文档内的图片。</p>
+
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+<br>
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　👣　步履不止　　-------------</div>
+<br>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Markdown/" rel="tag"><i class="fa fa-tag"></i> Markdown</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/31824.html" rel="next" title="markdown 介绍和使用说明">
+                  markdown 介绍和使用说明 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="SOHUCS" sid="4abc12a7c736e12bc506dc520b254318"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heartbeat"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">paopao</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">75k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:33</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyw09gPog","appkey":"4488e6b82bfe3d819f4971a5e5c115f4","count":true}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-100.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-50.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="某软件开发过程中，需要参考 PowerPC 架构代码，但并没有 ppc 架构的机器环境，VMware 只能模拟同架构的 OS，而想要模拟不同架构，进行跨架构开发的话只能通过 qemu 进行模拟。本文记录了在 Linux 和 Windows 两种环境下实现过程：在 Windows 通过 VMware 建立 Ubuntu18.04 虚拟机，然后在 Ubuntu18.04 下用 qemu 实现全系统模拟">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过 qemu 在 x86 上实现全系统模拟 PowerPC">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/66d22827.html">
+<meta property="og:site_name" content="PaoPao&#39;s Blog">
+<meta property="og:description" content="某软件开发过程中，需要参考 PowerPC 架构代码，但并没有 ppc 架构的机器环境，VMware 只能模拟同架构的 OS，而想要模拟不同架构，进行跨架构开发的话只能通过 qemu 进行模拟。本文记录了在 Linux 和 Windows 两种环境下实现过程：在 Windows 通过 VMware 建立 Ubuntu18.04 虚拟机，然后在 Ubuntu18.04 下用 qemu 实现全系统模拟">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305192313183.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305192326191.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305192301296.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305192310523.png">
+<meta property="article:published_time" content="2023-05-19T14:17:36.000Z">
+<meta property="article:modified_time" content="2023-07-12T06:54:49.611Z">
+<meta property="article:author" content="paopao">
+<meta property="article:tag" content="PowerPC">
+<meta property="article:tag" content="qemu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305192313183.png">
+
+
+<link rel="canonical" href="https://liu-paopao.github.io/posts/66d22827.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/66d22827.html","path":"posts/66d22827.html","title":"通过 qemu 在 x86 上实现全系统模拟 PowerPC"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>通过 qemu 在 x86 上实现全系统模拟 PowerPC | PaoPao's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">PaoPao's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu18-04%E6%90%AD%E5%BB%BA%E8%BF%87%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">Ubuntu18.04 搭建过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85qemu"><span class="nav-number">1.1.</span> <span class="nav-text">安装 qemu</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDppc%E9%95%9C%E5%83%8F"><span class="nav-number">1.2.</span> <span class="nav-text">下载 ppc 镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E7%A1%AC%E7%9B%98%E9%95%9C%E5%83%8F"><span class="nav-number">1.3.</span> <span class="nav-text">生成硬盘镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.4.</span> <span class="nav-text">安装系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E8%BF%90%E8%A1%8C"><span class="nav-number">1.5.</span> <span class="nav-text">开始运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E5%9B%BE"><span class="nav-number">1.6.</span> <span class="nav-text">效果图</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Windows10%E6%90%AD%E5%BB%BA%E8%BF%87%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">Windows10 搭建过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85qemu-1"><span class="nav-number">2.1.</span> <span class="nav-text">安装 qemu</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E5%A4%8D%E5%88%B6Linux%E7%A1%AC%E7%9B%98%E9%95%9C%E5%83%8F"><span class="nav-number">2.2.</span> <span class="nav-text">方法一：复制 Linux 硬盘镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E5%8F%82%E7%85%A7Ubuntu%E6%90%AD%E5%BB%BA%E8%BF%87%E7%A8%8B%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B"><span class="nav-number">2.3.</span> <span class="nav-text">方法二：参照 Ubuntu 搭建过程从零开始</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E5%9B%BE-1"><span class="nav-number">2.4.</span> <span class="nav-text">效果图</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">3.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="paopao"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">paopao</p>
+  <div class="site-description" itemprop="description">Stay hungry, stay foolish.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+<!-- none-select-br -->
+
+<p></p>
+
+<!-- hitokoto -->
+
+<div class="hitokoto-title">
+	<i class="fa fa-paragraph"></i>
+	<b>一言</b>
+</div>
+
+<div id="hitokoto">:D 获取中...</div>
+<i id="hitofrom">:D 获取中...</i>
+
+<script src="https://cdn.jsdelivr.net/npm/bluebird@3/js/browser/bluebird.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@2.0.3/fetch.min.js"></script>
+<script>
+  fetch('https://v1.hitokoto.cn')
+    .then(function (res){
+      return res.json();
+    })
+    .then(function (data) {
+      var hitokoto = document.getElementById('hitokoto');
+      hitokoto.innerText = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + data.hitokoto;
+      var hitofrom = document.getElementById('hitofrom');
+      hitofrom.innerText = "——" + data.from + '\xa0'; 
+    })
+    .catch(function (err) {
+      console.error(err);
+    })
+</script>
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/66d22827.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="通过 qemu 在 x86 上实现全系统模拟 PowerPC | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          通过 qemu 在 x86 上实现全系统模拟 PowerPC
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-05-19 22:17:36" itemprop="dateCreated datePublished" datetime="2023-05-19T22:17:36+08:00">2023-05-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-07-12 14:54:49" itemprop="dateModified" datetime="2023-07-12T14:54:49+08:00">2023-07-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8C%87%E4%BB%A4%E9%9B%86%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">指令集架构</span></a>
+        </span>
+    </span>
+
+  
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>948</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>某软件开发过程中，需要参考 PowerPC 架构代码，但并没有 ppc 架构的机器环境，VMware 只能模拟同架构的 OS，而想要模拟不同架构，进行跨架构开发的话只能通过 qemu 进行模拟。本文记录了在 Linux 和 Windows 两种环境下实现过程：在 Windows 通过 VMware 建立 Ubuntu18.04 虚拟机，然后在 Ubuntu18.04 下用 qemu 实现全系统模拟 PowerPC；或者直接在 Windows 下用 win-64bits 的 qemu 来实现，两种方法都可行。</p>
+<span id="more"></span>
+
+<h1 id="Ubuntu18-04搭建过程"><a href="#Ubuntu18-04搭建过程" class="headerlink" title="Ubuntu18.04搭建过程"></a>Ubuntu18.04 搭建过程</h1><h2 id="安装qemu"><a href="#安装qemu" class="headerlink" title="安装qemu"></a>安装 qemu</h2><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install qemu</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="下载ppc镜像"><a href="#下载ppc镜像" class="headerlink" title="下载ppc镜像"></a>下载 ppc 镜像</h2><p>Ubuntu16.04.6 之后的版本不再支持 ppc 架构，这里使用最后一个发行版 <code>ubuntu-16.04.6-server-powerpc.iso</code>，下载地址：<br><a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/ubuntu-cdimage/releases/16.04/release/ubuntu-16.04.6-server-powerpc.iso">https://mirrors.tuna.tsinghua.edu.cn/ubuntu-cdimage/releases/16.04/release/ubuntu-16.04.6-server-powerpc.iso</a></p>
+<h2 id="生成硬盘镜像"><a href="#生成硬盘镜像" class="headerlink" title="生成硬盘镜像"></a>生成硬盘镜像</h2><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-img create -f qcow2 ubuntu16.qcow2 60G</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="安装系统"><a href="#安装系统" class="headerlink" title="安装系统"></a>安装系统</h2><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-ppc -L pc-bios -boot d -M mac99 -m 1024 -net nic,model=sungem -net user -hda ubuntu16.qcow2 -cdrom ubuntu-16.04.6-server-powerpc.iso</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="开始运行"><a href="#开始运行" class="headerlink" title="开始运行"></a>开始运行</h2><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-ppc -L pc-bios -boot c -prom-env "boot-device=hd:,\yaboot" -prom-env "boot-args=conf=hd:,\yaboot.conf" -M mac99 -m 1024 -net nic,model=sungem -net user -hda ubuntu16.qcow2 -g 1024x768x32</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305192313183.png" alt="image-20230519231357094"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305192326191.png" alt="image-20230519232612089"></p>
+<h1 id="Windows10搭建过程"><a href="#Windows10搭建过程" class="headerlink" title="Windows10搭建过程"></a>Windows10 搭建过程</h1><h2 id="安装qemu-1"><a href="#安装qemu-1" class="headerlink" title="安装qemu"></a>安装 qemu</h2><p><a target="_blank" rel="noopener" href="https://www.qemu.org/download/#windows">qemu 官网</a>已经支持 Windows，并提供了二进制工具集，直接下载二进制使用最为方面。QEMU Binaries for Windows (64 bit) 下载地址：<br><a target="_blank" rel="noopener" href="https://qemu.weilnetz.de/w64/">https://qemu.weilnetz.de/w64/</a></p>
+<h2 id="方法一：复制Linux硬盘镜像"><a href="#方法一：复制Linux硬盘镜像" class="headerlink" title="方法一：复制Linux硬盘镜像"></a>方法一：复制 Linux 硬盘镜像</h2><p>如果已经在 Ubuntu Linux 环境下成功安装了 ppc 系统，可以直接把 <code>ubuntu16.qcow2</code> 镜像文件复制到 Windows 环境下使用。</p>
+<p>进入 qemu 二进制存放目录，在 Windows 命令行下运行：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.\qemu-system-ppc.exe -L pc-bios -boot c -prom-env "boot-device=hd:,\yaboot" -prom-env "boot-args=conf=hd:,\yaboot.conf" -M mac99 -m 1024 -net nic,model=sungem -net user -hda ubuntu16.qcow2 -g 1024x768x32</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="方法二：参照Ubuntu搭建过程从零开始"><a href="#方法二：参照Ubuntu搭建过程从零开始" class="headerlink" title="方法二：参照Ubuntu搭建过程从零开始"></a>方法二：参照 Ubuntu 搭建过程从零开始</h2><p>Windows 环境搭建过程和 Ubuntu 搭建方法一样，只是记得把命令中的 <code>qemu-system-ppc</code> 换成<code>.\qemu-system-ppc.exe</code>。</p>
+<p><strong>三步走：</strong></p>
+<ol>
+<li>生成硬盘镜像 </li>
+</ol>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.\qemu-img.exe create -f qcow2 ubuntu16.qcow2 60G</span><br></pre></td></tr></tbody></table></figure>
+
+<ol start="2">
+<li>安装系统 </li>
+</ol>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.\qemu-system-ppc.exe -L pc-bios -boot d -M mac99 -m 1024 -net nic,model=sungem -net user -hda ubuntu16.qcow2 -cdrom ubuntu-16.04.6-server-powerpc.iso</span><br></pre></td></tr></tbody></table></figure>
+
+<ol start="3">
+<li>开始运行 </li>
+</ol>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.\qemu-system-ppc.exe -L pc-bios -boot c -prom-env "boot-device=hd:,\yaboot" -prom-env "boot-args=conf=hd:,\yaboot.conf" -M mac99 -m 1024 -net nic,model=sungem -net user -hda ubuntu16.qcow2 -g 1024x768x32</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="效果图-1"><a href="#效果图-1" class="headerlink" title="效果图"></a>效果图</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305192301296.png" alt="image-20230519230101675"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305192310523.png" alt="image-20230519231054400"></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>一开始查阅的中文教程，实操过程中出现各种问题，然后 google 上用英文搜索后，发现了一些英文靠谱的教程，一试便成功了。参考的是 GitHub 上 ross-newman 大佬给出的方法：</p>
+<p><a target="_blank" rel="noopener" href="https://gist.github.com/ross-newman/a744988b298ea1ad47c5dae1baafcb22">https://gist.github.com/ross-newman/a744988b298ea1ad47c5dae1baafcb22</a></p>
+<p>Building PPC Linux code using QEMU on Ubuntu 18.04 LTS：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">echo "Building Debina 10 QEMU instance..."</span><br><span class="line">wget https://cdimage.debian.org/cdimage/ports/10.0/powerpc/iso-cd/debian-10.0-powerpc-NETINST-1.iso</span><br><span class="line">sudo apt install qemu</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Create new disk <span class="keyword">for</span> install</span></span><br><span class="line">qemu-img create -f qcow2 debian10.qcow2 2000M</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Boot the install image</span></span><br><span class="line">qemu-system-ppc -L pc-bios -boot d -M mac99 -m 1024 -net nic,model=sungem -net user -hda debian10.qcow2 -cdrom ./debian-10.0-powerpc-NETINST-1.iso -g 1024x768x8</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Run the image</span></span><br><span class="line">qemu-system-ppc -L pc-bios -boot c -prom-env "boot-device=hd:,\yaboot" -prom-env "boot-args=conf=hd:,\yaboot.conf" \</span><br><span class="line"> -M mac99 -m 1024 -net nic,model=sungem -net user -hda debian10.qcow2 -g 1024x768x32</span><br><span class="line"></span><br><span class="line">echo "Building lUbuntu 16.04 QEMU instance..."</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">wget http://cdimage.ubuntu.com/releases/14.04/release/ubuntu-14.04.6-server-powerpc.iso</span></span><br><span class="line">wget http://cdimage.ubuntu.com/lubuntu/releases/16.04.1/release/lubuntu-16.04-desktop-powerpc.iso</span><br><span class="line">qemu-img create -f qcow2 lubuntu14.qcow2 2000M</span><br><span class="line">qemu-system-ppc -L pc-bios -boot d -M mac99 -m 1024 -net nic,model=sungem -net user -hda lubuntu14.qcow2 -cdrom lubuntu-14.04.5-desktop-powerpc.iso</span><br><span class="line">qemu-system-ppc -L pc-bios -boot c -prom-env "boot-device=hd:,\yaboot" -prom-env "boot-args=conf=hd:,\yaboot.conf" -M mac99 -m 1024 -net nic,model=sungem -net user -hda lubuntu14.qcow2 -cdrom lubuntu-14.04.5-desktop-powerpc.iso</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">Building u-boot <span class="keyword">for</span> PPC</span></span><br><span class="line">echo "Building U-Boot for QEMU..."</span><br><span class="line">sudo apt install gcc-powerpc-linux-gnu</span><br><span class="line">git clone https://git.denx.de/u-boot.git</span><br><span class="line">make ARCH=powerpc CROSS_COMPILE=powerpc-linux-gnu- qemu-ppce500_defconfig</span><br><span class="line">make ARCH=powerpc CROSS_COMPILE=powerpc-linux-gnu-</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">qemu-system-ppc -machine <span class="built_in">help</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">qemu-system-ppc -cpu <span class="built_in">help</span></span></span><br><span class="line">qemu-system-ppc -M ppce500 -m 1024 -nographic -kernel ./u-boot</span><br></pre></td></tr></tbody></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+<br>
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　👣　步履不止　　-------------</div>
+<br>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/PowerPC/" rel="tag"><i class="fa fa-tag"></i> PowerPC</a>
+              <a href="/tags/qemu/" rel="tag"><i class="fa fa-tag"></i> qemu</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/355d67a9.html" rel="prev" title="解决 gcc 编译报错 - Werror=missing-attributes">
+                  <i class="fa fa-angle-left"></i> 解决 gcc 编译报错 - Werror=missing-attributes
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/7862bee9.html" rel="next" title="glibc 竟然也是一个可执行文件">
+                  glibc 竟然也是一个可执行文件 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heartbeat"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">paopao</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">75k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:33</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyw09gPog","appkey":"4488e6b82bfe3d819f4971a5e5c115f4","count":true}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+
+</body>
+</html>

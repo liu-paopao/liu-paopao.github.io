@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-100.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-50.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="安装符号从仓库源里，安装官方发布的符号包，可以先模糊搜索下，找下 “debug symbols for glibc……” 类似的关键字介绍，从而确定符号包的具体名字。比如 deb 包为 libc6-dbg，rpm 包为 glibc-debugutils，不同的操作系统发行版名字会有变动，比如有些包名为 libc6.1-dbgsym。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过仓库源安装 glibc 符号来实现 gdb 调试">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/c5780575.html">
+<meta property="og:site_name" content="PaoPao&#39;s Blog">
+<meta property="og:description" content="安装符号从仓库源里，安装官方发布的符号包，可以先模糊搜索下，找下 “debug symbols for glibc……” 类似的关键字介绍，从而确定符号包的具体名字。比如 deb 包为 libc6-dbg，rpm 包为 glibc-debugutils，不同的操作系统发行版名字会有变动，比如有些包名为 libc6.1-dbgsym。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-05-06T09:05:38.000Z">
+<meta property="article:modified_time" content="2023-05-17T13:34:21.180Z">
+<meta property="article:author" content="paopao">
+<meta property="article:tag" content="gdb">
+<meta property="article:tag" content="glibc">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://liu-paopao.github.io/posts/c5780575.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/c5780575.html","path":"posts/c5780575.html","title":"通过仓库源安装 glibc 符号来实现 gdb 调试"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>通过仓库源安装 glibc 符号来实现 gdb 调试 | PaoPao's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">PaoPao's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%AC%A6%E5%8F%B7"><span class="nav-number">1.</span> <span class="nav-text">安装符号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E7%89%88%E6%9C%AC%E6%98%AF%E5%90%A6%E5%AF%B9%E5%BA%94"><span class="nav-number">2.</span> <span class="nav-text">验证版本是否对应</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%89%E5%8F%96%E6%BA%90%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">拉取源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%A7%8Bgdb%E8%B0%83%E8%AF%95"><span class="nav-number">4.</span> <span class="nav-text">开始 gdb 调试</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="paopao"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">paopao</p>
+  <div class="site-description" itemprop="description">Stay hungry, stay foolish.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+<!-- none-select-br -->
+
+<p></p>
+
+<!-- hitokoto -->
+
+<div class="hitokoto-title">
+	<i class="fa fa-paragraph"></i>
+	<b>一言</b>
+</div>
+
+<div id="hitokoto">:D 获取中...</div>
+<i id="hitofrom">:D 获取中...</i>
+
+<script src="https://cdn.jsdelivr.net/npm/bluebird@3/js/browser/bluebird.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@2.0.3/fetch.min.js"></script>
+<script>
+  fetch('https://v1.hitokoto.cn')
+    .then(function (res){
+      return res.json();
+    })
+    .then(function (data) {
+      var hitokoto = document.getElementById('hitokoto');
+      hitokoto.innerText = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + data.hitokoto;
+      var hitofrom = document.getElementById('hitofrom');
+      hitofrom.innerText = "——" + data.from + '\xa0'; 
+    })
+    .catch(function (err) {
+      console.error(err);
+    })
+</script>
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/c5780575.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="通过仓库源安装 glibc 符号来实现 gdb 调试 | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          通过仓库源安装 glibc 符号来实现 gdb 调试
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-05-06 17:05:38" itemprop="dateCreated datePublished" datetime="2023-05-06T17:05:38+08:00">2023-05-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-05-17 21:34:21" itemprop="dateModified" datetime="2023-05-17T21:34:21+08:00">2023-05-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%B0%83%E8%AF%95%E8%B0%83%E4%BC%98/" itemprop="url" rel="index"><span itemprop="name">调试调优</span></a>
+        </span>
+    </span>
+
+  
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>931</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="安装符号"><a href="#安装符号" class="headerlink" title="安装符号"></a>安装符号</h3><p>从仓库源里，安装官方发布的符号包，可以先模糊搜索下，找下 “debug symbols for glibc……” 类似的关键字介绍，从而确定符号包的具体名字。比如 deb 包为 libc6-dbg，rpm 包为 glibc-debugutils，不同的操作系统发行版名字会有变动，比如有些包名为 libc6.1-dbgsym。</p>
+<span id="more"></span>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install libc6-dbg</span><br></pre></td></tr></tbody></table></figure>
+<p>符号信息会安装在 <code>/usr/lib/debug/.build-id</code> 目录下，以 <code>build-id.debug</code> 来命名。build-id 是 gcc 编译二进制的时候计算的文件标识，类似文件哈希值。<br>可以通过 readelf 和 file 命令来查看：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lhx@ubuntu:~$ file a.out </span><br><span class="line">a.out: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=f27b6b8365c516b14ed4bf830e6a80bf28756456, for GNU/Linux 3.2.0, with debug_info, not stripped</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">lhx@ubuntu:~$ readelf -n a.out </span><br><span class="line">……</span><br><span class="line">Displaying notes found in: .note.gnu.build-id</span><br><span class="line">  所有者            Data size 	Description</span><br><span class="line">  GNU                  0x00000014	NT_GNU_BUILD_ID (unique build ID bitstring)</span><br><span class="line">    Build ID: f27b6b8365c516b14ed4bf830e6a80bf28756456</span><br><span class="line">……</span><br><span class="line">lhx@ubuntu:~$ </span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="验证版本是否对应"><a href="#验证版本是否对应" class="headerlink" title="验证版本是否对应"></a>验证版本是否对应</h3><p>对比一下 build-id，然后 find 查找 build-id.debug 文件时，注意去掉前 2 位，前 2 位为目录名称。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">lhx@ubuntu:/usr/lib/debug$ file /lib/x86_64-linux-gnu/libc-2.31.so </span><br><span class="line">/lib/x86_64-linux-gnu/libc-2.31.so: ELF 64-bit LSB shared object, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=1878e6b475720c7c51969e69ab2d276fae6d1dee, for GNU/Linux 3.2.0, stripped</span><br><span class="line">lhx@ubuntu:/usr/lib/debug$ </span><br><span class="line">lhx@ubuntu:/usr/lib/debug$ find -name 78e6b475720c7c51969e69ab2d276fae6d1dee.debug</span><br><span class="line">./.build-id/18/78e6b475720c7c51969e69ab2d276fae6d1dee.debug</span><br><span class="line">lhx@ubuntu:/usr/lib/debug$ </span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="拉取源码"><a href="#拉取源码" class="headerlink" title="拉取源码"></a>拉取源码</h3><p>前提是在 /etc/apt/sources.list 中已经配置过 dbkg-src，这样才能通过 apt 下载源码，源码会下载到当前目录并自动解压。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt source libc6-dev</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="开始gdb调试"><a href="#开始gdb调试" class="headerlink" title="开始gdb调试"></a>开始 gdb 调试</h3><p>前面准备工作做好后，下面开始 gdb 调试，默认情况下此时 gdb 没有找到 glibc 的符号信息 (No debugging symbols found in /lib/x86_64-linux-gnu/libc.so.6)：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">lhx@ubuntu:~$ gdb a.out </span><br><span class="line">Reading symbols from a.out...</span><br><span class="line">(gdb) set verbose on</span><br><span class="line">(gdb) b 5</span><br><span class="line">Reading in symbols for hello.c...</span><br><span class="line">Breakpoint 1 at 0x1151: file hello.c, line 5.</span><br><span class="line">(gdb) r</span><br><span class="line">Starting program: /home/lhx/a.out </span><br><span class="line">Using PIE (Position Independent Executable) displacement 0x555555554000 for "/home/lhx/a.out".</span><br><span class="line">Reading symbols from /lib64/ld-linux-x86-64.so.2...</span><br><span class="line">(No debugging symbols found in /lib64/ld-linux-x86-64.so.2)</span><br><span class="line">Reading symbols from system-supplied DSO at 0x7ffff7fcd000...</span><br><span class="line">(No debugging symbols found in system-supplied DSO at 0x7ffff7fcd000)</span><br><span class="line">Reading symbols from /lib/x86_64-linux-gnu/libc.so.6...</span><br><span class="line">(No debugging symbols found in /lib/x86_64-linux-gnu/libc.so.6)</span><br><span class="line"></span><br><span class="line">Breakpoint 1, hello () at hello.c:5</span><br><span class="line">5	  printf("Hello World !\n");</span><br><span class="line">(gdb) </span><br></pre></td></tr></tbody></table></figure>
+
+<p>查看下 gdb 符号搜索路径是否正确，不同的话，需要手动设置 debug-file-directory 后才能找到符号信息，可以看到已经成功找到了：Reading symbols from /usr/lib/debug/.build-id/18/78e6b475720c7c51969e69ab2d276fae6d1dee.debug…。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">(gdb) show debug-file-directory </span><br><span class="line">The directory where separate debug symbols are searched for is "/usr/local/lib/debug".</span><br><span class="line">(gdb) set debug-file-directory /usr/lib/debug/</span><br><span class="line">(gdb) r</span><br><span class="line">Starting program: /home/lhx/a.out </span><br><span class="line">Using PIE (Position Independent Executable) displacement 0x555555554000 for "/home/lhx/a.out".</span><br><span class="line">Reading symbols from /lib64/ld-linux-x86-64.so.2...</span><br><span class="line">Reading symbols from /usr/lib/debug/.build-id/45/87364908de169dec62ffa538170118c1c3a078.debug...</span><br><span class="line">Reading symbols from system-supplied DSO at 0x7ffff7fcd000...</span><br><span class="line">(No debugging symbols found in system-supplied DSO at 0x7ffff7fcd000)</span><br><span class="line">Reading in symbols for rtld.c...</span><br><span class="line">Reading symbols from /lib/x86_64-linux-gnu/libc.so.6...</span><br><span class="line">Reading symbols from /usr/lib/debug/.build-id/18/78e6b475720c7c51969e69ab2d276fae6d1dee.debug...</span><br><span class="line"></span><br><span class="line">Breakpoint 1, hello () at hello.c:5</span><br><span class="line">5	  printf("Hello World !\n");</span><br></pre></td></tr></tbody></table></figure>
+
+<p>找到符号信息后，就可以在 printf 函数处单步调试进入，这时提示 ioputs.c 文件找不到，需要去 glibc 源码目录下 find 一下该文件，然后把文件目录通过 dir 命令添加进去。</p>
+<p>到此就大功告成了，从此可以自由自在的调试 glibc 的源码啦！</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">(gdb) s</span><br><span class="line">Reading in symbols for ioputs.c...</span><br><span class="line">__GI__IO_puts (str=0x555555556004 "Hello World !") at ioputs.c:33</span><br><span class="line">33	ioputs.c: 没有那个文件或目录.</span><br><span class="line">(gdb) dir ~/test1/glibc-2.31/libio</span><br><span class="line">Source directories searched: /home/lhx/test1/glibc-2.31/libio:$cdir:$cwd</span><br><span class="line">(gdb) n</span><br><span class="line">35	  size_t len = strlen (str);</span><br><span class="line">(gdb) l</span><br><span class="line">30	</span><br><span class="line">31	int</span><br><span class="line">32	_IO_puts (const char *str)</span><br><span class="line">33	{</span><br><span class="line">34	  int result = EOF;</span><br><span class="line">35	  size_t len = strlen (str);</span><br><span class="line">36	  _IO_acquire_lock (stdout);</span><br><span class="line">37	</span><br><span class="line">38	  if ((_IO_vtable_offset (stdout) != 0</span><br><span class="line">39	       || _IO_fwide (stdout, -1) == -1)</span><br><span class="line">(gdb) bt</span><br><span class="line">#0  __GI__IO_puts (str=0x555555556004 "Hello World !") at ioputs.c:35</span><br><span class="line">#1  0x000055555555515d in hello () at hello.c:5</span><br><span class="line">Reading in symbols for ../sysdeps/x86/libc-start.c...</span><br><span class="line">#2  0x0000555555555172 in main () at hello.c:10</span><br><span class="line">(gdb) </span><br></pre></td></tr></tbody></table></figure>
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+<br>
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　👣　步履不止　　-------------</div>
+<br>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/gdb/" rel="tag"><i class="fa fa-tag"></i> gdb</a>
+              <a href="/tags/glibc/" rel="tag"><i class="fa fa-tag"></i> glibc</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/7247b32f.html" rel="prev" title="《Linux 平台高级调试和优化（杭州站）》培训笔记">
+                  <i class="fa fa-angle-left"></i> 《Linux 平台高级调试和优化（杭州站）》培训笔记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/9dc9e90f.html" rel="next" title="x86 环境下交叉编译 binutils">
+                  x86 环境下交叉编译 binutils <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heartbeat"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">paopao</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">75k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:33</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyw09gPog","appkey":"4488e6b82bfe3d819f4971a5e5c115f4","count":true}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+
+</body>
+</html>

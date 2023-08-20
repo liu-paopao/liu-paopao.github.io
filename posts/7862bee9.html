@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-100.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-50.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="查看系统下 glibc 版本号时，发现了一个有趣的事情，就是 glibc 竟然可以当作可执行文件进行.&#x2F; 运行。虽然运行起来后，只是打印了一下版本号就退出了。抱着从张银奎老师那里学到的 “格物” 态度，通过 gdb 调试一下，查看究竟。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="glibc 竟然也是一个可执行文件">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/7862bee9.html">
+<meta property="og:site_name" content="PaoPao&#39;s Blog">
+<meta property="og:description" content="查看系统下 glibc 版本号时，发现了一个有趣的事情，就是 glibc 竟然可以当作可执行文件进行.&#x2F; 运行。虽然运行起来后，只是打印了一下版本号就退出了。抱着从张银奎老师那里学到的 “格物” 态度，通过 gdb 调试一下，查看究竟。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305212102259.gif">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305212105547.png">
+<meta property="article:published_time" content="2023-05-21T12:24:45.000Z">
+<meta property="article:modified_time" content="2023-05-21T13:16:30.143Z">
+<meta property="article:author" content="paopao">
+<meta property="article:tag" content="gdb">
+<meta property="article:tag" content="glibc">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305212102259.gif">
+
+
+<link rel="canonical" href="https://liu-paopao.github.io/posts/7862bee9.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/7862bee9.html","path":"posts/7862bee9.html","title":"glibc 竟然也是一个可执行文件"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>glibc 竟然也是一个可执行文件 | PaoPao's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">PaoPao's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%89%E8%B6%A3%E7%8E%B0%E8%B1%A1"><span class="nav-number">1.</span> <span class="nav-text">有趣现象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gdb%E8%B0%83%E8%AF%95%E6%8E%A2%E7%B4%A2%E8%BF%87%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">gdb 调试探索过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E5%85%A5%E5%8F%A3%E5%87%BD%E6%95%B0"><span class="nav-number">2.1.</span> <span class="nav-text">定位入口函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%BE%E7%A4%BA%E6%BA%90%E7%A0%81"><span class="nav-number">2.2.</span> <span class="nav-text">显示源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%BE%E5%88%B0%E6%A0%B9%E6%BA%90"><span class="nav-number">2.3.</span> <span class="nav-text">找到根源</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="paopao"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">paopao</p>
+  <div class="site-description" itemprop="description">Stay hungry, stay foolish.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+<!-- none-select-br -->
+
+<p></p>
+
+<!-- hitokoto -->
+
+<div class="hitokoto-title">
+	<i class="fa fa-paragraph"></i>
+	<b>一言</b>
+</div>
+
+<div id="hitokoto">:D 获取中...</div>
+<i id="hitofrom">:D 获取中...</i>
+
+<script src="https://cdn.jsdelivr.net/npm/bluebird@3/js/browser/bluebird.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@2.0.3/fetch.min.js"></script>
+<script>
+  fetch('https://v1.hitokoto.cn')
+    .then(function (res){
+      return res.json();
+    })
+    .then(function (data) {
+      var hitokoto = document.getElementById('hitokoto');
+      hitokoto.innerText = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + data.hitokoto;
+      var hitofrom = document.getElementById('hitofrom');
+      hitofrom.innerText = "——" + data.from + '\xa0'; 
+    })
+    .catch(function (err) {
+      console.error(err);
+    })
+</script>
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/7862bee9.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="glibc 竟然也是一个可执行文件 | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          glibc 竟然也是一个可执行文件
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-05-21 20:24:45 / 修改时间：21:16:30" itemprop="dateCreated datePublished" datetime="2023-05-21T20:24:45+08:00">2023-05-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%B0%83%E8%AF%95%E8%B0%83%E4%BC%98/" itemprop="url" rel="index"><span itemprop="name">调试调优</span></a>
+        </span>
+    </span>
+
+  
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>925</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>查看系统下 glibc 版本号时，发现了一个有趣的事情，就是 glibc 竟然可以当作可执行文件进行<code>./</code> 运行。虽然运行起来后，只是打印了一下版本号就退出了。抱着从张银奎老师那里学到的 “格物” 态度，通过 gdb 调试一下，查看究竟。</p>
+<span id="more"></span>
+
+<h2 id="有趣现象"><a href="#有趣现象" class="headerlink" title="有趣现象"></a>有趣现象</h2><p>随意查看一个可执行文件，找到链接的 glibc 库的路径。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lhx@ubuntu:~$ ldd a.out </span><br><span class="line">	linux-vdso.so.1 (0x00007ffd65393000)</span><br><span class="line">	libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007f2c14cd5000)</span><br><span class="line">	/lib64/ld-linux-x86-64.so.2 (0x00007f2c14eeb000)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后直接运行 <code>/libc.so.6</code>，没有报错，而是打印了下 glibc 版本信息便自动退出了。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">lhx@ubuntu:~$ /lib/x86_64-linux-gnu/libc.so.6</span><br><span class="line">GNU C Library (Ubuntu GLIBC 2.31-0ubuntu9.9) stable release version 2.31.</span><br><span class="line">Copyright (C) 2020 Free Software Foundation, Inc.</span><br><span class="line">This is free software; see the source for copying conditions.</span><br><span class="line">There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A</span><br><span class="line">PARTICULAR PURPOSE.</span><br><span class="line">Compiled by GNU CC version 9.4.0.</span><br><span class="line">libc ABIs: UNIQUE IFUNC ABSOLUTE</span><br><span class="line">For bug reporting instructions, please see:</span><br><span class="line">&lt;https://bugs.launchpad.net/ubuntu/+source/glibc/+bugs&gt;.</span><br><span class="line">lhx@ubuntu:~$ </span><br></pre></td></tr></tbody></table></figure>
+<h2 id="gdb调试探索过程"><a href="#gdb调试探索过程" class="headerlink" title="gdb调试探索过程"></a>gdb 调试探索过程</h2><p>接下来，打算用 gdb 调试下，分析下这个有趣的现象。</p>
+<h3 id="定位入口函数"><a href="#定位入口函数" class="headerlink" title="定位入口函数"></a>定位入口函数</h3><p>安装好 glibc 调试符号后，开始调试，发现在 main 函数设断点无法识别，推测入口函数可能不是 main。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">lhx@ubuntu:~$ gdb /lib/x86_64-linux-gnu/libc.so.6</span><br><span class="line">Reading symbols from /lib/x86_64-linux-gnu/libc.so.6...</span><br><span class="line">Reading symbols from /usr/lib/debug/.build-id/18/78e6b475720c7c51969e69ab2d276fae6d1dee.debug...</span><br><span class="line">(gdb) b main</span><br><span class="line">Function "main" not defined.</span><br><span class="line">(gdb) </span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后通过猜测模糊搜索下关于 main 关键字的函数，发现 version.c 文件里<code>__libc_main(void)</code> 函数比较接近，还可以结合源码来定位入口函数。</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">(gdb) info function main*</span><br><span class="line">All functions matching regular expression <span class="string">"main*"</span>:</span><br><span class="line"></span><br><span class="line">File ../csu/libc-start.c:</span><br><span class="line"><span class="number">129</span>:	<span class="type">int</span> __libc_start_main(<span class="type">int</span> (*)(<span class="type">int</span>, <span class="type">char</span> **, <span class="type">char</span> **), <span class="type">int</span>, <span class="type">char</span> **, <span class="type">int</span> (*)(<span class="type">int</span>, <span class="type">char</span> **, <span class="type">char</span> **), <span class="type">void</span> (*)(<span class="type">void</span>), <span class="type">void</span> (*)(<span class="type">void</span>), <span class="type">void</span> *);</span><br><span class="line"></span><br><span class="line">File bindtextdom.c:</span><br><span class="line"><span class="number">327</span>:	<span class="type">char</span> *__bind_textdomain_codeset(<span class="type">const</span> <span class="type">char</span> *, <span class="type">const</span> <span class="type">char</span> *);</span><br><span class="line"><span class="number">318</span>:	<span class="type">char</span> *__bindtextdomain(<span class="type">const</span> <span class="type">char</span> *, <span class="type">const</span> <span class="type">char</span> *);</span><br><span class="line"></span><br><span class="line">File finddomain.c:</span><br><span class="line"><span class="number">58</span>:	<span class="class"><span class="keyword">struct</span> <span class="title">loaded_l10nfile</span> *_<span class="title">nl_find_domain</span>(<span class="title">const</span> <span class="title">char</span> *, <span class="title">char</span> *, <span class="title">const</span> <span class="title">char</span> *, <span class="keyword">struct</span> <span class="title">binding</span> *);</span></span><br><span class="line"><span class="number">189</span>:	<span class="type">void</span> _nl_finddomain_subfreeres(<span class="type">void</span>);</span><br><span class="line"></span><br><span class="line">File genops.c:</span><br><span class="line"><span class="number">127</span>:	<span class="type">void</span> _IO_switch_to_main_get_area(FILE *);</span><br><span class="line"></span><br><span class="line">File getdomain.c:</span><br><span class="line"><span class="number">32</span>:	<span class="type">int</span> __GI_getdomainname(<span class="type">char</span> *, <span class="type">size_t</span>);</span><br><span class="line"></span><br><span class="line">File getdomainname_chk.c:</span><br><span class="line"><span class="number">22</span>:	<span class="type">int</span> __getdomainname_chk(<span class="type">char</span> *, <span class="type">size_t</span>, <span class="type">size_t</span>);</span><br><span class="line"></span><br><span class="line">File getnameinfo.c:</span><br><span class="line"><span class="number">87</span>:	<span class="type">static</span> <span class="type">char</span> *<span class="title function_">nrl_domainname</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"></span><br><span class="line">File loadmsgcat.c:</span><br><span class="line"><span class="number">752</span>:	<span class="type">void</span> _nl_load_domain(<span class="keyword">struct</span> loaded_l10nfile *, <span class="keyword">struct</span> binding *);</span><br><span class="line"><span class="number">1288</span>:	<span class="type">void</span> _nl_unload_domain(<span class="keyword">struct</span> loaded_domain *);</span><br><span class="line"></span><br><span class="line">File res_hconf.c:</span><br><span class="line"><span class="number">536</span>:	<span class="type">void</span> _res_hconf_trim_domain(<span class="type">char</span> *);</span><br><span class="line"><span class="number">561</span>:	<span class="type">void</span> _res_hconf_trim_domains(<span class="keyword">struct</span> hostent *);</span><br><span class="line"><span class="number">103</span>:	<span class="type">static</span> <span class="type">const</span> <span class="type">char</span> *<span class="title function_">arg_trimdomain_list</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *, <span class="type">int</span>, <span class="type">const</span> <span class="type">char</span> *)</span>;</span><br><span class="line"></span><br><span class="line">File textdomain.c:</span><br><span class="line"><span class="number">64</span>:	<span class="type">char</span> *__textdomain(<span class="type">const</span> <span class="type">char</span> *);</span><br><span class="line"></span><br><span class="line">File version.c:</span><br><span class="line"><span class="number">69</span>:	<span class="type">void</span> __libc_main(<span class="type">void</span>);</span><br><span class="line"></span><br><span class="line">File wgenops.c:</span><br><span class="line"><span class="number">55</span>:	<span class="type">void</span> __GI__IO_switch_to_main_wget_area(FILE *);</span><br><span class="line">(gdb)</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="显示源码"><a href="#显示源码" class="headerlink" title="显示源码"></a>显示源码</h3><p>把断点设到<code>__libc_main</code> 后，发现程序停下来了，但是找不到源码信息。</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(gdb) b __libc_main</span><br><span class="line">Breakpoint <span class="number">1</span> at <span class="number">0x241c0</span>: file version.c, line <span class="number">70.</span></span><br><span class="line">(gdb) r</span><br><span class="line">Starting program: /usr/lib/x86_64-linux-gnu/libc.so<span class="number">.6</span> </span><br><span class="line">warning: Probes-based dynamic linker interface failed.</span><br><span class="line">Reverting to original interface.</span><br><span class="line"></span><br><span class="line">Breakpoint <span class="number">1</span>, __libc_main () at version.c:<span class="number">70</span></span><br><span class="line"><span class="number">70</span>	version.c: 没有那个文件或目录.</span><br><span class="line">(gdb)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后手动设置下源码搜索路径：</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(gdb) directory ~/glibc/glibc<span class="number">-2.31</span>/csu/</span><br><span class="line">Source directories searched: /home/lhx/glibc/glibc<span class="number">-2.31</span>/csu:$cdir:$cwd</span><br><span class="line">(gdb) <span class="built_in">list</span></span><br><span class="line"><span class="number">65</span>	   Running the library as a program will get here.  */</span><br><span class="line"><span class="number">66</span>	</span><br><span class="line"><span class="number">67</span>	<span class="keyword">extern</span> <span class="type">void</span> __libc_main (<span class="type">void</span>) __attribute__ ((<span class="keyword">noreturn</span>));</span><br><span class="line"><span class="number">68</span>	<span class="type">void</span></span><br><span class="line"><span class="number">69</span>	__libc_main (<span class="type">void</span>)</span><br><span class="line"><span class="number">70</span>	{</span><br><span class="line"><span class="number">71</span>	  __libc_print_version ();</span><br><span class="line"><span class="number">72</span>	  _exit (<span class="number">0</span>);</span><br><span class="line"><span class="number">73</span>	}</span><br><span class="line">(gdb) </span><br></pre></td></tr></tbody></table></figure>
+<h3 id="找到根源"><a href="#找到根源" class="headerlink" title="找到根源"></a>找到根源</h3><p>接着单步调试，并进入函数一探究竟。发现版本信息正是被保存在 <code>banner</code> 数组里面。</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(gdb) s</span><br><span class="line"><span class="number">71</span>	  __libc_print_version ();</span><br><span class="line">(gdb) s</span><br><span class="line">__libc_print_version () at version.c:<span class="number">45</span></span><br><span class="line"><span class="number">45</span>	  __write (STDOUT_FILENO, banner, <span class="keyword">sizeof</span> banner - <span class="number">1</span>);</span><br><span class="line">(gdb) bt</span><br><span class="line">#<span class="number">0</span>  __libc_print_version () at version.c:<span class="number">45</span></span><br><span class="line">#<span class="number">1</span>  __libc_main () at version.c:<span class="number">71</span></span><br><span class="line">(gdb) p banner </span><br><span class="line">$<span class="number">1</span> = <span class="string">"GNU C Library (Ubuntu GLIBC 2.31-0ubuntu9.9) stable release version 2.31.\nCopyright (C) 2020 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.\nThere is NO wa"</span>...</span><br><span class="line">(gdb) <span class="built_in">set</span> print elements unlimited </span><br><span class="line">(gdb) p banner </span><br><span class="line">$<span class="number">2</span> = <span class="string">"GNU C Library (Ubuntu GLIBC 2.31-0ubuntu9.9) stable release version 2.31.\nCopyright (C) 2020 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.\nThere is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\nPARTICULAR PURPOSE.\nCompiled by GNU CC version 9.4.0.\nlibc ABIs: UNIQUE IFUNC ABSOLUTE\nFor bug reporting instructions, please see:\n&lt;https://bugs.launchpad.net/ubuntu/+source/glibc/+bugs&gt;.\n"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后通过 gdb 直接进去查看下源码，发现 <code>banner</code> 是一个固定写死的字符数组：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305212102259.gif" alt="GIF 2023-5-21 20-59-13"></p>
+<p>最后执行完版本打印函数<code>__libc_print_version</code>，glibc 就直接<code> _exit</code> 退出了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305212105547.png" alt="image-20230521210544482"></p>
+
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+<br>
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　👣　步履不止　　-------------</div>
+<br>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/gdb/" rel="tag"><i class="fa fa-tag"></i> gdb</a>
+              <a href="/tags/glibc/" rel="tag"><i class="fa fa-tag"></i> glibc</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/66d22827.html" rel="prev" title="通过 qemu 在 x86 上实现全系统模拟 PowerPC">
+                  <i class="fa fa-angle-left"></i> 通过 qemu 在 x86 上实现全系统模拟 PowerPC
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/65e2dbd7.html" rel="next" title="解决 Ubuntu 虚拟机网卡消失无法上网问题">
+                  解决 Ubuntu 虚拟机网卡消失无法上网问题 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heartbeat"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">paopao</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">75k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:33</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyw09gPog","appkey":"4488e6b82bfe3d819f4971a5e5c115f4","count":true}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+
+</body>
+</html>

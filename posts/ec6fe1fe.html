@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-100.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-50.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="通过查看官方手册和网上资料，梳理 gcc 各种常见的编译选项">
+<meta property="og:type" content="article">
+<meta property="og:title" content="gcc 编译选项汇总">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/ec6fe1fe.html">
+<meta property="og:site_name" content="PaoPao&#39;s Blog">
+<meta property="og:description" content="通过查看官方手册和网上资料，梳理 gcc 各种常见的编译选项">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-30T09:04:33.000Z">
+<meta property="article:modified_time" content="2023-06-16T07:26:55.406Z">
+<meta property="article:author" content="paopao">
+<meta property="article:tag" content="gcc">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://liu-paopao.github.io/posts/ec6fe1fe.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/ec6fe1fe.html","path":"posts/ec6fe1fe.html","title":"gcc 编译选项汇总"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>gcc 编译选项汇总 | PaoPao's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">PaoPao's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#pic%E5%92%8C-fPIC%E9%80%89%E9%A1%B9"><span class="nav-number">1.</span> <span class="nav-text">-pic 和 -fPIC 选项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fpie%E5%92%8C-fPIE%E9%80%89%E9%A1%B9"><span class="nav-number">2.</span> <span class="nav-text">-fpie 和 -fPIE 选项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pie%E5%92%8C-no-pie%E9%80%89%E9%A1%B9"><span class="nav-number">3.</span> <span class="nav-text">-pie 和 -no-pie 选项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pthread%E9%80%89%E9%A1%B9"><span class="nav-number">4.</span> <span class="nav-text">-pthread 选项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#w-W-Wall%E5%85%B3%E9%97%AD%E7%BC%96%E8%AF%91%E8%AD%A6%E5%91%8A"><span class="nav-number">5.</span> <span class="nav-text">-w&#x2F;-W&#x2F;-Wall 关闭编译警告</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="paopao"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">paopao</p>
+  <div class="site-description" itemprop="description">Stay hungry, stay foolish.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+<!-- none-select-br -->
+
+<p></p>
+
+<!-- hitokoto -->
+
+<div class="hitokoto-title">
+	<i class="fa fa-paragraph"></i>
+	<b>一言</b>
+</div>
+
+<div id="hitokoto">:D 获取中...</div>
+<i id="hitofrom">:D 获取中...</i>
+
+<script src="https://cdn.jsdelivr.net/npm/bluebird@3/js/browser/bluebird.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@2.0.3/fetch.min.js"></script>
+<script>
+  fetch('https://v1.hitokoto.cn')
+    .then(function (res){
+      return res.json();
+    })
+    .then(function (data) {
+      var hitokoto = document.getElementById('hitokoto');
+      hitokoto.innerText = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + data.hitokoto;
+      var hitofrom = document.getElementById('hitofrom');
+      hitofrom.innerText = "——" + data.from + '\xa0'; 
+    })
+    .catch(function (err) {
+      console.error(err);
+    })
+</script>
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/ec6fe1fe.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="gcc 编译选项汇总 | PaoPao's Blog">
+      <meta itemprop="description" content="通过查看官方手册和网上资料，梳理 gcc 各种常见的编译选项">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          gcc 编译选项汇总
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-04-30 17:04:33" itemprop="dateCreated datePublished" datetime="2022-04-30T17:04:33+08:00">2022-04-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-06-16 15:26:55" itemprop="dateModified" datetime="2023-06-16T15:26:55+08:00">2023-06-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E8%AF%91%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">编译器</span></a>
+        </span>
+    </span>
+
+  
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">通过查看官方手册和网上资料，梳理 gcc 各种常见的编译选项</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>-shared； Create a shared library /* 创建共享库时需要添加的编译选项 */<br>因为共享库的代码都是位置无关的，所以通常还需要添加编译选项 - fPIC。</p>
+<h2 id="pic和-fPIC选项"><a href="#pic和-fPIC选项" class="headerlink" title="-pic和-fPIC选项"></a><code>-pic</code> 和 <code>-fPIC</code> 选项</h2><p><strong>PIC (position-independent code)</strong></p>
+<p><code>-pic</code> 和 <code>-fPIC</code> 都是编译时的选项，用于生成位置无关的代码 (Position-Independent-Code)。这两个选项都是可以使代码在加载到内存时使用相对地址，所有对固定地址的访问都通过全局偏移表 (GOT) 来实现。</p>
+<p><code>-pic</code> 和 <code>-fPIC</code> 区别在于：</p>
+<ul>
+<li><code>-fpic</code> 对 GOT 表的大小有限制。如果链接的可执行文件 GOT 表 size 超过了架构设定的 maximum size，链接器就会报错，这时候 <code>-fpic</code> 就不适用了。</li>
+<li><code>-fPIC</code> 对 GOT 表大小无限制，所以如果在不确定的情况下，建议使用 <code>-fPIC</code>。</li>
+</ul>
+<p>PIC 实现原理：</p>
+<p>（1）GOT：在动态库的数据段增加 GOT（Global Offset Table），该表的每一项是符号到地址的绝对映射。由于代码段到数据段的偏移是固定的，因此可以在编译时确定代码段中的某个符号到 GOT 特定项之间的偏移。这样，代码段中的符号偏移就可以在编译时确定了，在加载时也无需修改代码段的内容，只需要填写位于数据段的 GOT 的所有项的符号的绝对地址就完成了。因为数据段本来就是进程间不共享，每个进程独立的一份，因此 GOT 的设计完全解决了以上两个问题，从而达到两个目的：1，代码段可以在多进程间共享；2，代码段是只读的。</p>
+<p>（2）PLT：PLT 是 Program Linkage Table 的缩写，即程序链接表，PLT 的出现是为了延时定位的目的。一个动态库中的函数往往要远多于全局变量，并且被调用的函数往往少于定义的函数。GOT 中包含了该动态库中的所有的全局变量的映射，并且在连接器加载时解析所有的全局变量的地址。如果用同样的方式去处理函数调用符号，则开销会非常大。因此在代码段设计了一个 PLT 表，每一项其实是个代码段，用于执行如下逻辑：首次访问时，解析参数和向 GOT 填写函数地址，后续访问直接访问 GOT 中的函数地址。如此达到了延时定位的目的。</p>
+<p>因此，一个 PIC 的动态库中，对全局变量使用 GOT 来映射，对函数调用使用 PLT+GOT 来映射，从而达到共享库代码段复用，代码段安全访问的目的。而这些就是 PIC 的意义。</p>
+<p>GCC 官方手册解释：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">-fpic</span><br><span class="line">Generate position-independent code (PIC) suitable for use in a shared library, if supported for the target machine. Such code accesses all constant addresses through a global offset table (GOT). The dynamic loader resolves the GOT entries when the program starts (the dynamic loader is not part of GCC; it is part of the operating system). If the GOT size for the linked executable exceeds a machine-specific maximum size, you get an error message from the linker indicating that -fpic does not work; in that case, recompile with -fPIC instead. (These maximums are 8k on the SPARC, 28k on AArch64 and 32k on the m68k and RS/6000. The x86 has no such limit.)</span><br><span class="line"></span><br><span class="line">Position-independent code requires special support, and therefore works only on certain machines. For the x86, GCC supports PIC for System V but not for the Sun 386i. Code generated for the IBM RS/6000 is always position-independent.</span><br><span class="line"></span><br><span class="line">When this flag is set, the macros __pic__ and __PIC__ are defined to 1.</span><br><span class="line"></span><br><span class="line">-fPIC</span><br><span class="line">If supported for the target machine, emit position-independent code, suitable for dynamic linking and avoiding any limit on the size of the global offset table. This option makes a difference on AArch64, m68k, PowerPC and SPARC.</span><br><span class="line"></span><br><span class="line">Position-independent code requires special support, and therefore works only on certain machines.</span><br><span class="line"></span><br><span class="line">When this flag is set, the macros __pic__ and __PIC__ are defined to 2.</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="fpie和-fPIE选项"><a href="#fpie和-fPIE选项" class="headerlink" title="-fpie和-fPIE选项"></a><code>-fpie</code> 和 <code>-fPIE</code> 选项</h2><p><strong>PIE (position-independent executable)</strong></p>
+<p><code>-fpie</code> 和 <code>-fPIE</code> 选项与 <code>-pic</code> 和 <code>-fPIC</code> 是类似的，唯一区别是加上 <code>-fpie</code> 和 <code>-fPIE</code> 这两个选项后编译生成的位置无关代码只能被用于链接成可执行文件。</p>
+<p>即：<code>-fPIC</code> 用于生成动态库，<code>-fPIE</code> 用于生成可执行文件。</p>
+<p><strong>若想通过 gcc 编译出位置无关的可执行程序，必须同时使用 <code>-fPIE</code> 和 <code>-pie</code> 选项。其中，<code>-fPIE</code> 选项用于编译器，使用该选项从.c 编译出来的.o 文件将是位置无关的目标文件；而 <code>-pie</code> 选项则用于链接器，使用该选项后，链接器能够把 <code>-fPIE</code> 选项下编译出来的.o 文件进一步链接成位置无关的可执行程序。</strong></p>
+<p>GCC 官方手册解释：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-fpie</span><br><span class="line">-fPIE</span><br><span class="line">These options are similar to -fpic and -fPIC, but the generated position-independent code can be only linked into executables. Usually these options are used to compile code that will be linked using the -pie GCC option.</span><br><span class="line"></span><br><span class="line">-fpie and -fPIE both define the macros __pie__ and __PIE__. The macros have the value 1 for -fpie and 2 for -fPIE.</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="pie和-no-pie选项"><a href="#pie和-no-pie选项" class="headerlink" title="-pie和-no-pie选项"></a><code>-pie</code> 和 <code>-no-pie</code> 选项</h2><p><code>-pie</code> 和 <code>-no-pie</code> 属于链接选项，</p>
+<ul>
+<li><code>-pie</code> 表示生成动态链接的位置无关的可执行文件，前提是编译阶段使用了 <code>-fpie</code> 和 <code>-fPIE</code> 选项。</li>
+<li><code>-no-pie</code> 表示不生成，和 <code>-pie</code> 意思相反。</li>
+</ul>
+<p>GCC 官方手册解释：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-pie</span><br><span class="line">Produce a dynamically linked position independent executable on targets that support it. For predictable results, you must also specify the same set of options used for compilation (-fpie, -fPIE, or model suboptions) when you specify this linker option.</span><br><span class="line"></span><br><span class="line">-no-pie</span><br><span class="line">Don’t produce a dynamically linked position independent executable.</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="pthread选项"><a href="#pthread选项" class="headerlink" title="-pthread选项"></a><code>-pthread</code> 选项</h2><p><code>-pthread</code> 表示链接 POSIX 线程库。有些架构下，此选项还会为预处理器设置 flags，所以该选项会同时起作用于编译和链接阶段。</p>
+<p>GCC 官方手册解释：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-pthread</span><br><span class="line">Link with the POSIX threads library. This option is supported on GNU/Linux targets, most other Unix derivatives, and also on x86 Cygwin and MinGW targets. On some targets this option also sets flags for the preprocessor, so it should be used consistently for both compilation and linking.</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="w-W-Wall关闭编译警告"><a href="#w-W-Wall关闭编译警告" class="headerlink" title="-w/-W/-Wall关闭编译警告"></a><code>-w/-W/-Wall</code> 关闭编译警告</h2><p><code>-w</code>：关闭编译时所有的警告 warning，使用该选项后，编译界面非常清爽。</p>
+<p><code>-Wall</code>：编译时显示所有警告 warning。</p>
+<p><code>-W</code>：编译时显示编译器认为会导致报错的警告。</p>
+
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+<br>
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　👣　步履不止　　-------------</div>
+<br>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/gcc/" rel="tag"><i class="fa fa-tag"></i> gcc</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/2732b274.html" rel="prev" title="Linux 一行执行多条命令">
+                  <i class="fa fa-angle-left"></i> Linux 一行执行多条命令
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/bf48f70d.html" rel="next" title="通过 qemu+gdb 实现跨架构调试">
+                  通过 qemu+gdb 实现跨架构调试 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heartbeat"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">paopao</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">75k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:33</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyw09gPog","appkey":"4488e6b82bfe3d819f4971a5e5c115f4","count":true}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+
+</body>
+</html>

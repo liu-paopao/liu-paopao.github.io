@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-100.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-50.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="coroutine 协程库简介协程有时候被称为轻量级线程，它由程序员进行调度（切换），而不像线程那样需要内核参与，同时也避免内核进行线程切换的开销。因为协程切换保留的是当前上下文环境，也就是函数调用栈和当前的寄存器，而线程切换需要陷入内核态，改变线程对象状态。 go 把协程作为基础设施提供语言级的支持，cpp 没有提供语言级的支持，而是通过准标准库 boost coroutine2 库（boost">
+<meta property="og:type" content="article">
+<meta property="og:title" content="boost 协程库 coroutine 介绍">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/e2f31abc.html">
+<meta property="og:site_name" content="PaoPao&#39;s Blog">
+<meta property="og:description" content="coroutine 协程库简介协程有时候被称为轻量级线程，它由程序员进行调度（切换），而不像线程那样需要内核参与，同时也避免内核进行线程切换的开销。因为协程切换保留的是当前上下文环境，也就是函数调用栈和当前的寄存器，而线程切换需要陷入内核态，改变线程对象状态。 go 把协程作为基础设施提供语言级的支持，cpp 没有提供语言级的支持，而是通过准标准库 boost coroutine2 库（boost">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-01-05T07:54:13.000Z">
+<meta property="article:modified_time" content="2023-02-10T09:05:04.072Z">
+<meta property="article:author" content="paopao">
+<meta property="article:tag" content="协程">
+<meta property="article:tag" content="boost">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://liu-paopao.github.io/posts/e2f31abc.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/e2f31abc.html","path":"posts/e2f31abc.html","title":"boost 协程库 coroutine 介绍"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>boost 协程库 coroutine 介绍 | PaoPao's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">PaoPao's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#coroutine%E5%8D%8F%E7%A8%8B%E5%BA%93%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">coroutine 协程库简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#push-type-%E5%92%8C-pull-type"><span class="nav-number">2.</span> <span class="nav-text">push_type 和 pull_type</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pull%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">2.1.</span> <span class="nav-text">pull 的例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#push%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">2.2.</span> <span class="nav-text">push 的例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%89%88%E6%9C%AC%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">2.3.</span> <span class="nav-text">其他版本的例子</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="paopao"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">paopao</p>
+  <div class="site-description" itemprop="description">Stay hungry, stay foolish.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+<!-- none-select-br -->
+
+<p></p>
+
+<!-- hitokoto -->
+
+<div class="hitokoto-title">
+	<i class="fa fa-paragraph"></i>
+	<b>一言</b>
+</div>
+
+<div id="hitokoto">:D 获取中...</div>
+<i id="hitofrom">:D 获取中...</i>
+
+<script src="https://cdn.jsdelivr.net/npm/bluebird@3/js/browser/bluebird.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@2.0.3/fetch.min.js"></script>
+<script>
+  fetch('https://v1.hitokoto.cn')
+    .then(function (res){
+      return res.json();
+    })
+    .then(function (data) {
+      var hitokoto = document.getElementById('hitokoto');
+      hitokoto.innerText = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + data.hitokoto;
+      var hitofrom = document.getElementById('hitofrom');
+      hitofrom.innerText = "——" + data.from + '\xa0'; 
+    })
+    .catch(function (err) {
+      console.error(err);
+    })
+</script>
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/e2f31abc.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="boost 协程库 coroutine 介绍 | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          boost 协程库 coroutine 介绍
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-01-05 15:54:13" itemprop="dateCreated datePublished" datetime="2023-01-05T15:54:13+08:00">2023-01-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-02-10 17:05:04" itemprop="dateModified" datetime="2023-02-10T17:05:04+08:00">2023-02-10</time>
+    </span>
+
+  
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>719</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="coroutine协程库简介"><a href="#coroutine协程库简介" class="headerlink" title="coroutine协程库简介"></a>coroutine 协程库简介</h2><p>协程有时候被称为轻量级线程，它由程序员进行调度（切换），而不像线程那样需要内核参与，同时也避免内核进行线程切换的开销。因为协程切换保留的是当前上下文环境，也就是函数调用栈和当前的寄存器，而线程切换需要陷入内核态，改变线程对象状态。</p>
+<p>go 把协程作为基础设施提供语言级的支持，cpp 没有提供语言级的支持，而是通过准标准库 boost coroutine2 库（boost coroutine 已经废弃，建议使用 boost coroutine2）为 cpp 提供的协程支持。</p>
+<p>协程分为对称协程（symmetric）和非对称协程（asymmetric），对称协程需要显式指定将控制权 yeild 给谁，非对称协程可以隐式的转移控制权给它的调用者，boost coroutine2 实现的是非对称协程。</p>
+<span id="more"></span>
+
+<h2 id="push-type-和-pull-type"><a href="#push-type-和-pull-type" class="headerlink" title="push_type 和 pull_type"></a>push_type 和 pull_type</h2><p>boost.corountine2 中的协程增加了 push_type 和 pull_type 用于提供协程数据的流转，约束了数据的从 push_type 流入，从 pull_type 流出。</p>
+<p>当协程对象被创建之后就直接运行，直到 sink (1) 的时候暂停返回到 main 中，main 中使用 source.get () 获取数据，继续使用 source () 调用协程对象，协程从 sink (1) 之后继续运行执行完毕，返回 main，main 也执行完毕。</p>
+<h3 id="pull的例子"><a href="#pull的例子" class="headerlink" title="pull的例子"></a>pull 的例子</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;boost/coroutine2/all.hpp&gt;</span><br><span class="line"></span><br><span class="line">void foo(boost::coroutines2::coroutine&lt;int&gt;::push_type &amp; sink)</span><br><span class="line">{</span><br><span class="line">    std::cout &lt;&lt; "start coroutine\n";</span><br><span class="line">    sink(1);</span><br><span class="line">    std::cout &lt;&lt; "finish coroutine\n";</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">{</span><br><span class="line">    boost::coroutines2::coroutine&lt;int&gt;::pull_type source(foo);</span><br><span class="line">    std::cout &lt;&lt; source.get() &lt;&lt; std::endl;</span><br><span class="line">    //std::cout &lt;&lt; source() &lt;&lt; std::endl;</span><br><span class="line">    source();</span><br><span class="line">    std::cout &lt;&lt; "finish\n";</span><br><span class="line">    return 0;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">lhx@ubuntu:~/boost$ g++ -o demo3 demo3.cpp -lboost_coroutine -lboost_context -L/home/lhx/boost/boost167/install/lib -I/home/lhx/boost/boost167/install/include</span><br><span class="line">lhx@ubuntu:~/boost$ ./demo3 </span><br><span class="line">start coroutine</span><br><span class="line">1</span><br><span class="line">finish coroutine</span><br><span class="line">finish</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="push的例子"><a href="#push的例子" class="headerlink" title="push的例子"></a>push 的例子</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;boost/coroutine2/all.hpp&gt;</span><br><span class="line"></span><br><span class="line">void foo(boost::coroutines2::coroutine&lt;int&gt;::pull_type&amp; sink)</span><br><span class="line">{</span><br><span class="line">    std::cout &lt;&lt; "start coroutine\n";</span><br><span class="line">    //sink();</span><br><span class="line">    int a = sink().get();</span><br><span class="line">    std::cout &lt;&lt; a &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; "finish coroutine\n";</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">{</span><br><span class="line">    boost::coroutines2::coroutine&lt;int&gt;::push_type source(foo);</span><br><span class="line">    </span><br><span class="line">    std::cout &lt;&lt; "finish\n";</span><br><span class="line">    source(0);</span><br><span class="line">    source(5);</span><br><span class="line">    return 0;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">lhx@ubuntu:~/boost$ g++ -o demo4 demo4.cpp -lboost_coroutine -lboost_context -L/home/lhx/boost/boost167/install/lib -I/home/lhx/boost/boost167/install/include</span><br><span class="line">lhx@ubuntu:~/boost$ ./demo4 </span><br><span class="line">finish</span><br><span class="line">start coroutine</span><br><span class="line">5</span><br><span class="line">finish coroutine</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="其他版本的例子"><a href="#其他版本的例子" class="headerlink" title="其他版本的例子"></a>其他版本的例子</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;boost/coroutine2/all.hpp&gt;</span><br><span class="line"></span><br><span class="line">void foo(boost::coroutines2::coroutine&lt;void&gt;::push_type &amp; sink){</span><br><span class="line">    std::cout &lt;&lt; "a ";</span><br><span class="line">    sink();</span><br><span class="line">    std::cout &lt;&lt; "b ";</span><br><span class="line">    sink();</span><br><span class="line">    std::cout &lt;&lt; "c ";</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">int main(){</span><br><span class="line">    boost::coroutines2::coroutine&lt;void&gt;::pull_type source(foo);</span><br><span class="line">    std::cout &lt;&lt; "1 ";</span><br><span class="line">    source();</span><br><span class="line">    std::cout &lt;&lt; "2 ";</span><br><span class="line">    source();</span><br><span class="line">    std::cout &lt;&lt; "3 " &lt;&lt; std::endl;</span><br><span class="line">    return 0;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lhx@ubuntu:~/boost$ g++ -o demo1 demo1.cpp -lboost_coroutine -lboost_context -L/home/lhx/boost/boost167/install/lib -I/home/lhx/boost/boost167/install/include</span><br><span class="line">lhx@ubuntu:~/boost$ ./demo1</span><br><span class="line">a 1 b 2 c 3</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;boost/coroutine2/all.hpp&gt;</span><br><span class="line"></span><br><span class="line">void foo(boost::coroutines2::coroutine&lt;void&gt;::pull_type &amp; sink1){</span><br><span class="line">    std::cout &lt;&lt; "a ";</span><br><span class="line">    sink1();</span><br><span class="line">    std::cout &lt;&lt; "b ";</span><br><span class="line">    sink1();</span><br><span class="line">    std::cout &lt;&lt; "c ";</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">int main(){</span><br><span class="line">    boost::coroutines2::coroutine&lt;void&gt;::push_type source(foo);</span><br><span class="line">    std::cout &lt;&lt; "1 ";</span><br><span class="line">    source();</span><br><span class="line">    std::cout &lt;&lt; "2 ";</span><br><span class="line">    source();</span><br><span class="line">    std::cout &lt;&lt; "3 " &lt;&lt; std::endl;</span><br><span class="line">    return 0;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lhx@ubuntu:~/boost$ g++ -o demo2 demo2.cpp -lboost_coroutine -lboost_context -L/home/lhx/boost/boost167/install/lib -I/home/lhx/boost/boost167/install/include</span><br><span class="line">lhx@ubuntu:~/boost$ ./demo2</span><br><span class="line">1 a 2 b 3 </span><br></pre></td></tr></tbody></table></figure>
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+<br>
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　👣　步履不止　　-------------</div>
+<br>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%8D%8F%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> 协程</a>
+              <a href="/tags/boost/" rel="tag"><i class="fa fa-tag"></i> boost</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/449772ec.html" rel="prev" title="用于创建进程的 fork 和 execve 函数">
+                  <i class="fa fa-angle-left"></i> 用于创建进程的 fork 和 execve 函数
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/505e02a1.html" rel="next" title="通过 PTRACE_SINGLESTEP 实现单步调试">
+                  通过 PTRACE_SINGLESTEP 实现单步调试 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heartbeat"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">paopao</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">75k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:33</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyw09gPog","appkey":"4488e6b82bfe3d819f4971a5e5c115f4","count":true}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+
+</body>
+</html>

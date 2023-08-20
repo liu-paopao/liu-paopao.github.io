@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-100.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-50.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="PowerPC 简介PowerPC，有时也被简称 PPC，是一种精简指令集（RISC）架构。PowerPC 英文全名为 “Performance Optimization With Enhanced RISC – Performance Computing”。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PowerPC 指令集架构介绍">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/a19ee375.html">
+<meta property="og:site_name" content="PaoPao&#39;s Blog">
+<meta property="og:description" content="PowerPC 简介PowerPC，有时也被简称 PPC，是一种精简指令集（RISC）架构。PowerPC 英文全名为 “Performance Optimization With Enhanced RISC – Performance Computing”。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304052225755.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304052339845.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304052339810.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304052339466.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304152216874.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304152231871.png">
+<meta property="og:image" content="c:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20230415223333681.png">
+<meta property="og:image" content="c:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20230415223357207.png">
+<meta property="og:image" content="c:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20230415223415305.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162235074.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162235590.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162235669.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162235709.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162237885.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162237553.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162237330.png">
+<meta property="article:published_time" content="2023-04-05T03:03:17.000Z">
+<meta property="article:modified_time" content="2023-04-16T15:00:46.046Z">
+<meta property="article:author" content="paopao">
+<meta property="article:tag" content="PowerPC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304052225755.png">
+
+
+<link rel="canonical" href="https://liu-paopao.github.io/posts/a19ee375.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/a19ee375.html","path":"posts/a19ee375.html","title":"PowerPC 指令集架构介绍"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>PowerPC 指令集架构介绍 | PaoPao's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">PaoPao's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#PowerPC%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">PowerPC 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8%E7%B1%BB%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">寄存器类别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">指令格式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#I-Form"><span class="nav-number">3.1.</span> <span class="nav-text">I-Form</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-Form"><span class="nav-number">3.2.</span> <span class="nav-text">B-Form</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SC-Form"><span class="nav-number">3.3.</span> <span class="nav-text">SC-Form</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#D-Form%E5%92%8CDS-Form"><span class="nav-number">3.4.</span> <span class="nav-text">D-Form 和 DS-Form</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#X-Form"><span class="nav-number">3.5.</span> <span class="nav-text">X-Form</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XL-Form"><span class="nav-number">3.6.</span> <span class="nav-text">XL-Form</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XFX-Form%E3%80%81XFL-Form%E3%80%81XS-Form%E3%80%81XO-Form%E4%B8%8EA-Form"><span class="nav-number">3.7.</span> <span class="nav-text">XFX-Form、XFL-Form、XS-Form、XO-Form 与 A-Form</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#M-Form%E3%80%81MD-Form%E5%92%8CMDS-Form"><span class="nav-number">3.8.</span> <span class="nav-text">M-Form、MD-Form 和 MDS-Form</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="paopao"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">paopao</p>
+  <div class="site-description" itemprop="description">Stay hungry, stay foolish.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+<!-- none-select-br -->
+
+<p></p>
+
+<!-- hitokoto -->
+
+<div class="hitokoto-title">
+	<i class="fa fa-paragraph"></i>
+	<b>一言</b>
+</div>
+
+<div id="hitokoto">:D 获取中...</div>
+<i id="hitofrom">:D 获取中...</i>
+
+<script src="https://cdn.jsdelivr.net/npm/bluebird@3/js/browser/bluebird.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@2.0.3/fetch.min.js"></script>
+<script>
+  fetch('https://v1.hitokoto.cn')
+    .then(function (res){
+      return res.json();
+    })
+    .then(function (data) {
+      var hitokoto = document.getElementById('hitokoto');
+      hitokoto.innerText = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + data.hitokoto;
+      var hitofrom = document.getElementById('hitofrom');
+      hitofrom.innerText = "——" + data.from + '\xa0'; 
+    })
+    .catch(function (err) {
+      console.error(err);
+    })
+</script>
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/a19ee375.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="PowerPC 指令集架构介绍 | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PowerPC 指令集架构介绍
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-04-05 11:03:17" itemprop="dateCreated datePublished" datetime="2023-04-05T11:03:17+08:00">2023-04-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-04-16 23:00:46" itemprop="dateModified" datetime="2023-04-16T23:00:46+08:00">2023-04-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8C%87%E4%BB%A4%E9%9B%86%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">指令集架构</span></a>
+        </span>
+    </span>
+
+  
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="PowerPC简介"><a href="#PowerPC简介" class="headerlink" title="PowerPC简介"></a>PowerPC 简介</h2><p>PowerPC，有时也被简称 PPC，是一种精简指令集（RISC）架构。PowerPC 英文全名为 “Performance Optimization With Enhanced RISC – Performance Computing”。</p>
+<span id="more"></span>
+
+<p>PowerPC 是由 Apple、IBM、Motorola 三家公司在 1991 年设计的，设计源自 IBM 的 POWER 架构，主要应用在通信、工控、航天国防等要求高性能和高可靠性的一些高端领域。</p>
+<p>PowerPC 指令集架构（PowerPC Instruction Set Architecture，PowerPC ISA），主要包括寄存器类别和指令格式两部分内容。</p>
+<p>PowerPC 处理器提供 32 位和 64 位两种指令运行环境。</p>
+<h2 id="寄存器类别"><a href="#寄存器类别" class="headerlink" title="寄存器类别"></a>寄存器类别</h2><p>PowerPC 用户态寄存器包括：</p>
+<ul>
+<li>GPR（General Purpose Registers，通用寄存器，64 位），32 个</li>
+<li> FPR（Floating-Point Registers，浮点寄存器，64 位），32 个</li>
+<li> FPSCR（Floating-Point Status and Control Register，浮点状态和控制寄存器，32 位）</li>
+<li>LR（Link Register，链接寄存器，64 位），用来存放函数的返回地址，转移指令的编码中 LK 位为 1 时，转移指令就会将当前指令地址加 4 后保存到 LR 寄存器，从而实现函数的调用和返回。</li>
+<li>CTR（ Count Register，计数寄存器，64 位），用来保存循环变量。</li>
+<li>XER（ Fixed-Point Exception Register，整数运算进位和溢出寄存器，64 位），用来存放整数运算的溢出、进位。分为 3 个有效位，1 个有效字段，其他是保留位。<ul>
+<li>SO（第 32 位）：当检测到有指令设置 OV 时，置 1</li>
+<li>OV（第 33 位）：有符号数算术运算出现溢位</li>
+<li> CA（第 34 位）：无符号数算术运算出现进位</li>
+<li>第 57~63 位：表示 load/store 指令传送的字节数</li>
+</ul>
+</li>
+<li> CR（Condition Register，条件寄存器，32 位），用来存放指令执行后的状态，分为 8 个字段（CR0 ~ CR7），每个字段 4 位。整数运算指令的结果状态保存到 CR0，浮点运算指令的结果状态保存到 CR1。<ul>
+<li>CR0 [0]：小于 LT，结果为负时置 1</li>
+<li>CR0 [0]：大于 GT，结果为正时置 1</li>
+<li>CR0 [0]：等于 EQ，结果为 0 时置 1</li>
+<li>CR0 [0]：溢出 SO，结果溢出时置 1</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304052225755.png" alt="image-20230405222500629"></p>
+<h2 id="指令格式"><a href="#指令格式" class="headerlink" title="指令格式"></a>指令格式</h2><ul>
+<li>指令长度 4 字节 32 位，按字对齐，通常采用大端存储，指令最低 2 位忽略，通常为 0。</li>
+<li>[0:5] 位表示操作码 OPCD，很多指令同时也有扩展码 XO（extended opcode）。</li>
+<li>[6:31] 位根据不同指令格式，分别表示不同含义。</li>
+</ul>
+<h3 id="I-Form"><a href="#I-Form" class="headerlink" title="I-Form"></a>I-Form</h3><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304052339845.png" alt="image-20230405225019176"></p>
+<p><strong>无条件转移指令格式</strong>，如函数调用 bl 指令，跳转到指定函数并保存下一条指令地址：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bl LI AA=0,LK=1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>LI (6:29) ：立即数字段（Immediate field），表示 24 位带符号的二进制整数，右侧添加 0b00 （即 LI*4）并符号扩展为 64 位。</p>
+<p>AA (30) ：绝对地址位（Absolute Address bit）。</p>
+<blockquote>
+<p>AA=0 表示立即数字段为当前指令地址的相对地址。 对于 I-form 分支指令，分支目标的有效地址是 LI 字段符号扩展到 64 位后再加上分支指令地址。 对于 B-form 分支指令，分支目标的有效地址是 BD 字段符号扩展到 64 位后再加上分支指令地址。<br>AA=1 表示立即数字段代表一个绝对地址。 对于 I-form 分支指令，分支跳转目标的有效地址是 LI 字段符号扩展到 64 位。 对于 B-form 分支指令，分支跳转目标的有效地址是 BD 字段符号扩展到 64 位。</p>
+</blockquote>
+<p>LK (31) ：链接位（LINK bit）。</p>
+<blockquote>
+<p>0 表示不设置 LR 寄存器<br>1 表示将分支指令后的下一条指令地址设置到 LR 寄存器中。</p>
+</blockquote>
+<h3 id="B-Form"><a href="#B-Form" class="headerlink" title="B-Form"></a>B-Form</h3><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304052339810.png" alt="image-20230405231908193"></p>
+<p><strong>条件转移指令格式</strong></p>
+<p>BO (6:10)：该字段表示指令根据什么条件进行跳转。</p>
+<ul>
+<li>第 0 位为 1 时，bc 指令根据 CTR 寄存器进行条件跳转</li>
+<li>第 1 为为 1 时，表示条件为真时进行跳转</li>
+<li>第 2 为为 1 时，表示执行 bc 指令时 CTR 值不变</li>
+<li>……</li>
+</ul>
+<p>BI (11:15)：该字段用于指定 CR 中需要由分支条件指令测试的位。</p>
+<ul>
+<li>BI [3:4]=00，使用 LT 状态位用作指令转移条件</li>
+<li> BI [3:4]=01，使用 GT 状态位用作指令转移条件</li>
+<li> BI [3:4]=10，使用 EQ 状态位用作指令转移条件</li>
+<li> BI [3:4]=11，使用 SO 状态位用作指令转移条件</li>
+</ul>
+<p>BD (16:29)：该字段用于指定 14 位有符号数的分支位移的立即数，右侧添加 0b00 并符号扩展为 64 位。</p>
+<h3 id="SC-Form"><a href="#SC-Form" class="headerlink" title="SC-Form"></a>SC-Form</h3><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304052339466.png" alt="image-20230405232752028"></p>
+<p><strong>系统调用指令格式</strong>，即 sc 指令。</p>
+<p>LEV (20:26)：该字段被系统调用指令使用（System Call）。</p>
+<p><code>/，//，///</code> 表示指令中保留的字段。</p>
+<h3 id="D-Form和DS-Form"><a href="#D-Form和DS-Form" class="headerlink" title="D-Form和DS-Form"></a>D-Form 和 DS-Form</h3><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304152216874.png" alt="image-20230415221607770"></p>
+<p><strong>存储器、寄存器读写指令，立即数算术运算和逻辑运算指令</strong>，由 6 位操作码 + 10 位寄存器索引 + 16 位立即数构成。</p>
+<p>RT (6:10)：存放指令运算结果的寄存器索引，用作目标寄存器。</p>
+<p>RS (6:10)：存放指令运算结果的寄存器索引。</p>
+<p>RA (11:15)：存放指令所需数据源的寄存器索引。</p>
+<p>D (16:31)：存放指令所需另一个数据源，16 位有符号立即数，并符号扩展到 64 位。</p>
+<p>SI (16:31)：存放指令所需另一个数据源，16 位有符号立即数。</p>
+<p>UI (16:31)：存放指令所需另一个数据源，16 位无符号立即数。</p>
+<p>L (10)：表示进行 32 位还是 64 位比较。</p>
+<p>BF (6:8)：表示使用的 CR 字段或者 FPSCR 字段。</p>
+<p>TO (6:10)：表示 trap 自陷指令的条件。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304152231871.png" alt="image-20230415223101813"></p>
+<p>DS (16:29)：表示 14 位有符号立即数，右侧用 0x00 进行位拼接，并符号扩展到 64 位。</p>
+<p>XO (30:31)：表示扩展的操作码字段。</p>
+<h3 id="X-Form"><a href="#X-Form" class="headerlink" title="X-Form"></a>X-Form</h3><p><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20230415223333681.png" alt="image-20230415223333681"></p>
+<p>X-Form 格式指令与 D-Form 类似，只是将 D 字段拆分为 RB、XO、Rc。</p>
+<p>RB 和 RS 字段用来存放源操作数寄存器的索引，RT 字段存放目的操作寄存器的索引，RA 既可以当源操作数又可以当目的操作数。</p>
+<p>Rc 字段为 1 表示指令运算结果将改变 CR 寄存器的值，为 0 则不改变 CR 寄存器。具有<code>.</code> 后缀的指令，其 Rc 位为 1。</p>
+<h3 id="XL-Form"><a href="#XL-Form" class="headerlink" title="XL-Form"></a>XL-Form</h3><p><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20230415223357207.png" alt="image-20230415223357207"></p>
+<p>XL-Form 格式指令支持条件转移，与 B-Form 格式指令不同的是，此类指令使用 LR 或 CTR 寄存器进行跳转，而不是使用 16 位立即数进行跳转，因此可以实现一些 32 位的长跳转。</p>
+<h3 id="XFX-Form、XFL-Form、XS-Form、XO-Form与A-Form"><a href="#XFX-Form、XFL-Form、XS-Form、XO-Form与A-Form" class="headerlink" title="XFX-Form、XFL-Form、XS-Form、XO-Form与A-Form"></a>XFX-Form、XFL-Form、XS-Form、XO-Form 与 A-Form</h3><p><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20230415223415305.png" alt="image-20230415223415305"></p>
+<p>XFX-Form 格式指令用于访问 SPR 寄存器和 CR 寄存器。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162235074.png" alt="image-20230416223505933"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162235590.png" alt="image-20230416223530521"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162235669.png" alt="image-20230416223543594"></p>
+<p>XO-Form 格式指令用来支持带进位的算术运算和乘除法指令。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162235709.png" alt="image-20230416223558649"></p>
+<p>A-Form 格式指令用于浮点计算。</p>
+<h3 id="M-Form、MD-Form和MDS-Form"><a href="#M-Form、MD-Form和MDS-Form" class="headerlink" title="M-Form、MD-Form和MDS-Form"></a>M-Form、MD-Form 和 MDS-Form</h3><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162237885.png" alt="image-20230416223700825"></p>
+<p>M-Form 格式指令用于对选定的字段进行循环左移并做一些相应的掩码操作。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162237553.png" alt="image-20230416223714490"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162237330.png" alt="image-20230416223724263"></p>
+
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+<br>
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　👣　步履不止　　-------------</div>
+<br>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/PowerPC/" rel="tag"><i class="fa fa-tag"></i> PowerPC</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/a3ea1ba2.html" rel="prev" title="cmake 构建类型：Debug、Release、RelWithDebInfo 和 MinSizeRel">
+                  <i class="fa fa-angle-left"></i> cmake 构建类型：Debug、Release、RelWithDebInfo 和 MinSizeRel
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/cf96db1b.html" rel="next" title="程序中的 fall-through 行为分析">
+                  程序中的 fall-through 行为分析 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heartbeat"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">paopao</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">75k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:33</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyw09gPog","appkey":"4488e6b82bfe3d819f4971a5e5c115f4","count":true}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+
+</body>
+</html>

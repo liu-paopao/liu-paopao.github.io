@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-100.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-50.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="点击阅读全文查看详细内容">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习笔记 1：单片机最小系统设计">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/56027b49.html">
+<meta property="og:site_name" content="PaoPao&#39;s Blog">
+<meta property="og:description" content="点击阅读全文查看详细内容">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img2020.cnblogs.com/blog/1729775/202102/1729775-20210221184228988-605752706.png">
+<meta property="og:image" content="https://img2020.cnblogs.com/blog/1729775/202102/1729775-20210221194123546-1287876210.png">
+<meta property="article:published_time" content="2021-05-27T12:42:54.000Z">
+<meta property="article:modified_time" content="2022-04-02T02:14:33.458Z">
+<meta property="article:author" content="paopao">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img2020.cnblogs.com/blog/1729775/202102/1729775-20210221184228988-605752706.png">
+
+
+<link rel="canonical" href="https://liu-paopao.github.io/posts/56027b49.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/56027b49.html","path":"posts/56027b49.html","title":"学习笔记 1：单片机最小系统设计"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>学习笔记 1：单片机最小系统设计 | PaoPao's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">PaoPao's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E5%8D%95%E7%89%87%E6%9C%BA%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">1、单片机概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E5%8D%95%E7%89%87%E6%9C%BA%E7%94%A8%E9%80%94"><span class="nav-number">2.</span> <span class="nav-text">2、单片机用途</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81%E5%8D%95%E7%89%87%E6%9C%BA%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.</span> <span class="nav-text">3、单片机应用系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81MCS-51%E7%B3%BB%E5%88%97%E5%8D%95%E7%89%87%E6%9C%BA%E7%BB%84%E6%88%90%E7%BB%93%E6%9E%84"><span class="nav-number">4.</span> <span class="nav-text">4、MCS-51 系列单片机组成结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%E3%80%81MCS-51%E7%B3%BB%E5%88%97%E5%8D%95%E7%89%87%E6%9C%BA%E5%BC%95%E8%84%9A%E4%BB%8B%E7%BB%8D"><span class="nav-number">5.</span> <span class="nav-text">5、MCS-51 系列单片机引脚介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6%E3%80%81MCS-51%E7%B3%BB%E5%88%97%E5%8D%95%E7%89%87%E6%9C%BA%E5%AD%98%E5%82%A8%E5%99%A8%E7%BB%93%E6%9E%84"><span class="nav-number">6.</span> <span class="nav-text">6、MCS-51 系列单片机存储器结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7%E3%80%81%E5%8D%95%E7%89%87%E6%9C%BA%E6%9C%80%E5%B0%8F%E7%B3%BB%E7%BB%9F%E7%94%B5%E8%B7%AF"><span class="nav-number">7.</span> <span class="nav-text">7、单片机最小系统电路</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="paopao"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">paopao</p>
+  <div class="site-description" itemprop="description">Stay hungry, stay foolish.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+<!-- none-select-br -->
+
+<p></p>
+
+<!-- hitokoto -->
+
+<div class="hitokoto-title">
+	<i class="fa fa-paragraph"></i>
+	<b>一言</b>
+</div>
+
+<div id="hitokoto">:D 获取中...</div>
+<i id="hitofrom">:D 获取中...</i>
+
+<script src="https://cdn.jsdelivr.net/npm/bluebird@3/js/browser/bluebird.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@2.0.3/fetch.min.js"></script>
+<script>
+  fetch('https://v1.hitokoto.cn')
+    .then(function (res){
+      return res.json();
+    })
+    .then(function (data) {
+      var hitokoto = document.getElementById('hitokoto');
+      hitokoto.innerText = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + data.hitokoto;
+      var hitofrom = document.getElementById('hitofrom');
+      hitofrom.innerText = "——" + data.from + '\xa0'; 
+    })
+    .catch(function (err) {
+      console.error(err);
+    })
+</script>
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/56027b49.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="学习笔记 1：单片机最小系统设计 | PaoPao's Blog">
+      <meta itemprop="description" content="点击阅读全文查看详细内容">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          学习笔记 1：单片机最小系统设计
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-05-27 20:42:54" itemprop="dateCreated datePublished" datetime="2021-05-27T20:42:54+08:00">2021-05-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-04-02 10:14:33" itemprop="dateModified" datetime="2022-04-02T10:14:33+08:00">2022-04-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%85%B6%E4%BB%96/" itemprop="url" rel="index"><span itemprop="name">其他</span></a>
+        </span>
+    </span>
+
+  
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">点击阅读全文查看详细内容</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="1、单片机概念"><a href="#1、单片机概念" class="headerlink" title="1、单片机概念"></a>1、单片机概念</h2><p>单片机：一种集成电路芯片，是单片微型计算机的简称。单片机由微处理器 CPU、存储器 ROM 和 RAM、输入输出 IO 接口电路组成，构成了一个既小巧又完善的计算机硬件系统。</p>
+<h2 id="2、单片机用途"><a href="#2、单片机用途" class="headerlink" title="2、单片机用途"></a>2、单片机用途</h2><p>（1）智能仪器仪表，如示波器、万用表</p>
+<p>（2）机电一体化产品，如机器人、数控机床、打印机</p>
+<p>（3）实时工业控制，如电机转速控制</p>
+<p>（4）家用电器，如冰箱、洗衣机</p>
+<h2 id="3、单片机应用系统"><a href="#3、单片机应用系统" class="headerlink" title="3、单片机应用系统"></a>3、单片机应用系统</h2><p>单片机应用系统 = 软件 + 硬件（单片机 + 接口电路及外部设备）</p>
+<p>单片机应用系统是以单片机为核心，配以输入、输出、显示、控制等外围电路和相应的控制、驱动软件，能完成一种或多种功能的使用系统。</p>
+<h2 id="4、MCS-51系列单片机组成结构"><a href="#4、MCS-51系列单片机组成结构" class="headerlink" title="4、MCS-51系列单片机组成结构"></a>4、MCS-51 系列单片机组成结构</h2><p>（1）中央处理器 - CPU：8 位数据宽度，能同时处理 8 位二进制数据或代码。</p>
+<p>（2）数据存储器 - RAM：8051 单片机有 128B 数据存储器和 21 个专用寄存器，用户能使用的只有 128B，专用寄存器通常用于存放控制指令数据，不能存放用户数据。</p>
+<p>（3）程序存储器 - ROM：8051 单片机有 4KB 程序存储器，掉电后数据不会丢失。</p>
+<p>（4）定时 / 计数器：8051 单片机有 2 个 16 位的可编程定时 / 计数器。</p>
+<p>（5）并行 I/O 口：8051 单片机有 4 个 8 位的并行 I/O 口（P0/P1/P2/P3）。</p>
+<p>（6）全双工串行口：8051 单片机有一个全双工异步串行通信口。</p>
+<p>（7）中断系统：8051 单片机有 5 个中断源（2 个外中断、2 个定时 / 计数器中断和 1 个串行中断）。</p>
+<p>（8）时钟电路：8051 单片机有时钟电路，只需外接晶振和震荡电容，用于产生时序脉冲供整个单片机运行。</p>
+<h2 id="5、MCS-51系列单片机引脚介绍"><a href="#5、MCS-51系列单片机引脚介绍" class="headerlink" title="5、MCS-51系列单片机引脚介绍"></a>5、MCS-51 系列单片机引脚介绍</h2><p><img src="https://img2020.cnblogs.com/blog/1729775/202102/1729775-20210221184228988-605752706.png" alt="img"></p>
+<p> （1）电源：40 引脚 Vcc 接电源 + 5V，20 引脚 GND 接地。</p>
+<p>（2）时钟：19 引脚 XTAL1 是内部振荡电路输入端。当采用外部振荡器时，此引脚接地。18 引脚 XTAL2 是内部振荡电路输出端。当采用外部振荡器时，此引脚接外部振荡源。</p>
+<p>（3）控制总线：</p>
+<p>（4）I/O 线：</p>
+<p>P0 口（32~39 引脚）双向数据总线和低 8 位地址总线。</p>
+<p>P1 口（1~8 引脚）准双向输入 / 输出口。</p>
+<p>P2 口（21~28 引脚）准双向输入 / 输出口，访问外部存储器时用作高 8 位地址总线。</p>
+<p>P3 口（10~17 引脚）准双向输入 / 输出口。P3 口还具第二功能。</p>
+<p><img src="https://img2020.cnblogs.com/blog/1729775/202102/1729775-20210221194123546-1287876210.png" alt="img"></p>
+<h2 id="6、MCS-51系列单片机存储器结构"><a href="#6、MCS-51系列单片机存储器结构" class="headerlink" title="6、MCS-51系列单片机存储器结构"></a>6、MCS-51 系列单片机存储器结构</h2><p>程序存储器：存放程序和表格常数。</p>
+<p>数据存储器：存放程序运行所需要的参数和运行结果。</p>
+<p>从物理存储介质来看，MCS-51 系列单片机共有 4 种存储空间：片内程序存储器、片外程序存储器、片内数据存储器和片外数据存储器。</p>
+<p>从逻辑地址空间来看，MCS-51 系列单片机可分为 3 部分：程序存储器、片外数据存储器和片内数据存储器。</p>
+<p>单片机复位后，程序计数器 PC 为 0000H，系统从 0000H 单元开始取指令并执行。</p>
+<h2 id="7、单片机最小系统电路"><a href="#7、单片机最小系统电路" class="headerlink" title="7、单片机最小系统电路"></a>7、单片机最小系统电路</h2><p>单片机最小系统电路是指单片机工作不可或缺的最基本连接电路。</p>
+<p><strong>单片机最小系统电路包括单片机芯片、电源电路、时钟电路和复位电路四部分。</strong></p>
+<p>（1）时钟电路。单片机内部有一个高增益反向放大器，其频率范围为 1.2<del>12MHz，XTAL1 和 XTAL2 分别为放大器的输入端和输出端。XTAL1 和 XTAL2 外接定时元件就能构成自激振荡电路。定时元件通常采用石英晶体和电容组成的并联谐振电路。电容 C1 和 C2 主要起频率微调作用，电容取值 30</del>40pF。</p>
+<p><strong>振荡周期：振荡源的周期，若内部产生，则为石英晶体的振荡周期。</strong></p>
+<p><strong>时钟周期：振荡周期的两倍。</strong></p>
+<p><strong>机器周期：等于 6 个时钟周期，12 个振荡周期。</strong></p>
+<p><strong>指令周期：完成一条操作所需要的全部时间，每条指令的执行时间都是一个或几个机器周期组成。</strong></p>
+<p>例题：单片机采用内部时钟，晶振频率 f 为 6MHz，则：</p>
+<p>振荡周期 = 1/6 MHz=1/6 us</p>
+<p>时钟周期 = 1/3 us</p>
+<p>机器周期 = 2 us</p>
+<p>指令周期 = 机器周期的 1<del>4 倍 = 2</del>8us</p>
+<p>（2）复位电路</p>
+<p>主要分为两种：上电复位和按键复位电路。</p>
+
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+<br>
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　👣　步履不止　　-------------</div>
+<br>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/31824.html" rel="prev" title="markdown 介绍和使用说明">
+                  <i class="fa fa-angle-left"></i> markdown 介绍和使用说明
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/12403.html" rel="next" title="查看 gcc 的宏定义">
+                  查看 gcc 的宏定义 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heartbeat"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">paopao</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">75k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:33</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyw09gPog","appkey":"4488e6b82bfe3d819f4971a5e5c115f4","count":true}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-100.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-50.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="点击阅读全文查看详细内容">
+<meta property="og:type" content="article">
+<meta property="og:title" content="v2ray 多用户配置">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/21a98812.html">
+<meta property="og:site_name" content="PaoPao&#39;s Blog">
+<meta property="og:description" content="点击阅读全文查看详细内容">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-01-22T14:33:22.000Z">
+<meta property="article:modified_time" content="2022-04-02T02:12:37.647Z">
+<meta property="article:author" content="paopao">
+<meta property="article:tag" content="V2Ray">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://liu-paopao.github.io/posts/21a98812.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/21a98812.html","path":"posts/21a98812.html","title":"v2ray 多用户配置"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>v2ray 多用户配置 | PaoPao's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">PaoPao's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#v2ray%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">v2ray 多用户配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E7%89%88%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE"><span class="nav-number">1.1.</span> <span class="nav-text">普通版多用户配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E7%AB%AF%E5%8F%A3%E4%B8%8D%E5%90%8Cid"><span class="nav-number">1.1.1.</span> <span class="nav-text">同端口不同 id</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E7%AB%AF%E5%8F%A3%E4%B8%8D%E5%90%8Cid"><span class="nav-number">1.1.2.</span> <span class="nav-text">不同端口不同 id</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%A6%E4%BC%AA%E8%A3%85%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.</span> <span class="nav-text">带伪装多用户配置</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="paopao"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">paopao</p>
+  <div class="site-description" itemprop="description">Stay hungry, stay foolish.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+<!-- none-select-br -->
+
+<p></p>
+
+<!-- hitokoto -->
+
+<div class="hitokoto-title">
+	<i class="fa fa-paragraph"></i>
+	<b>一言</b>
+</div>
+
+<div id="hitokoto">:D 获取中...</div>
+<i id="hitofrom">:D 获取中...</i>
+
+<script src="https://cdn.jsdelivr.net/npm/bluebird@3/js/browser/bluebird.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@2.0.3/fetch.min.js"></script>
+<script>
+  fetch('https://v1.hitokoto.cn')
+    .then(function (res){
+      return res.json();
+    })
+    .then(function (data) {
+      var hitokoto = document.getElementById('hitokoto');
+      hitokoto.innerText = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + data.hitokoto;
+      var hitofrom = document.getElementById('hitofrom');
+      hitofrom.innerText = "——" + data.from + '\xa0'; 
+    })
+    .catch(function (err) {
+      console.error(err);
+    })
+</script>
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/21a98812.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="v2ray 多用户配置 | PaoPao's Blog">
+      <meta itemprop="description" content="点击阅读全文查看详细内容">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          v2ray 多用户配置
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-01-22 22:33:22" itemprop="dateCreated datePublished" datetime="2022-01-22T22:33:22+08:00">2022-01-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-04-02 10:12:37" itemprop="dateModified" datetime="2022-04-02T10:12:37+08:00">2022-04-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%85%B6%E4%BB%96/" itemprop="url" rel="index"><span itemprop="name">其他</span></a>
+        </span>
+    </span>
+
+  
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">点击阅读全文查看详细内容</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="v2ray多用户配置"><a href="#v2ray多用户配置" class="headerlink" title="v2ray多用户配置"></a>v2ray 多用户配置</h1><blockquote>
+<p>本文转载自：<a target="_blank" rel="noopener" href="https://v2raytech.com/v2ray-multiple-users/%EF%BC%8C%E5%A6%82%E6%96%87%E4%B8%AD%E5%86%85%E5%AE%B9%E6%9C%89%E9%94%99%E8%AF%AF%E8%AF%B7%E5%88%B0%E5%8E%9F%E6%96%87%E6%9F%A5%E7%9C%8B%E5%8E%9F%E5%A7%8B%E7%89%88(%E6%9C%80%E6%96%B0%E7%89%88)">https://v2raytech.com/v2ray-multiple-users/，如文中内容有错误请到原文查看原始版 (最新版)</a></p>
+</blockquote>
+<blockquote>
+<p>如有问题，欢迎到 <a target="_blank" rel="noopener" href="https://hijk.club/">网络跳越论坛</a> 或 TG 群组 <a target="_blank" rel="noopener" href="https://t.me/hijkclub">https://t.me/hijkclub</a> 交流</p>
+</blockquote>
+<p>部分网友自行搭建好 v2ray 科学上网环境后，不好意思拒绝朋友的分享请求，所以想设置一个不同的端口或者 id 再分享。类似的需求 v2ray 都是支持的，配置起来也不算麻烦。本文就 v2ray 普通版、伪装版分别介绍 v2ray 多用户配置。</p>
+<p>注意：自行更改配置文件需要用到 vi/vim/nano 等编辑器，或者把配置文件下载到本地修改，修改完再上传到服务端。下载和上传教程请参考：<a target="_blank" rel="noopener" href="https://v2xtls.org/bitvise%E8%BF%9E%E6%8E%A5linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%99%E7%A8%8B/">Bitvise 连接 Linux 服务器教程</a> (Windows 用户)、<a target="_blank" rel="noopener" href="https://v2xtls.org/mac%E7%94%B5%E8%84%91%E8%BF%9E%E6%8E%A5linux%E6%95%99%E7%A8%8B/">Mac 电脑连接 Linux 教程</a> (Mac 用户)。</p>
+<h2 id="普通版多用户配置"><a href="#普通版多用户配置" class="headerlink" title="普通版多用户配置"></a>普通版多用户配置</h2><p><a target="_blank" rel="noopener" href="https://v2xtls.org/v2ray%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC/">v2ray 一键脚本</a> 运行完后，会输出配置文件路径，默认是 <code>/etc/v2ray/config.json</code>，其内容类似这样：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">{</span><br><span class="line">  "log": {</span><br><span class="line">    "loglevel": "info",</span><br><span class="line">    "access": "/var/log/v2ray/access.log",</span><br><span class="line">    "error": "/var/log/v2ray/error.log"</span><br><span class="line">  },</span><br><span class="line">  "inbounds": [{</span><br><span class="line">    "port": 12345,</span><br><span class="line">    "protocol": "vmess",</span><br><span class="line">    "settings": {</span><br><span class="line">      "clients": [</span><br><span class="line">        {</span><br><span class="line">          "id": "6be0aa25-09c1-4d8b-a96f-75cd3485021f",</span><br><span class="line">          "level": 1,</span><br><span class="line">          "alterId": 53</span><br><span class="line">        }</span><br><span class="line">      ]</span><br><span class="line">    }</span><br><span class="line">  }],</span><br><span class="line">  "outbounds": [{</span><br><span class="line">    "protocol": "freedom",</span><br><span class="line">    "settings": {}</span><br><span class="line">  },{</span><br><span class="line">    "protocol": "blackhole",</span><br><span class="line">    "settings": {},</span><br><span class="line">    "tag": "blocked"</span><br><span class="line">  }],</span><br><span class="line">  "routing": {</span><br><span class="line">    "rules": [</span><br><span class="line">      {</span><br><span class="line">        "type": "field",</span><br><span class="line">        "ip": ["geoip:private"],</span><br><span class="line">        "outboundTag": "blocked"</span><br><span class="line">      }</span><br><span class="line">    ]</span><br><span class="line">  }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>下文教程的修改都是参考这个文件，如果出现问题，请注意与原来文件的差异。</p>
+<p>v2ray 多用户分成两种：同端口不同 id，不同端口不同 id。v2ray 两种类型都支持，接下来分别做介绍。</p>
+<h3 id="同端口不同id"><a href="#同端口不同id" class="headerlink" title="同端口不同id"></a>同端口不同 id</h3><p>这是最简单的配置多用户方式。方法是编辑 <code>/etc/v2ray/config.json</code> 文件，在”<strong>clients</strong>“一节中增加新增用户配置。例如在上面配置基础上增加一个用户：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">{</span><br><span class="line">  "log": {</span><br><span class="line">    "loglevel": "info",</span><br><span class="line">    "access": "/var/log/v2ray/access.log",</span><br><span class="line">    "error": "/var/log/v2ray/error.log"</span><br><span class="line">  },</span><br><span class="line">  "inbounds": [{</span><br><span class="line">    "port": 12345,</span><br><span class="line">    "protocol": "vmess",</span><br><span class="line">    "settings": {</span><br><span class="line">      "clients": [</span><br><span class="line">        {</span><br><span class="line">          "id": "6be0aa25-09c1-4d8b-a96f-75cd3485021f",</span><br><span class="line">          "level": 1,</span><br><span class="line">          "alterId": 53</span><br><span class="line">        }, # 逗号不能少</span><br><span class="line">        # 下面是新增的内容</span><br><span class="line">        {</span><br><span class="line">          "id": "2a1292fd-07be-37e7-af20-57668b4a546a",  # id可以用 /usr/bin/v2ray/v2ctl uuid生成</span><br><span class="line">          "level": 1, # 这个不用改</span><br><span class="line">          "alterId": 63 # 建议50-150之间的一个整数</span><br><span class="line">        }</span><br><span class="line">        # 新增内容结束</span><br><span class="line">      ]</span><br><span class="line">    }</span><br><span class="line">  }],</span><br><span class="line">  # 下面的内容保持不变</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>注意：</strong>“#” 和后面的东西都不能出现在配置文件中，上面只是为了解释说明。</p>
+<p>编辑好文件后，重启 v2ray：<code>systemctl restart v2ray</code>。如果命令失败，或者 <code>netstat -nltp | grep v2ray</code> 输出为空，说明配置文件有错误，请仔细检查，改好后再重启。</p>
+<p>接下来就可以用新的 id 和 alterId 配置客户端，其余信息保持不变。</p>
+<h3 id="不同端口不同id"><a href="#不同端口不同id" class="headerlink" title="不同端口不同id"></a>不同端口不同 id</h3><p>如果希望端口也不一样，请按照如下步骤做：</p>
+<p>\1. 首先编辑 <code>/etc/v2ray/config.json</code> 文件，按照”<strong>inbounds</strong>“格式新增入口和用户。例如新增一个端口和用户后，配置文件变成：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">{</span><br><span class="line">  "log": {</span><br><span class="line">    "loglevel": "info",</span><br><span class="line">    "access": "/var/log/v2ray/access.log",</span><br><span class="line">    "error": "/var/log/v2ray/error.log"</span><br><span class="line">  },</span><br><span class="line">  "inbounds": [{</span><br><span class="line">    "port": 12345,</span><br><span class="line">    "protocol": "vmess",</span><br><span class="line">    "settings": {</span><br><span class="line">      "clients": [</span><br><span class="line">        {</span><br><span class="line">          "id": "6be0aa25-09c1-4d8b-a96f-75cd3485021f",</span><br><span class="line">          "level": 1,</span><br><span class="line">          "alterId": 53</span><br><span class="line">        }</span><br><span class="line">      ]</span><br><span class="line">    }</span><br><span class="line">  }, # 逗号不能省，原来这里是"}],"</span><br><span class="line">  # 以下是新增的配置</span><br><span class="line">  {</span><br><span class="line">    "port": 54321, # 端口是1000-65535之间的一个整数</span><br><span class="line">    "protocol": "vmess", # 也可以改成其他协议，如果你知道怎么配置的话</span><br><span class="line">    "settings": {</span><br><span class="line">      "clients": [</span><br><span class="line">        {</span><br><span class="line">          "id": "24813255-228d-b0e0-c3fa-e5d4c9defda1", # id可以用 /usr/bin/v2ray/v2ctl uuid生成</span><br><span class="line">          "level": 1, # 0或1都可以</span><br><span class="line">          "alterId": 57 # 建议50-150之间的一个整数</span><br><span class="line">        }</span><br><span class="line">      ]</span><br><span class="line">    }</span><br><span class="line">  }],</span><br><span class="line">  # 新增内容结束</span><br><span class="line">  # 下面的内容保持不变</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>注意：</strong>“#” 和后面的东西都不能出现在配置文件中，上面只是为了解释说明。</p>
+<p>编辑好文件后，重启 v2ray：<code>systemctl restart v2ray</code>。如果命令失败，或者 <code>netstat -nltp | grep v2ray</code> 输出为空，说明配置文件有错误，请仔细检查，改好后再重启。</p>
+<p>\2. 设置防火墙放行新增的端口。CentOS 系统命令是：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --permanent --add-port=54321/tcp # 注意：54321要改成你的端口号</span><br><span class="line">firewall-cmd --permanent --add-port=54321/udp # 注意：54321要改成你的端口号</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Ubuntu 系统命令是：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ufw allow 54321/tcp # 注意：54321要改成你的端口</span><br><span class="line">ufw allow 54321/udp # 注意：54321要改成你的端口</span><br></pre></td></tr></tbody></table></figure>
+
+<p>接下来用新的端口、id 和 alterId 配置客户端，其余信息保持不变。</p>
+<h2 id="带伪装多用户配置"><a href="#带伪装多用户配置" class="headerlink" title="带伪装多用户配置"></a>带伪装多用户配置</h2><p><strong>同端口不同 id 的配置和普通版操作方法一样</strong>，配置好后重启 v2ray 就行了，这里不再重复。</p>
+<p>接下来说说不同端口不同 id 的情形。伪装有了 Nginx 的介入，所以有多种情况，这里只介绍最简单的一种实现方式。</p>
+<ol>
+<li><p>编辑 <code>/etc/v2ray/config.json</code> 文件，按照 <a target="_blank" rel="noopener" href="https://v2xtls.org/v2ray%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE/#single_port">普通版同端口不同 id</a> 中的方法添加用户；</p>
+</li>
+<li><p>编辑 <code>/etc/nginx/conf.d/你的域名.conf</code> 文件，找到 “**listen 443 ssl http2;**” 这一行，在这行下面添加 “listen 新的端口号 ssl http2;” 一行（新的端口号要改成整数，例如 8443，不能是 443）。然后保存文件， <code>nginx -t</code> 检查配置有没有错误，没有错误的话重启 Nginx：<code>systemctl restart nginx</code>；</p>
+</li>
+<li><p>设置防火墙放行端口，请参考 <a target="_blank" rel="noopener" href="https://v2xtls.org/v2ray%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE/#set_firewall">普通版设置防火墙</a> 中的命令。</p>
+</li>
+</ol>
+<p>接下来用新的端口、id 和 alterId 配置客户端，其余信息保持不变。</p>
+<p>如果你想添加多个端口或多个用户，重复上面的过程就可以了。</p>
+
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+<br>
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　👣　步履不止　　-------------</div>
+<br>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/V2Ray/" rel="tag"><i class="fa fa-tag"></i> V2Ray</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/b53da12e.html" rel="prev" title="在 Ubuntu20.04 上安装配置私人网盘 nextcloud">
+                  <i class="fa fa-angle-left"></i> 在 Ubuntu20.04 上安装配置私人网盘 nextcloud
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/50c08953.html" rel="next" title="将 git 信息编译进可执行程序">
+                  将 git 信息编译进可执行程序 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heartbeat"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">paopao</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">75k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:33</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyw09gPog","appkey":"4488e6b82bfe3d819f4971a5e5c115f4","count":true}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+
+</body>
+</html>

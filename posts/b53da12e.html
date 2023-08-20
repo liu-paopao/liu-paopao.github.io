@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-100.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-50.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="前提条件 具有 sudo 权限的用户 具有 example.com 域名，并成功解析到当前 ip（可选）  安装 Nextcloud这里使用 snap 包管理工具安装 Nextcloud，该打包系统可以安装自动处理底层系统的 snap 包，而不是安装和配置 Web 和数据库服务器，然后配置 Nextcloud 应用程序在其上运行，非常方便，适合不爱折腾的小白。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在 Ubuntu20.04 上安装配置私人网盘 nextcloud">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/b53da12e.html">
+<meta property="og:site_name" content="PaoPao&#39;s Blog">
+<meta property="og:description" content="前提条件 具有 sudo 权限的用户 具有 example.com 域名，并成功解析到当前 ip（可选）  安装 Nextcloud这里使用 snap 包管理工具安装 Nextcloud，该打包系统可以安装自动处理底层系统的 snap 包，而不是安装和配置 Web 和数据库服务器，然后配置 Nextcloud 应用程序在其上运行，非常方便，适合不爱折腾的小白。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-01-18T09:30:49.000Z">
+<meta property="article:modified_time" content="2023-06-20T08:52:29.385Z">
+<meta property="article:author" content="paopao">
+<meta property="article:tag" content="私人网盘">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://liu-paopao.github.io/posts/b53da12e.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/b53da12e.html","path":"posts/b53da12e.html","title":"在 Ubuntu20.04 上安装配置私人网盘 nextcloud"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>在 Ubuntu20.04 上安装配置私人网盘 nextcloud | PaoPao's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">PaoPao's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">前提条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Nextcloud"><span class="nav-number">2.</span> <span class="nav-text">安装 Nextcloud</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87snap-install%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.</span> <span class="nav-text">通过 snap install 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87snap-changes%E6%9F%A5%E7%9C%8B"><span class="nav-number">2.2.</span> <span class="nav-text">通过 snap changes 查看</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96snap%E5%85%B6%E4%BB%96%E4%BF%A1%E6%81%AF"><span class="nav-number">2.3.</span> <span class="nav-text">获取 snap 其他信息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8SSL%E4%BF%9D%E6%8A%A4Nextcloud-Web%E7%95%8C%E9%9D%A2"><span class="nav-number">3.</span> <span class="nav-text">使用 SSL 保护 Nextcloud Web 界面</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%89%E9%A1%B91%EF%BC%9A%E4%BD%BF%E7%94%A8Let%E7%9A%84%E5%8A%A0%E5%AF%86%E8%AE%BE%E7%BD%AESSL"><span class="nav-number">3.1.</span> <span class="nav-text">选项 1：使用 Let 的加密设置 SSL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%89%E9%A1%B92%EF%BC%9A%E4%BD%BF%E7%94%A8%E8%87%AA%E7%AD%BE%E5%90%8D%E8%AF%81%E4%B9%A6%E8%AE%BE%E7%BD%AESSL"><span class="nav-number">3.2.</span> <span class="nav-text">选项 2：使用自签名证书设置 SSL</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95Nextcloud-Web%E7%95%8C%E9%9D%A2"><span class="nav-number">4.</span> <span class="nav-text">登录 Nextcloud Web 界面</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="paopao"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">paopao</p>
+  <div class="site-description" itemprop="description">Stay hungry, stay foolish.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+<!-- none-select-br -->
+
+<p></p>
+
+<!-- hitokoto -->
+
+<div class="hitokoto-title">
+	<i class="fa fa-paragraph"></i>
+	<b>一言</b>
+</div>
+
+<div id="hitokoto">:D 获取中...</div>
+<i id="hitofrom">:D 获取中...</i>
+
+<script src="https://cdn.jsdelivr.net/npm/bluebird@3/js/browser/bluebird.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@2.0.3/fetch.min.js"></script>
+<script>
+  fetch('https://v1.hitokoto.cn')
+    .then(function (res){
+      return res.json();
+    })
+    .then(function (data) {
+      var hitokoto = document.getElementById('hitokoto');
+      hitokoto.innerText = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + data.hitokoto;
+      var hitofrom = document.getElementById('hitofrom');
+      hitofrom.innerText = "——" + data.from + '\xa0'; 
+    })
+    .catch(function (err) {
+      console.error(err);
+    })
+</script>
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/b53da12e.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="在 Ubuntu20.04 上安装配置私人网盘 nextcloud | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          在 Ubuntu20.04 上安装配置私人网盘 nextcloud
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-01-18 17:30:49" itemprop="dateCreated datePublished" datetime="2022-01-18T17:30:49+08:00">2022-01-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-06-20 16:52:29" itemprop="dateModified" datetime="2023-06-20T16:52:29+08:00">2023-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%98%E8%85%BE%E6%97%A5%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">折腾日记</span></a>
+        </span>
+    </span>
+
+  
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="前提条件"><a href="#前提条件" class="headerlink" title="前提条件"></a>前提条件</h2><ol>
+<li>具有 sudo 权限的用户</li>
+<li>具有 example.com 域名，并成功解析到当前 ip（可选）</li>
+</ol>
+<h2 id="安装Nextcloud"><a href="#安装Nextcloud" class="headerlink" title="安装Nextcloud"></a>安装 Nextcloud</h2><p>这里使用 <code>snap</code> 包管理工具安装 Nextcloud，该打包系统可以安装自动处理底层系统的 <code>snap</code> 包，而不是安装和配置 Web 和数据库服务器，然后配置 Nextcloud 应用程序在其上运行，非常方便，适合不爱折腾的小白。</p>
+<span id="more"></span>
+
+<h3 id="通过snap-install安装"><a href="#通过snap-install安装" class="headerlink" title="通过snap install安装"></a>通过 <code>snap install</code> 安装</h3><p>输入命令：  </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo snap install nextcloud</span><br></pre></td></tr></tbody></table></figure>
+<p>将下载 Nextcloud  snap 包并将其安装在系统上。</p>
+<h3 id="通过snap-changes查看"><a href="#通过snap-changes查看" class="headerlink" title="通过snap changes查看"></a>通过 <code>snap changes</code> 查看</h3><p>Nextcloud 软件包安装到服务器后，可以通过列出与 <code>snap</code> 关联的更改来确认安装过程是否成功：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snap changes nextcloud</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="获取snap其他信息"><a href="#获取snap其他信息" class="headerlink" title="获取snap其他信息"></a>获取 <code>snap</code> 其他信息</h3><p><code>snap info</code> 命令可以显示描述，可用的 Nextcloud 管理命令，以及正在跟踪的已安装版本和快照通道：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snap info nextcloud</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="使用SSL保护Nextcloud-Web界面"><a href="#使用SSL保护Nextcloud-Web界面" class="headerlink" title="使用SSL保护Nextcloud Web界面"></a>使用 SSL 保护 Nextcloud Web 界面</h2><p>在我们开始使用 Nextcloud 之前，我们需要保护 Web 界面。</p>
+<p>如果您的域名与 Nextcloud 服务器关联，则 Nextcloud snap 可以帮助您从 <a target="_blank" rel="noopener" href="https://letsencrypt.org/">Let 的加密中</a>获取和配置受信任的 SSL 证书。 如果您的 Nextcloud 服务器<em>没有</em>域名，则 Nextcloud 可以配置自签名证书，该证书将加密您的 Web 流量，但无法验证您的服务器的身份。</p>
+<h3 id="选项1：使用Let的加密设置SSL"><a href="#选项1：使用Let的加密设置SSL" class="headerlink" title="选项1：使用Let的加密设置SSL"></a>选项 1：使用 Let 的加密设置 SSL</h3><p>如果域名与 Nextcloud 服务器相关联，则保护 Web 界面的最佳选择是获取 Let 的加密 SSL 证书。</p>
+<p>首先打开防火墙中允许加密用于验证域所有权的端口，将 Nextcloud 登录页面可公开访问，但由于已经配置了管理员帐户，因此没有人能够劫持安装：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw allow 80,443/tcp</span><br></pre></td></tr></tbody></table></figure>
+
+<p>接下来，输入以下内容来请求 Let’s Encrypt 证书：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nextcloud.enable-https lets-encrypt</span><br></pre></td></tr></tbody></table></figure>
+
+<p>首先会询问服务器是否满足从 Let’s Encrypt 服务请求证书所需的条件：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">OutputIn order for Let's Encrypt to verify that you actually own the</span><br><span class="line">domain(s) for which you're requesting a certificate, there are a</span><br><span class="line">number of requirements of which you need to be aware:</span><br><span class="line"></span><br><span class="line">1. In order to register with the Let's Encrypt ACME server, you must</span><br><span class="line">   agree to the currently-in-effect Subscriber Agreement located</span><br><span class="line">   here:</span><br><span class="line"></span><br><span class="line">       https://letsencrypt.org/repository/</span><br><span class="line"></span><br><span class="line">   By continuing to use this tool you agree to these terms. Please</span><br><span class="line">   cancel now if otherwise.</span><br><span class="line"></span><br><span class="line">2. You must have the domain name(s) for which you want certificates</span><br><span class="line">   pointing at the external IP address of this machine.</span><br><span class="line"></span><br><span class="line">3. Both ports 80 and 443 on the external IP address of this machine</span><br><span class="line">   must point to this machine (e.g. port forwarding might need to be</span><br><span class="line">   setup on your router).</span><br><span class="line"></span><br><span class="line">Have you met these requirements? (y/n)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>输入 <strong>y</strong> 继续。</p>
+<p>接下来，系统会要求提供用于恢复操作的电子邮件地址：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OutputPlease enter an email address (for urgent notices or key recovery): your_email@domain.com</span><br></pre></td></tr></tbody></table></figure>
+
+<p>最后，输入与 Nextcloud 服务器关联的域名：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OutputPlease enter your domain name(s) (space-separated): example.com</span><br></pre></td></tr></tbody></table></figure>
+
+<p>您的 Let’s Encrypt 证书将被请求，并且如果一切顺利，将重新启动内部 Apache 实例以立即实施 SSL：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">OutputAttempting to obtain certificates... done</span><br><span class="line">Restarting apache... done</span><br></pre></td></tr></tbody></table></figure>
+
+<p>到这里就说明设置成功 。</p>
+<h3 id="选项2：使用自签名证书设置SSL"><a href="#选项2：使用自签名证书设置SSL" class="headerlink" title="选项2：使用自签名证书设置SSL"></a>选项 2：使用自签名证书设置 SSL</h3><p>如果您的 Nextcloud 服务器<em>没有</em>域名，您仍然可以通过生成自签名 SSL 证书来保护 Web 界面。 此证书将允许通过加密连接访问 Web 界面，但无法验证服务器的身份，因此您的浏览器可能会显示警告。</p>
+<p>要生成自签名证书并配置 Nextcloud 以使用它，请键入：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo nextcloud.enable-https self-signed</span><br><span class="line">OutputGenerating key and self-signed certificate... done</span><br><span class="line">Restarting apache... done</span><br></pre></td></tr></tbody></table></figure>
+
+<p>以上输出表明 Nextcloud 生成并启用了自签名证书。</p>
+<p>现在接口是安全的，打开防火墙中的 Web 端口以允许访问 Web 界面：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw allow 80,443/tcp</span><br></pre></td></tr></tbody></table></figure>
+
+<p>您现在已准备好第一次登录 Nextcloud。</p>
+<h2 id="登录Nextcloud-Web界面"><a href="#登录Nextcloud-Web界面" class="headerlink" title="登录Nextcloud Web界面"></a>登录 Nextcloud Web 界面</h2><p>现在已配置 Nextcloud，请在 Web 浏览器中访问服务器的域名或 IP 地址：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://example.com</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>注意：</strong>如果设置自签名 SSL 证书，则浏览器可能会显示连接不安全的警告，因为服务器的证书未由可识别的证书颁发机构签名。 这适用于自签名证书，因此请随意点击警告以继续访问该站点。输入管理员帐户后将进入 Nextcloud 页面。 </p>
+
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+<br>
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　👣　步履不止　　-------------</div>
+<br>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%A7%81%E4%BA%BA%E7%BD%91%E7%9B%98/" rel="tag"><i class="fa fa-tag"></i> 私人网盘</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/121d06ee.html" rel="prev" title="如何通过 WebDAV 将 Nextcloud 挂载到本地">
+                  <i class="fa fa-angle-left"></i> 如何通过 WebDAV 将 Nextcloud 挂载到本地
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/21a98812.html" rel="next" title="v2ray 多用户配置">
+                  v2ray 多用户配置 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heartbeat"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">paopao</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">75k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:33</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyw09gPog","appkey":"4488e6b82bfe3d819f4971a5e5c115f4","count":true}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+
+</body>
+</html>

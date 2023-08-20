@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-100.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-50.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="基于 Next 主题 V8.10.1，第一波美化修改记录。 主要修改为：  添加文章结束分割线 添加上吊猫个性化回到顶部 添加畅言评论系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Next 主题美化修改记录（一）">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/d87f7e0c.html">
+<meta property="og:site_name" content="PaoPao&#39;s Blog">
+<meta property="og:description" content="基于 Next 主题 V8.10.1，第一波美化修改记录。 主要修改为：  添加文章结束分割线 添加上吊猫个性化回到顶部 添加畅言评论系统">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-01T09:16:35.000Z">
+<meta property="article:modified_time" content="2023-06-20T08:57:35.753Z">
+<meta property="article:author" content="paopao">
+<meta property="article:tag" content="Hexo">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://liu-paopao.github.io/posts/d87f7e0c.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/d87f7e0c.html","path":"posts/d87f7e0c.html","title":"Next 主题美化修改记录（一）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Next 主题美化修改记录（一） | PaoPao's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">PaoPao's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#git-status-%E7%BB%93%E6%9E%9C"><span class="nav-number">1.</span> <span class="nav-text">git status 结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-diff-%E7%BB%93%E6%9E%9C"><span class="nav-number">2.</span> <span class="nav-text">git diff 结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#config-yml-%E4%BF%AE%E6%94%B9%E6%83%85%E5%86%B5"><span class="nav-number">3.</span> <span class="nav-text">_config.yml 修改情况</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="paopao"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">paopao</p>
+  <div class="site-description" itemprop="description">Stay hungry, stay foolish.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+<!-- none-select-br -->
+
+<p></p>
+
+<!-- hitokoto -->
+
+<div class="hitokoto-title">
+	<i class="fa fa-paragraph"></i>
+	<b>一言</b>
+</div>
+
+<div id="hitokoto">:D 获取中...</div>
+<i id="hitofrom">:D 获取中...</i>
+
+<script src="https://cdn.jsdelivr.net/npm/bluebird@3/js/browser/bluebird.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@2.0.3/fetch.min.js"></script>
+<script>
+  fetch('https://v1.hitokoto.cn')
+    .then(function (res){
+      return res.json();
+    })
+    .then(function (data) {
+      var hitokoto = document.getElementById('hitokoto');
+      hitokoto.innerText = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + data.hitokoto;
+      var hitofrom = document.getElementById('hitofrom');
+      hitofrom.innerText = "——" + data.from + '\xa0'; 
+    })
+    .catch(function (err) {
+      console.error(err);
+    })
+</script>
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/d87f7e0c.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Next 主题美化修改记录（一） | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Next 主题美化修改记录（一）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-04-01 17:16:35" itemprop="dateCreated datePublished" datetime="2022-04-01T17:16:35+08:00">2022-04-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-06-20 16:57:35" itemprop="dateModified" datetime="2023-06-20T16:57:35+08:00">2023-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%98%E8%85%BE%E6%97%A5%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">折腾日记</span></a>
+        </span>
+    </span>
+
+  
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>692</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>基于 Next 主题 V8.10.1，第一波美化修改记录。</p>
+<p>主要修改为：</p>
+<ul>
+<li>添加文章结束分割线</li>
+<li>添加上吊猫个性化回到顶部</li>
+<li>添加畅言评论系统</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="git-status-结果"><a href="#git-status-结果" class="headerlink" title="git status 结果"></a>git status 结果</h2><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Changed files:</span><br><span class="line">	modified:   layout/_macro/post.njk</span><br><span class="line">	modified:   layout/_partials/footer.njk</span><br><span class="line">	modified:   layout/_partials/page/tags.njk</span><br><span class="line">	modified:   source/css/_common/components/back-to-top.styl</span><br><span class="line"></span><br><span class="line">Untracked files:</span><br><span class="line">	layout/_macro/passage-end-tag.njk</span><br></pre></td></tr></tbody></table></figure>
+<p>新文件 layout/_macro/passage-end-tag.njk 内容：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    {% if not is_index %}</span><br><span class="line">        &lt;div style="text-align:center;color: #ccc;font-size:14px;"&gt;-------------     本文结束　&lt;i class="fa fa-heartbeat"&gt;&lt;/i&gt;　步履不止     -------------&lt;/div&gt;</span><br><span class="line">    {% endif %}</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="git-diff-结果"><a href="#git-diff-结果" class="headerlink" title="git diff 结果"></a>git diff 结果</h2><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line">diff --git a/layout/_macro/post.njk b/layout/_macro/post.njk</span><br><span class="line">index 27851de..6c994b4 100644</span><br><span class="line">--- a/layout/_macro/post.njk</span><br><span class="line">+++ b/layout/_macro/post.njk</span><br><span class="line">@@ -102,6 +102,12 @@</span><br><span class="line">       {{ partial('_partials/post/post-related.njk') }}</span><br><span class="line">     {%- endif %}</span><br><span class="line"> </span><br><span class="line">+&lt;div&gt;</span><br><span class="line">+  {% if not is_index %}</span><br><span class="line">+    {% include 'passage-end-tag.njk' %}</span><br><span class="line">+  {% endif %}</span><br><span class="line">+&lt;/div&gt;</span><br><span class="line">+</span><br><span class="line">     &lt;footer class="post-footer"&gt;</span><br><span class="line">       {%- if is_index %}</span><br><span class="line">         &lt;div class="post-eof"&gt;&lt;/div&gt;</span><br><span class="line">diff --git a/layout/_partials/footer.njk b/layout/_partials/footer.njk</span><br><span class="line">index d39307a..a060418 100644</span><br><span class="line">--- a/layout/_partials/footer.njk</span><br><span class="line">+++ b/layout/_partials/footer.njk</span><br><span class="line">@@ -19,7 +19,7 @@</span><br><span class="line">   &lt;/span&gt;</span><br><span class="line">   &lt;span class="author" itemprop="copyrightHolder"&gt;{{ theme.footer.copyright or author }}&lt;/span&gt;</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line">-</span><br><span class="line">+&lt;!--</span><br><span class="line"> {%- if config.symbols_count_time.total_symbols or config.symbols_count_time.total_time %}</span><br><span class="line"> &lt;div class="wordcount"&gt;</span><br><span class="line">   {%- if config.symbols_count_time.total_symbols %}</span><br><span class="line">@@ -47,7 +47,7 @@</span><br><span class="line">   {%- endif %}</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line"> {%- endif %}</span><br><span class="line">-</span><br><span class="line">+--&gt;</span><br><span class="line"> {%- if theme.busuanzi_count.enable %}</span><br><span class="line"> &lt;div class="busuanzi-count"&gt;</span><br><span class="line">   {%- if theme.busuanzi_count.total_visitors %}</span><br><span class="line">@@ -73,14 +73,14 @@</span><br><span class="line">   {%- endif %}</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line"> {%- endif %}</span><br><span class="line">-</span><br><span class="line">+&lt;!--</span><br><span class="line"> {%- if theme.footer.powered %}</span><br><span class="line">   &lt;div class="powered-by"&gt;</span><br><span class="line">     {%- set next_site = 'https://theme-next.js.org' if theme.scheme === 'Gemini' else 'https://theme-next.js.org/' + theme.scheme | lower + '/' %}</span><br><span class="line">     {{- __('footer.powered', next_url('https://hexo.io', 'Hexo') + ' &amp; ' + next_url(next_site, 'NexT.' + theme.scheme)) }}</span><br><span class="line">   &lt;/div&gt;</span><br><span class="line"> {%- endif %}</span><br><span class="line">-</span><br><span class="line">+--&gt;</span><br><span class="line"> {%- if theme.add_this_id %}</span><br><span class="line">   &lt;div class="addthis_inline_share_toolbox"&gt;</span><br><span class="line">     &lt;script src="//s7.addthis.com/js/300/addthis_widget.js#pubid={{ theme.add_this_id }}" async="async"&gt;&lt;/script&gt;</span><br><span class="line">diff --git a/layout/_partials/page/tags.njk b/layout/_partials/page/tags.njk</span><br><span class="line">index c6e55cc..7cbc75c 100644</span><br><span class="line">--- a/layout/_partials/page/tags.njk</span><br><span class="line">+++ b/layout/_partials/page/tags.njk</span><br><span class="line">@@ -13,4 +13,4 @@</span><br><span class="line">       })</span><br><span class="line">     }}</span><br><span class="line">   &lt;/div&gt;</span><br><span class="line">-&lt;/div&gt;</span><br><span class="line">+&lt;/div&gt;</span><br><span class="line">\ No newline at end of file</span><br><span class="line">diff --git a/source/css/_common/components/back-to-top.styl b/source/css/_common/components/back-to-top.styl</span><br><span class="line">index d1c9152..89af070 100644</span><br><span class="line">--- a/source/css/_common/components/back-to-top.styl</span><br><span class="line">+++ b/source/css/_common/components/back-to-top.styl</span><br><span class="line">@@ -43,3 +43,26 @@ if (hexo-config('back2top.enable')) {</span><br><span class="line">     }</span><br><span class="line">   }</span><br><span class="line"> }</span><br><span class="line">+</span><br><span class="line">+/* 这里已经注释掉，若想生效取消注释即可，其他不用设置</span><br><span class="line">+//自定义回到顶部样式-上吊猫</span><br><span class="line">+.back-to-top {</span><br><span class="line">+  right: 60px;</span><br><span class="line">+  width: 70px;  //图片素材宽度</span><br><span class="line">+  height: 900px;  //图片素材高度</span><br><span class="line">+  top: -900px;</span><br><span class="line">+  bottom: unset;</span><br><span class="line">+  transition: all .5s ease-in-out;</span><br><span class="line">+  background: url("/images/scroll.png");</span><br><span class="line">+</span><br><span class="line">+  //隐藏箭头图标</span><br><span class="line">+  &gt; i {</span><br><span class="line">+    display: none;</span><br><span class="line">+  }</span><br><span class="line">+</span><br><span class="line">+  &amp;.back-to-top-on {</span><br><span class="line">+    bottom: unset;</span><br><span class="line">+    top: 100vh &lt; (900px + 200px) ? calc( 100vh - 900px - 200px ) : 0px;</span><br><span class="line">+  }</span><br><span class="line">+}</span><br><span class="line">+*/</span><br><span class="line">\ No newline at end of file</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="config-yml-修改情况"><a href="#config-yml-修改情况" class="headerlink" title="_config.yml 修改情况"></a>_config.yml 修改情况</h2><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">24c24</span><br><span class="line">&lt;   #sidebar: source/_data/sidebar.njk</span><br><span class="line">---</span><br><span class="line">&gt;   sidebar: source/_data/sidebar.njk</span><br><span class="line">53,54c53,54</span><br><span class="line">&lt;   small: /images/favicon-16x16-next.png</span><br><span class="line">&lt;   medium: /images/favicon-32x32-next.png</span><br><span class="line">---</span><br><span class="line">&gt;   small: /images/favicon-50.png # favicon-16x16-next.png</span><br><span class="line">&gt;   medium: /images/favicon-100.png # favicon-32x32-next.png</span><br><span class="line">98,102c98,102</span><br><span class="line">&lt;   #home: / || fa fa-home</span><br><span class="line">&lt;   #about: /about/ || fa fa-user</span><br><span class="line">&lt;   #tags: /tags/ || fa fa-tags</span><br><span class="line">&lt;   #categories: /categories/ || fa fa-th</span><br><span class="line">&lt;   #archives: /archives/ || fa fa-archive</span><br><span class="line">---</span><br><span class="line">&gt;   home: / || fa fa-home</span><br><span class="line">&gt;   categories: /categories/ || fa fa-folder-open</span><br><span class="line">&gt;   tags: /tags/ || fa fa-tags</span><br><span class="line">&gt;   archives: /archives/ || fa fa-calendar # fa fa-archive</span><br><span class="line">&gt;   about: /about/ || fa fa-user</span><br><span class="line">120,121c120,121</span><br><span class="line">&lt;   position: left</span><br><span class="line">&lt;   #position: right</span><br><span class="line">---</span><br><span class="line">&gt;   #position: left</span><br><span class="line">&gt;   position: right</span><br><span class="line">143c143</span><br><span class="line">&lt;   url: #/images/avatar.gif</span><br><span class="line">---</span><br><span class="line">&gt;   url: /images/avatar.jpg</span><br><span class="line">145c145</span><br><span class="line">&lt;   rounded: false</span><br><span class="line">---</span><br><span class="line">&gt;   rounded: true</span><br><span class="line">147c147</span><br><span class="line">&lt;   rotated: false</span><br><span class="line">---</span><br><span class="line">&gt;   rotated: true</span><br><span class="line">157,158c157,158</span><br><span class="line">&lt;   #GitHub: https://github.com/yourname || fab fa-github</span><br><span class="line">&lt;   #E-Mail: mailto:yourname@gmail.com || fa fa-envelope</span><br><span class="line">---</span><br><span class="line">&gt;   #GitHub: https://github.com/liu-paopao || fab fa-github</span><br><span class="line">&gt;   #E-Mail: mailto:liupaopao520@163.com || fa fa-envelope</span><br><span class="line">170c170</span><br><span class="line">&lt;   icons_only: false</span><br><span class="line">---</span><br><span class="line">&gt;   icons_only: true</span><br><span class="line">212c212</span><br><span class="line">&lt;     name: fa fa-heart</span><br><span class="line">---</span><br><span class="line">&gt;     name: fa fa-heartbeat</span><br><span class="line">222c222</span><br><span class="line">&lt;   powered: true</span><br><span class="line">---</span><br><span class="line">&gt;   powered: false</span><br><span class="line">262a263</span><br><span class="line">&gt; </span><br><span class="line">264c265</span><br><span class="line">&lt; tag_icon: false</span><br><span class="line">---</span><br><span class="line">&gt; tag_icon: true</span><br><span class="line">375c376</span><br><span class="line">&lt;     enable: false</span><br><span class="line">---</span><br><span class="line">&gt;     enable: true</span><br><span class="line">384c385</span><br><span class="line">&lt;   scrollpercent: false</span><br><span class="line">---</span><br><span class="line">&gt;   scrollpercent: true</span><br><span class="line">409c410</span><br><span class="line">&lt;   permalink: https://github.com/yourname</span><br><span class="line">---</span><br><span class="line">&gt;   permalink: https://github.com/liu-paopao</span><br><span class="line">529c530</span><br><span class="line">&lt; fancybox: false</span><br><span class="line">---</span><br><span class="line">&gt; fancybox: true</span><br><span class="line">610,612c611,613</span><br><span class="line">&lt;   enable: false</span><br><span class="line">&lt;   appid:</span><br><span class="line">&lt;   appkey:</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br><span class="line">&gt;   appid: cyw09gPog</span><br><span class="line">&gt;   appkey: 4488e6b82bfe3d819f4971a5e5c115f4</span><br><span class="line">745c746</span><br><span class="line">&lt;   enable: false</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br><span class="line">857c858</span><br><span class="line">&lt;   enable: false</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br></pre></td></tr></tbody></table></figure>
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+<br>
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　👣　步履不止　　-------------</div>
+<br>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Hexo/" rel="tag"><i class="fa fa-tag"></i> Hexo</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/6c0adc53.html" rel="prev" title="vim 速查图_中英文版">
+                  <i class="fa fa-angle-left"></i> vim 速查图_中英文版
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/102383ca.html" rel="next" title="vim 学习笔记">
+                  vim 学习笔记 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heartbeat"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">paopao</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">75k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:33</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyw09gPog","appkey":"4488e6b82bfe3d819f4971a5e5c115f4","count":true}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+
+</body>
+</html>

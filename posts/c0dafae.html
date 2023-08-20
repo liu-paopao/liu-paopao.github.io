@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-100.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-50.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="开源、稳定、好用的三大网盘 nextcloud owncloud cloudreve  我心目中的开源网盘 TOP3，其中 nextcloud 和 cloudreve 亲身搭建测试用过，效果都不错。owncloud 据说是 nextcloud 的前身，的确感觉界面很类似。nextcloud 有各平台 app 客户端，插件丰富，功能强大。cloudreve 感觉更轻量级，部署方便，而且界面 UI 比">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过 cloudreve 搭建私人网盘教程">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/c0dafae.html">
+<meta property="og:site_name" content="PaoPao&#39;s Blog">
+<meta property="og:description" content="开源、稳定、好用的三大网盘 nextcloud owncloud cloudreve  我心目中的开源网盘 TOP3，其中 nextcloud 和 cloudreve 亲身搭建测试用过，效果都不错。owncloud 据说是 nextcloud 的前身，的确感觉界面很类似。nextcloud 有各平台 app 客户端，插件丰富，功能强大。cloudreve 感觉更轻量级，部署方便，而且界面 UI 比">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202306201621997.png">
+<meta property="article:published_time" content="2023-06-19T09:51:32.000Z">
+<meta property="article:modified_time" content="2023-06-20T08:53:05.914Z">
+<meta property="article:author" content="paopao">
+<meta property="article:tag" content="私人网盘">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202306201621997.png">
+
+
+<link rel="canonical" href="https://liu-paopao.github.io/posts/c0dafae.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/c0dafae.html","path":"posts/c0dafae.html","title":"通过 cloudreve 搭建私人网盘教程"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>通过 cloudreve 搭建私人网盘教程 | PaoPao's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">PaoPao's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E6%BA%90%E3%80%81%E7%A8%B3%E5%AE%9A%E3%80%81%E5%A5%BD%E7%94%A8%E7%9A%84%E4%B8%89%E5%A4%A7%E7%BD%91%E7%9B%98"><span class="nav-number">1.</span> <span class="nav-text">开源、稳定、好用的三大网盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cloudreve%E7%89%B9%E6%80%A7"><span class="nav-number">2.</span> <span class="nav-text">cloudreve 特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cloudreve"><span class="nav-number">3.</span> <span class="nav-text">安装 cloudreve</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E6%93%8D%E6%BC%94%E7%A4%BA"><span class="nav-number">3.1.</span> <span class="nav-text">实操演示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEcloudreve%E8%BF%9B%E7%A8%8B%E5%AE%88%E6%8A%A4%E5%92%8C%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8"><span class="nav-number">4.</span> <span class="nav-text">设置 cloudreve 进程守护和开机启动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%BE%91%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">4.1.</span> <span class="nav-text">编辑配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%91%BD%E4%BB%A4"><span class="nav-number">4.2.</span> <span class="nav-text">配置命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-number">4.3.</span> <span class="nav-text">管理命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E6%93%8D%E6%BC%94%E7%A4%BA-1"><span class="nav-number">4.4.</span> <span class="nav-text">实操演示</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="paopao"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">paopao</p>
+  <div class="site-description" itemprop="description">Stay hungry, stay foolish.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+<!-- none-select-br -->
+
+<p></p>
+
+<!-- hitokoto -->
+
+<div class="hitokoto-title">
+	<i class="fa fa-paragraph"></i>
+	<b>一言</b>
+</div>
+
+<div id="hitokoto">:D 获取中...</div>
+<i id="hitofrom">:D 获取中...</i>
+
+<script src="https://cdn.jsdelivr.net/npm/bluebird@3/js/browser/bluebird.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@2.0.3/fetch.min.js"></script>
+<script>
+  fetch('https://v1.hitokoto.cn')
+    .then(function (res){
+      return res.json();
+    })
+    .then(function (data) {
+      var hitokoto = document.getElementById('hitokoto');
+      hitokoto.innerText = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + data.hitokoto;
+      var hitofrom = document.getElementById('hitofrom');
+      hitofrom.innerText = "——" + data.from + '\xa0'; 
+    })
+    .catch(function (err) {
+      console.error(err);
+    })
+</script>
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/c0dafae.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="通过 cloudreve 搭建私人网盘教程 | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          通过 cloudreve 搭建私人网盘教程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-06-19 17:51:32" itemprop="dateCreated datePublished" datetime="2023-06-19T17:51:32+08:00">2023-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-06-20 16:53:05" itemprop="dateModified" datetime="2023-06-20T16:53:05+08:00">2023-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%98%E8%85%BE%E6%97%A5%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">折腾日记</span></a>
+        </span>
+    </span>
+
+  
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="开源、稳定、好用的三大网盘"><a href="#开源、稳定、好用的三大网盘" class="headerlink" title="开源、稳定、好用的三大网盘"></a>开源、稳定、好用的三大网盘</h2><ul>
+<li>nextcloud</li>
+<li>owncloud</li>
+<li>cloudreve</li>
+</ul>
+<p>我心目中的开源网盘 TOP3，其中 nextcloud 和 cloudreve 亲身搭建测试用过，效果都不错。owncloud 据说是 nextcloud 的前身，的确感觉界面很类似。nextcloud 有各平台 app 客户端，插件丰富，功能强大。cloudreve 感觉更轻量级，部署方便，而且界面 UI 比较好看，GitHub 上 star 也非常多，感觉更受欢迎，我亲测过后也爱了。</p>
+<span id="more"></span>
+
+<h2 id="cloudreve特性"><a href="#cloudreve特性" class="headerlink" title="cloudreve特性"></a>cloudreve 特性</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202306201621997.png" alt="homepage"></p>
+<p>☁️ 支持本机、从机、七牛、阿里云 OSS、腾讯云 COS、又拍云、OneDrive (包括世纪互联版) 、S3 兼容协议 作为存储端<br>📤 上传 / 下载 支持客户端直传，支持下载限速<br>💾 可对接 Aria2 离线下载，可使用多个从机节点分担下载任务<br>📚 在线 压缩 / 解压缩、多文件打包下载<br>💻 覆盖全部存储策略的 WebDAV 协议支持<br>⚡ 拖拽上传、目录上传、流式上传处理<br>🗃️ 文件拖拽管理<br>👩‍👧‍👦 多用户、用户组、多存储策略<br>🔗 创建文件、目录的分享链接，可设定自动过期<br>👁️‍🗨️ 视频、图像、音频、 ePub 在线预览，文本、Office 文档在线编辑<br>🎨 自定义配色、黑暗模式、PWA 应用、全站单页应用、国际化支持<br>🚀 All-In-One 打包，开箱即用<br>🌈 … …</p>
+<h2 id="安装cloudreve"><a href="#安装cloudreve" class="headerlink" title="安装cloudreve"></a>安装 cloudreve</h2><p>GitHub 下载地址：<a target="_blank" rel="noopener" href="https://github.com/cloudreve/Cloudreve/releases">https://github.com/cloudreve/Cloudreve/releases</a></p>
+<p>根据操作系统和 CPU 架构下载对应的二进制文件，解压后直接运行即可：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">解压程序包</span></span><br><span class="line">tar -zxvf cloudreve_VERSION_OS_ARCH.tar.gz</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">赋予执行权限</span></span><br><span class="line">chmod +x ./cloudreve</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启动 Cloudreve</span></span><br><span class="line">./cloudreve</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Cloudreve 在首次启动时，会创建初始管理员账号，请注意保管管理员密码，此密码只会在首次启动时出现。如果您忘记初始管理员密码，需要删除同级目录下的 cloudreve.db，重新启动主程序以初始化新的管理员账户。</p>
+<p>Cloudreve 默认会监听 5212 端口。启动后直接在浏览器中访问 <code>localhost:5212</code> 或 <code>http://服务器IP:5212</code> 进入 Cloudreve。</p>
+<h3 id="实操演示"><a href="#实操演示" class="headerlink" title="实操演示"></a>实操演示</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">geduer@gdk8:~$ mkdir cloudreve</span><br><span class="line">geduer@gdk8:~$ cd cloudreve/</span><br><span class="line">geduer@gdk8:~/cloudreve$ ls</span><br><span class="line">cloudreve_3.8.0_linux_arm64.tar.gz</span><br><span class="line">geduer@gdk8:~/cloudreve$ tar -xvf cloudreve_3.8.0_linux_arm64.tar.gz </span><br><span class="line">LICENSE</span><br><span class="line">README.md</span><br><span class="line">README_zh-CN.md</span><br><span class="line">cloudreve</span><br><span class="line">geduer@gdk8:~/cloudreve$ ls</span><br><span class="line">LICENSE  README.md  README_zh-CN.md  cloudreve  cloudreve_3.8.0_linux_arm64.tar.gz</span><br><span class="line">geduer@gdk8:~/cloudreve$ ./cloudreve </span><br><span class="line"></span><br><span class="line">___ _                 _</span><br><span class="line">  / __\ | ___  _   _  __| |_ __ _____   _____ </span><br><span class="line"> / /  | |/ _ \| | | |/ _  | '__/ _ \ \ / / _ \	</span><br><span class="line">/ /___| | (_) | |_| | (_| | | |  __/\ V /  __/</span><br><span class="line">\____/|_|\___/ \__,_|\__,_|_|  \___| \_/ \___|</span><br><span class="line"></span><br><span class="line">   V3.8.0  Commit #243c312  Pro=false</span><br><span class="line">================================================.</span><br><span class="line"></span><br><span class="line">[Info]    2023-06-19 14:44:03 Initializing database connection...</span><br><span class="line">[Info]    2023-06-19 14:44:03 Start initializing database schema...</span><br><span class="line">[Info]    2023-06-19 14:44:03 Admin user name: xxxxx</span><br><span class="line">[Info]    2023-06-19 14:44:03 Admin password: xxxxx</span><br><span class="line">[Info]    2023-06-19 14:44:04 Start executing database script "UpgradeTo3.4.0".</span><br><span class="line">[Info]    2023-06-19 14:44:04 Finish initializing database schema.</span><br><span class="line">[Info]    2023-06-19 14:44:04 Initialize task queue with WorkerNum = 10</span><br><span class="line">[Info]    2023-06-19 14:44:04 Initialize crontab jobs...</span><br><span class="line">[Info]    2023-06-19 14:44:04 Current running mode: Master.</span><br><span class="line">[Info]    2023-06-19 14:44:04 Listening to ":5212"</span><br><span class="line">[GIN] 2023/06/19 - 14:45:55 | 200 |    18.24428ms |  192.168.43.117 | GET      "/"</span><br><span class="line">[GIN] 2023/06/19 - 14:45:55 | 200 |   41.710503ms |  192.168.43.117 | GET      "/static/css/6.57254ef2.chunk.css"</span><br><span class="line">[GIN] 2023/06/19 - 14:45:55 | 200 |   144.74392ms |  192.168.43.117 | GET      "/static/js/main.b28185a0.chunk.js"</span><br><span class="line">[GIN] 2023/06/19 - 14:45:56 | 200 |  382.097422ms |  192.168.43.117 | GET      "/static/js/6.2cdf7034.chunk.js"</span><br><span class="line">[GIN] 2023/06/19 - 14:45:56 | 200 |    1.546953ms |  192.168.43.117 | GET      "/locales/en-US/common.json?v=3.8.0-beta1"</span><br><span class="line">[GIN] 2023/06/19 - 14:45:56 | 200 |    8.654829ms |  192.168.43.117 | GET      "/api/v3/site/config"</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="设置cloudreve进程守护和开机启动"><a href="#设置cloudreve进程守护和开机启动" class="headerlink" title="设置cloudreve进程守护和开机启动"></a>设置 cloudreve 进程守护和开机启动</h2><h3 id="编辑配置文件"><a href="#编辑配置文件" class="headerlink" title="编辑配置文件"></a>编辑配置文件</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /usr/lib/systemd/system/cloudreve.service</span><br></pre></td></tr></tbody></table></figure>
+
+<p>将下文 PATH_TO_CLOUDREVE 更换为程序所在目录：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Cloudreve</span><br><span class="line">Documentation=https://docs.cloudreve.org</span><br><span class="line">After=network.target</span><br><span class="line">After=mysqld.service</span><br><span class="line">Wants=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">WorkingDirectory=/PATH_TO_CLOUDREVE</span><br><span class="line">ExecStart=/PATH_TO_CLOUDREVE/cloudreve</span><br><span class="line">Restart=on-abnormal</span><br><span class="line">RestartSec=5s</span><br><span class="line">KillMode=mixed</span><br><span class="line"></span><br><span class="line">StandardOutput=null</span><br><span class="line">StandardError=syslog</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="配置命令"><a href="#配置命令" class="headerlink" title="配置命令"></a>配置命令</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 更新配置</span><br><span class="line">systemctl daemon-reload</span><br><span class="line"></span><br><span class="line"># 启动服务</span><br><span class="line">systemctl start cloudreve</span><br><span class="line"></span><br><span class="line"># 设置开机启动</span><br><span class="line">systemctl enable cloudreve</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="管理命令"><a href="#管理命令" class="headerlink" title="管理命令"></a>管理命令</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 启动服务</span><br><span class="line">systemctl start cloudreve</span><br><span class="line"></span><br><span class="line"># 停止服务</span><br><span class="line">systemctl stop cloudreve</span><br><span class="line"></span><br><span class="line"># 重启服务</span><br><span class="line">systemctl restart cloudreve</span><br><span class="line"></span><br><span class="line"># 查看状态</span><br><span class="line">systemctl status cloudreve</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="实操演示-1"><a href="#实操演示-1" class="headerlink" title="实操演示"></a>实操演示</h3><p><strong>注意：</strong>如果存在配置文件对应的目录，则直接根据步骤操作即可。而我的新环境由于 /usr/lib/systemd 下没有 system 目录，vim 编辑文件后无法保存，此时需要先创建好对应的目录后，再编辑配置文件。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">root@gdk8:/usr/lib/systemd/system# vim cloudreve.service</span><br><span class="line">root@gdk8:/usr/lib/systemd/system# systemctl daemon-reload</span><br><span class="line">root@gdk8:/usr/lib/systemd/system# systemctl start cloudreve</span><br><span class="line">root@gdk8:/usr/lib/systemd/system# systemctl enable cloudreve</span><br><span class="line">Created symlink /etc/systemd/system/multi-user.target.wants/cloudreve.service → /usr/lib/systemd/system/cloudreve.service.</span><br><span class="line">root@gdk8:/usr/lib/systemd/system# systemctl status cloudreve</span><br><span class="line">● cloudreve.service - Cloudreve</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/cloudreve.service; enabled; vendor preset: enabled)</span><br><span class="line">   Active: active (running) since Mon 2023-06-19 15:24:53 CST; 13s ago</span><br><span class="line">     Docs: https://docs.cloudreve.org</span><br><span class="line"> Main PID: 1673 (cloudreve)</span><br><span class="line">    Tasks: 8 (limit: 4672)</span><br><span class="line">   CGroup: /system.slice/cloudreve.service</span><br><span class="line">           └─1673 /home/geduer/cloudreve/cloudreve</span><br><span class="line"></span><br><span class="line">Jun 19 15:24:53 gdk8 systemd[1]: Started Cloudreve.</span><br><span class="line">root@gdk8:/usr/lib/systemd/system# ls</span><br><span class="line">cloudreve.service</span><br></pre></td></tr></tbody></table></figure>
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+<br>
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　本文结束　👣　步履不止　　-------------</div>
+<br>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%A7%81%E4%BA%BA%E7%BD%91%E7%9B%98/" rel="tag"><i class="fa fa-tag"></i> 私人网盘</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/6e443868.html" rel="prev" title="通过 Fiddler 抓取抖音、快手直播源">
+                  <i class="fa fa-angle-left"></i> 通过 Fiddler 抓取抖音、快手直播源
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/25f4fe28.html" rel="next" title="cmake 添加编译选项：头文件和库文件路径">
+                  cmake 添加编译选项：头文件和库文件路径 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heartbeat"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">paopao</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">75k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:33</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cyw09gPog","appkey":"4488e6b82bfe3d819f4971a5e5c115f4","count":true}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+
+</body>
+</html>
