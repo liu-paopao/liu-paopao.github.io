@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>每天学个 Linux 命令 | dpkg</title>
-    <url>/posts/4119ab6c.html</url>
-    <content><![CDATA[<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><code>dpkg</code> 命令全称是 <code>Debian package</code>，即 Debian 系统的软件安装、管理、卸载工具，基于 Debian 系列 Linux 发行版基本都用 <code>dpkg</code> 命令来管理软件安装包。</p>
-<span id="more"></span>
-
-<h2 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h2><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">dpkg [参数] 软件包</span><br></pre></td></tr></tbody></table></figure>
-
-<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">root@PAOPAO:~# dpkg -l vim</span><br><span class="line">Desired=Unknown/Install/Remove/Purge/Hold</span><br><span class="line">| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend</span><br><span class="line">|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)</span><br><span class="line">||/ Name                        Version            Architecture       Description</span><br><span class="line">+++-===========================-==================-==================-===========================================================</span><br><span class="line">ii  vim                         2:8.0.1453-1ubuntu amd64              Vi IMproved - enhanced vi editor</span><br></pre></td></tr></tbody></table></figure>
-
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">root@PAOPAO:~# dpkg -L vim</span><br><span class="line">/.</span><br><span class="line">/usr</span><br><span class="line">/usr/bin</span><br><span class="line">/usr/bin/vim.basic</span><br><span class="line">/usr/share</span><br><span class="line">/usr/share/bug</span><br><span class="line">/usr/share/bug/vim</span><br><span class="line">/usr/share/bug/vim/presubj</span><br><span class="line">/usr/share/bug/vim/script</span><br><span class="line">/usr/share/doc</span><br><span class="line">/usr/share/doc/vim</span><br><span class="line">/usr/share/doc/vim/NEWS.Debian.gz</span><br><span class="line">/usr/share/doc/vim/changelog.Debian.gz</span><br><span class="line">/usr/share/doc/vim/copyright</span><br><span class="line">/usr/share/lintian</span><br><span class="line">/usr/share/lintian/overrides</span><br><span class="line">/usr/share/lintian/overrides/vim</span><br></pre></td></tr></tbody></table></figure>]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux命令</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>git 学习笔记</title>
     <url>/posts/21db94ec.html</url>
     <content><![CDATA[<h2 id="修改上次git-commit时间"><a href="#修改上次git-commit时间" class="headerlink" title="修改上次git commit时间"></a>修改上次 git commit 时间</h2><p>命令：</p>
@@ -259,366 +241,6 @@
       </categories>
       <tags>
         <tag>VSCode</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Vim 可视模式下多行操作技巧</title>
-    <url>/posts/71f253a3.html</url>
-    <content><![CDATA[<h2 id="三种可视化模式"><a href="#三种可视化模式" class="headerlink" title="三种可视化模式"></a>三种可视化模式</h2><ol>
-<li><p>按 <code>v</code> 进入字符可视模式（– VISUAL –）。文本选择是以字符为单位的。</p>
-</li>
-<li><p>按 <code>V</code> 或 <code>Shift+v</code> 进入可视行模式（– VISUAL LINE –)。文本选择是以行为单位的。</p>
-</li>
-<li><p>按 <code>Ctrl+v</code> 进入可视块模式（– VISUAL BLOCK –）。文本选择是以纵向的列为单位的。</p>
-</li>
-</ol>
-<span id="more"></span>
-
-<h2 id="添加多行注释"><a href="#添加多行注释" class="headerlink" title="添加多行注释"></a>添加多行注释</h2><ol>
-<li><p>按 <code>Ctrl+v</code> 进入可视块模式</p>
-</li>
-<li><p>通过上下按键选中多行</p>
-</li>
-<li><p>按 <code>I</code> 或 <code>Shift+i</code> 进行行首插入</p>
-</li>
-<li><p>添加注释字符</p>
-</li>
-<li><p>按 <code>Esc</code> 退出插入模式</p>
-</li>
-</ol>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212022049277.gif" alt="添加多行注释"></p>
-<h2 id="删除多行注释"><a href="#删除多行注释" class="headerlink" title="删除多行注释"></a>删除多行注释</h2><ol>
-<li>按 <code>Ctrl+v</code> 进入可视块模式</li>
-<li>通过上下按键选中多行</li>
-<li>按 <code>delete</code> 进行删除</li>
-<li>按 <code>Esc</code> 退出插入模式</li>
-</ol>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212022049421.gif" alt="删除多行注释"></p>
-<h2 id="添加内容到多行行尾"><a href="#添加内容到多行行尾" class="headerlink" title="添加内容到多行行尾"></a>添加内容到多行行尾</h2><ol>
-<li>按 <code>Ctrl+v</code> 进入可视块模式</li>
-<li>通过上下按键选中多行</li>
-<li>按 <code>$</code> 定位到行尾</li>
-<li>按 <code>A</code> 或 <code>Shift+a</code> 进行行尾插入</li>
-<li>添加插入内容</li>
-<li>按 <code>Esc</code> 退出插入模式</li>
-</ol>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212022049642.gif" alt="添加内容到多行行尾"></p>
-<h2 id="对多行进行大小写转换"><a href="#对多行进行大小写转换" class="headerlink" title="对多行进行大小写转换"></a>对多行进行大小写转换</h2><ol>
-<li>在三种可视模式下都能操作，先进入一种可视模式</li>
-<li>通过上下左右按键选中多行</li>
-<li>按 <code>~</code> 大小写互换</li>
-</ol>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212022058620.gif" alt="大小写互换"></p>
-<ol start="4">
-<li>按 <code>U</code> 全部变大写</li>
-</ol>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212022121964.gif" alt="全部变大写"></p>
-<ol start="5">
-<li>按 <code>u</code> 全部变小写</li>
-</ol>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212022058108.gif" alt="全部变小写"></p>
-]]></content>
-      <categories>
-        <category>Vim</category>
-      </categories>
-      <tags>
-        <tag>Vim</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>vim 学习笔记</title>
-    <url>/posts/102383ca.html</url>
-    <content><![CDATA[<h2 id="多行添加注释和取消注释"><a href="#多行添加注释和取消注释" class="headerlink" title="多行添加注释和取消注释"></a>多行添加注释和取消注释</h2><p><strong>正常模式 –&gt; 可视模式：</strong></p>
-<table>
-<thead>
-<tr>
-<th>指令</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td> v</td>
-<td> 可视模式</td>
-</tr>
-<tr>
-<td> ctrl+v</td>
-<td> 可视块模式</td>
-</tr>
-<tr>
-<td> shift+v</td>
-<td> 可视行模式</td>
-</tr>
-</tbody></table>
-<p>可视块模式有一个非常实用的作用：选多行进行注释</p>
-<ul>
-<li><p>多行添加注释：<br>- 光标置于行首<br>- <code>ctrl + v</code>，进入可视块模式<br>- 移动光标，选中的位置会有高亮显示<br>- <code>shift + i</code>，进入 insert 模式<br>- 输入 <code>//</code><br>- <code>esc</code></p>
-</li>
-<li><p>多行取消注释：<br>- 光标置于行首<br>- <code>ctrl + v</code>，进入可视块模式<br>- 移动光标，选中的位置会有高亮显示<br>- 按 <code>d</code></p>
-</li>
-</ul>
-<h2 id="同一窗口操作多个文件"><a href="#同一窗口操作多个文件" class="headerlink" title="同一窗口操作多个文件"></a>同一窗口操作多个文件</h2><ol>
-<li>同时打开两个文件并分割窗口</li>
-</ol>
-<p>上下分割：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ vim -o filename1 filename2  </span><br></pre></td></tr></tbody></table></figure>
-<p>左右分割：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ vim -O filename1 filename2</span><br></pre></td></tr></tbody></table></figure>
-
-<ol start="2">
-<li>已打开一个文件，同时再打开另一个文件</li>
-</ol>
-<p>上下分割：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">:vs filename</span><br></pre></td></tr></tbody></table></figure>
-<p>左右分割：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">:sp filename</span><br></pre></td></tr></tbody></table></figure>
-<blockquote>
-<p>其中，vs 可以用 vsplit 替换，sp 可以用 split 替换。<br>如果 finename 不存在，则会新建该文件并打开。</p>
-</blockquote>
-<ol start="3">
-<li>切换窗口</li>
-</ol>
-<p>先 <code>ctrl + w</code> 开启窗口切换后，再选择按上下左右键进行跳转：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">ctrl + w w  // 即按住ctrl键，再按两下w键。或者ctrl + w &lt;h|j|k|l&gt;</span><br></pre></td></tr></tbody></table></figure>
-<blockquote>
-<p>即按住 ctrl 键，按一次 w 键，再按一次表示方向的 h 或 j 或 k 或 l，则光标会切换到当前窗口的 左｜下｜上｜右 侧的窗口。</p>
-</blockquote>
-<ol start="4">
-<li>关闭 vim 窗口</li>
-</ol>
-<p>关闭光标所在的窗口：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">:q</span><br></pre></td></tr></tbody></table></figure>
-<p>关闭所有窗口：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">:qa</span><br></pre></td></tr></tbody></table></figure>
-<p>关闭除光标所在的窗口之外的其他窗口：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">:only</span><br></pre></td></tr></tbody></table></figure>
-
-
-<h2 id="统计字符串出现次数"><a href="#统计字符串出现次数" class="headerlink" title="统计字符串出现次数"></a>统计字符串出现次数</h2><ul>
-<li>命令 </li>
-</ul>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">:%s/pattern//gn</span><br></pre></td></tr></tbody></table></figure>
-
-<ul>
-<li>参数说明</li>
-</ul>
-<p> % ：指明操作区间，% 表示全文本；可以使用 1,$ 或者行区间代替<br> s：substitute，表示替换<br> pattern：要查找的字符串<br> //：替代文本应该放在这里，两个斜杠中间没有任何字符表示无替代文本<br> g：替换该行所有出现的字符串，如果没有该参数则只替换该行第一次出现的地方<br> n：表示匹配的行数</p>
-<ul>
-<li>扩展</li>
-</ul>
-<p>统计 k 行到 l 行出现 pattern 的次数：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">:k,ls/pattern//gn</span><br></pre></td></tr></tbody></table></figure>
-
-<p>统计在当前编辑文本出现的次数：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">:%s/pattern//gn</span><br></pre></td></tr></tbody></table></figure>
-
-<p>统计在文件中出现的行数：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cat file|greg –i pattern |wc –l</span><br></pre></td></tr></tbody></table></figure>
-
-<h2 id="鼠标选中不能复制"><a href="#鼠标选中不能复制" class="headerlink" title="鼠标选中不能复制"></a>鼠标选中不能复制</h2><p>vim 中鼠标选中不能复制并进入可视模式，习惯了在 vim 中鼠标选中即复制的效果，对此问题从网上查了下发现是 vim 的默认配置导致的。</p>
-<ul>
-<li>解决方法：</li>
-</ul>
-<ol>
-<li><p>修改 vim 的默认配置文件</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">vim /usr/share/vim/vim81/defaults.vim</span><br></pre></td></tr></tbody></table></figure></li>
-<li><p>输入 <code>/mouse</code> 搜索关键词 <code>mouse</code> ，定位到下面位置</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">if has('mouse')</span><br><span class="line">set mouse=a</span><br><span class="line">endif</span><br></pre></td></tr></tbody></table></figure>
-<p>将 <code>set mouse=a</code> 改为 <code>set mouse-=a</code>（在等号前面加上一个减号）</p>
-</li>
-<li><p>输入 <code>:wq!</code> 保存即可解决问题。</p>
-</li>
-</ol>
-<h2 id="删除多余空格"><a href="#删除多余空格" class="headerlink" title="删除多余空格"></a>删除多余空格</h2><ul>
-<li><p>删除行尾多余的空格和 tab 符号。</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">%s/\s\+$//g</span><br></pre></td></tr></tbody></table></figure></li>
-</ul>
-<p>命令解释：</p>
-<blockquote>
-<p>【% s】表示全文替换<br>【% s/str1/str2/g】表示将全文中 <code>str1</code> 替换成 <code>str2</code><br>【\s+$】要替换的内容 <code>str1</code>，其中 <code>\s</code> 表示空格和 tab，<code>\+</code> 表示一个或多个，<code>$</code> 表示行尾（表示行末（$）前的一个或者多个（+）空格（\s））<br>【//】替换后的内容 <code>str2</code>，其中 // 直接为空，表示替换为空，即达到删除效果<br>【g】表示全局替换（global）</p>
-</blockquote>
-<ul>
-<li><p>只删除行尾空格，不能删除 tab</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">%s/ *$//g</span><br></pre></td></tr></tbody></table></figure>
-<p>/ 和 * 中间有空格，只能删除行尾空格，对于 tab 不能删除</p>
-</li>
-</ul>
-<h2 id="vim新建文件自动添加头部注释"><a href="#vim新建文件自动添加头部注释" class="headerlink" title="vim新建文件自动添加头部注释"></a>vim 新建文件自动添加头部注释</h2><ul>
-<li>修改 <code>~/.vimrc</code>，在文件最后添加以下内容：<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">" 【vim创建程序文件自动添加头部注释】</span><br><span class="line">" 当新建.h .c .hpp .cpp .sh文件时自动调用SetTitle函数添加头部注释</span><br><span class="line">autocmd BufNewFile *.[ch],*.hpp,*.cpp,*.sh exec ":call SetTitle()"</span><br><span class="line">" 定义.h .c .hpp .cpp注释格式</span><br><span class="line">func SetComment()</span><br><span class="line">	call setline(1,"/*================================================================")</span><br><span class="line">	call append(line("."),   "*  Author: paopao")</span><br><span class="line">	call append(line(".")+1, "*  Date: ".strftime("%Y-%m-%d"))</span><br><span class="line">	call append(line(".")+2, "*  Description: ")</span><br><span class="line">	call append(line(".")+3, "================================================================*/")</span><br><span class="line">	call append(line(".")+4, "")</span><br><span class="line">endfunc</span><br><span class="line"></span><br><span class="line">" 定义.sh注释格式</span><br><span class="line">func SetComment_sh()</span><br><span class="line">	call setline(3, "#================================================================")</span><br><span class="line">	call setline(4, "#")</span><br><span class="line">	call setline(5, "#  Author: paopao")</span><br><span class="line">	call setline(6, "#  Date: ".strftime("%Y-%m-%d"))</span><br><span class="line">	call setline(7, "#  Description: ")</span><br><span class="line">	call setline(8, "#================================================================")</span><br><span class="line">	call setline(9, "")</span><br><span class="line">endfunc</span><br><span class="line"></span><br><span class="line">" 定义函数SetTitle，自动插入文件头</span><br><span class="line">func SetTitle()</span><br><span class="line">	if &amp;filetype == 'sh'</span><br><span class="line">		call setline(1,"#!/bin/sh")</span><br><span class="line">		call setline(2,"")</span><br><span class="line">		call SetComment_sh()</span><br><span class="line">	else</span><br><span class="line">	     call SetComment()</span><br><span class="line">	     if expand("%:e") == 'h'</span><br><span class="line">		call append(line(".")+5, "#ifndef _".toupper(expand("%:t:r"))."_H")</span><br><span class="line">		call append(line(".")+6, "#define _".toupper(expand("%:t:r"))."_H")</span><br><span class="line">		call append(line(".")+7, "")</span><br><span class="line">		call append(line(".")+8, "#endif //".toupper(expand("%:t:r"))."_H")</span><br><span class="line">	     elseif expand("%:e") == 'hpp'</span><br><span class="line">		call append(line(".")+5, "#ifndef _".toupper(expand("%:t:r"))."_HPP")</span><br><span class="line">		call append(line(".")+6, "#define _".toupper(expand("%:t:r"))."_HPP")</span><br><span class="line">		call append(line(".")+7, "")</span><br><span class="line">		call append(line(".")+8, "#endif //".toupper(expand("%:t:r"))."_HPP")</span><br><span class="line">	     endif</span><br><span class="line">	endif</span><br><span class="line">endfunc</span><br></pre></td></tr></tbody></table></figure></li>
-<li>新建 <code>a.sh</code> 和 <code>a.h</code> 来测试效果：<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ vim a.sh</span><br><span class="line"></span><br><span class="line">#!/bin/sh</span><br><span class="line"></span><br><span class="line">#================================================================</span><br><span class="line">#</span><br><span class="line">#  Author: paopao</span><br><span class="line">#  Date: 2022-04-30</span><br><span class="line">#  Description: </span><br><span class="line">#================================================================</span><br></pre></td></tr></tbody></table></figure>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ vim a.h</span><br><span class="line"></span><br><span class="line">/*================================================================</span><br><span class="line">*  Author: paopao</span><br><span class="line">*  Date: 2022-04-30</span><br><span class="line">*  Description: </span><br><span class="line">================================================================*/</span><br><span class="line"></span><br><span class="line">#ifndef _A_H</span><br><span class="line">#define _A_H</span><br><span class="line"></span><br><span class="line">#endif //A_H</span><br></pre></td></tr></tbody></table></figure></li>
-</ul>
-<h2 id="底部状态行显示绝对路径和行列信息"><a href="#底部状态行显示绝对路径和行列信息" class="headerlink" title="底部状态行显示绝对路径和行列信息"></a>底部状态行显示绝对路径和行列信息</h2><ol>
-<li>打开 vim 配置文件 <figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">vim ~/.vimrc</span><br></pre></td></tr></tbody></table></figure></li>
-<li>修改方法</li>
-</ol>
-<ul>
-<li>方法 1：复制下面内容到配置文件最后面 </li>
-</ul>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">" 状态栏</span><br><span class="line">set laststatus=2 " 总是显示状态栏</span><br><span class="line">highlight StatusLine cterm=bold ctermfg=yellow ctermbg=blue</span><br><span class="line">" 获取当前路径，将$HOME转化为~</span><br><span class="line">function! CurDir()</span><br><span class="line"> let curdir = substitute(getcwd(), $HOME, "~", "g")</span><br><span class="line"> return curdir</span><br><span class="line">endfunction</span><br><span class="line">set statusline=[%n]\ %f%m%r%h\ \|\ \ pwd:\ %{CurDir()}\ \ \|%=\|\ %l,%c\ %p%%\ \|\ ascii=%b,hex=%b%{((&amp;fenc==\"\")?\"\":\"\ \|\ \".&amp;fenc)}\ \|\ %{$USER}\ @\ %{hostname()}\</span><br></pre></td></tr></tbody></table></figure>
-
-<ul>
-<li>方法 2：复制下面内容到配置文件最后面 </li>
-</ul>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%] "显示文件名：总行数，总的字符数</span><br><span class="line">set ruler "在编辑过程中，在右下角显示光标位置的状态行</span><br></pre></td></tr></tbody></table></figure>
-
-<ul>
-<li>参数列表</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td> %{n}*</td>
-<td>% 对其余的行使用高亮显示组 Usern，直到另一个 % n*。数字 n 必须从 1 到 9。用 % <em>或 %0</em> 可以恢复正常的高亮显示。</td>
-</tr>
-<tr>
-<td>%&lt;</td>
-<td> 如果状态行过长，在何处换行。缺省是在开头。</td>
-</tr>
-<tr>
-<td>%=</td>
-<td> 左对齐和右对齐项目之间的分割点。</td>
-</tr>
-<tr>
-<td>%</td>
-<td> 字符 %</td>
-</tr>
-<tr>
-<td>%B</td>
-<td> 光标下字符的十六进制形式</td>
-</tr>
-<tr>
-<td> %F</td>
-<td> 缓冲区的文件完整路径</td>
-</tr>
-<tr>
-<td> %H</td>
-<td> 如果为帮助缓冲区则显示为 HLP</td>
-</tr>
-<tr>
-<td>%L</td>
-<td> 缓冲区中的行数</td>
-</tr>
-<tr>
-<td> %M</td>
-<td> 如果缓冲区修改过则显示为 +</td>
-</tr>
-<tr>
-<td>%N</td>
-<td> 打印机页号</td>
-</tr>
-<tr>
-<td> %O</td>
-<td> 以十六进制方式显示文件中的字符偏移</td>
-</tr>
-<tr>
-<td> %P</td>
-<td> 文件中光标前的 %</td>
-</tr>
-<tr>
-<td>%R</td>
-<td> 如果缓冲区只读则为 RO</td>
-</tr>
-<tr>
-<td>%V</td>
-<td> 列数。如果与 % c 相同则为空字符串</td>
-</tr>
-<tr>
-<td> %W</td>
-<td> 如果窗口为预览窗口则为 PRV</td>
-</tr>
-<tr>
-<td>%Y</td>
-<td> 缓冲区的文件类型，如 vim</td>
-</tr>
-<tr>
-<td>%a</td>
-<td> 如果编辑多行文本，这个字行串就是 ({current} of {arguments})，例如：(5 of 18)。如果在命令行中只有一行，这个字符串为空</td>
-</tr>
-<tr>
-<td> %b</td>
-<td> 光标下的字符的十进制表示形式</td>
-</tr>
-<tr>
-<td> %c</td>
-<td> 列号</td>
-</tr>
-<tr>
-<td> %f</td>
-<td> 缓冲区的文件路径</td>
-</tr>
-<tr>
-<td> %h</td>
-<td> 如果为帮助缓冲区显示为 [Help]</td>
-</tr>
-<tr>
-<td>%l</td>
-<td> 行号</td>
-</tr>
-<tr>
-<td> %m</td>
-<td> 如果缓冲区已修改则表示为 [+]</td>
-</tr>
-<tr>
-<td>%n</td>
-<td> 缓冲区号</td>
-</tr>
-<tr>
-<td> %o</td>
-<td> 在光标前的字符数（包括光标下的字符）</td>
-</tr>
-<tr>
-<td>%p</td>
-<td> 文件中所在行的百分比</td>
-</tr>
-<tr>
-<td> %r</td>
-<td> 如果缓冲区为只读则表示为 [RO]</td>
-</tr>
-<tr>
-<td>%t</td>
-<td> 文件名 (无路径)</td>
-</tr>
-<tr>
-<td>%v</td>
-<td> 虚列号</td>
-</tr>
-<tr>
-<td> %w</td>
-<td> 如果为预览窗口则显示为 [Preview]</td>
-</tr>
-<tr>
-<td>%y</td>
-<td> 缓冲区的文件类型，如 [vim]</td>
-</tr>
-<tr>
-<td>%{expr}</td>
-<td> 表达式的结果</td>
-</tr>
-</tbody></table>
-]]></content>
-      <categories>
-        <category>Vim</category>
-      </categories>
-      <tags>
-        <tag>Vim</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>vim 速查图_中英文版</title>
-    <url>/posts/6c0adc53.html</url>
-    <content><![CDATA[<h2 id="中文翻译版"><a href="#中文翻译版" class="headerlink" title="中文翻译版"></a>中文翻译版</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202203181645094.jpg" alt="vim速查图_中文版"></p>
-<h2 id="英文原版"><a href="#英文原版" class="headerlink" title="英文原版"></a>英文原版</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202203181645480.jpg" alt="vim速查图_英文版"></p>
-]]></content>
-      <categories>
-        <category>Vim</category>
-      </categories>
-      <tags>
-        <tag>Vim</tag>
       </tags>
   </entry>
   <entry>
@@ -1272,6 +894,384 @@
       </categories>
   </entry>
   <entry>
+    <title>每天学个 Linux 命令 | dpkg</title>
+    <url>/posts/4119ab6c.html</url>
+    <content><![CDATA[<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><code>dpkg</code> 命令全称是 <code>Debian package</code>，即 Debian 系统的软件安装、管理、卸载工具，基于 Debian 系列 Linux 发行版基本都用 <code>dpkg</code> 命令来管理软件安装包。</p>
+<span id="more"></span>
+
+<h2 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h2><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">dpkg [参数] 软件包</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">root@PAOPAO:~# dpkg -l vim</span><br><span class="line">Desired=Unknown/Install/Remove/Purge/Hold</span><br><span class="line">| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend</span><br><span class="line">|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)</span><br><span class="line">||/ Name                        Version            Architecture       Description</span><br><span class="line">+++-===========================-==================-==================-===========================================================</span><br><span class="line">ii  vim                         2:8.0.1453-1ubuntu amd64              Vi IMproved - enhanced vi editor</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">root@PAOPAO:~# dpkg -L vim</span><br><span class="line">/.</span><br><span class="line">/usr</span><br><span class="line">/usr/bin</span><br><span class="line">/usr/bin/vim.basic</span><br><span class="line">/usr/share</span><br><span class="line">/usr/share/bug</span><br><span class="line">/usr/share/bug/vim</span><br><span class="line">/usr/share/bug/vim/presubj</span><br><span class="line">/usr/share/bug/vim/script</span><br><span class="line">/usr/share/doc</span><br><span class="line">/usr/share/doc/vim</span><br><span class="line">/usr/share/doc/vim/NEWS.Debian.gz</span><br><span class="line">/usr/share/doc/vim/changelog.Debian.gz</span><br><span class="line">/usr/share/doc/vim/copyright</span><br><span class="line">/usr/share/lintian</span><br><span class="line">/usr/share/lintian/overrides</span><br><span class="line">/usr/share/lintian/overrides/vim</span><br></pre></td></tr></tbody></table></figure>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux命令</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vim 可视模式下多行操作技巧</title>
+    <url>/posts/71f253a3.html</url>
+    <content><![CDATA[<h2 id="三种可视化模式"><a href="#三种可视化模式" class="headerlink" title="三种可视化模式"></a>三种可视化模式</h2><ol>
+<li><p>按 <code>v</code> 进入字符可视模式（– VISUAL –）。文本选择是以字符为单位的。</p>
+</li>
+<li><p>按 <code>V</code> 或 <code>Shift+v</code> 进入可视行模式（– VISUAL LINE –)。文本选择是以行为单位的。</p>
+</li>
+<li><p>按 <code>Ctrl+v</code> 进入可视块模式（– VISUAL BLOCK –）。文本选择是以纵向的列为单位的。</p>
+</li>
+</ol>
+<span id="more"></span>
+
+<h2 id="添加多行注释"><a href="#添加多行注释" class="headerlink" title="添加多行注释"></a>添加多行注释</h2><ol>
+<li><p>按 <code>Ctrl+v</code> 进入可视块模式</p>
+</li>
+<li><p>通过上下按键选中多行</p>
+</li>
+<li><p>按 <code>I</code> 或 <code>Shift+i</code> 进行行首插入</p>
+</li>
+<li><p>添加注释字符</p>
+</li>
+<li><p>按 <code>Esc</code> 退出插入模式</p>
+</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212022049277.gif" alt="添加多行注释"></p>
+<h2 id="删除多行注释"><a href="#删除多行注释" class="headerlink" title="删除多行注释"></a>删除多行注释</h2><ol>
+<li>按 <code>Ctrl+v</code> 进入可视块模式</li>
+<li>通过上下按键选中多行</li>
+<li>按 <code>delete</code> 进行删除</li>
+<li>按 <code>Esc</code> 退出插入模式</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212022049421.gif" alt="删除多行注释"></p>
+<h2 id="添加内容到多行行尾"><a href="#添加内容到多行行尾" class="headerlink" title="添加内容到多行行尾"></a>添加内容到多行行尾</h2><ol>
+<li>按 <code>Ctrl+v</code> 进入可视块模式</li>
+<li>通过上下按键选中多行</li>
+<li>按 <code>$</code> 定位到行尾</li>
+<li>按 <code>A</code> 或 <code>Shift+a</code> 进行行尾插入</li>
+<li>添加插入内容</li>
+<li>按 <code>Esc</code> 退出插入模式</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212022049642.gif" alt="添加内容到多行行尾"></p>
+<h2 id="对多行进行大小写转换"><a href="#对多行进行大小写转换" class="headerlink" title="对多行进行大小写转换"></a>对多行进行大小写转换</h2><ol>
+<li>在三种可视模式下都能操作，先进入一种可视模式</li>
+<li>通过上下左右按键选中多行</li>
+<li>按 <code>~</code> 大小写互换</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212022058620.gif" alt="大小写互换"></p>
+<ol start="4">
+<li>按 <code>U</code> 全部变大写</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212022121964.gif" alt="全部变大写"></p>
+<ol start="5">
+<li>按 <code>u</code> 全部变小写</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2022/202212022058108.gif" alt="全部变小写"></p>
+]]></content>
+      <categories>
+        <category>Vim</category>
+      </categories>
+      <tags>
+        <tag>Vim</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>vim 学习笔记</title>
+    <url>/posts/102383ca.html</url>
+    <content><![CDATA[<h2 id="多行添加注释和取消注释"><a href="#多行添加注释和取消注释" class="headerlink" title="多行添加注释和取消注释"></a>多行添加注释和取消注释</h2><p><strong>正常模式 –&gt; 可视模式：</strong></p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> v</td>
+<td> 可视模式</td>
+</tr>
+<tr>
+<td> ctrl+v</td>
+<td> 可视块模式</td>
+</tr>
+<tr>
+<td> shift+v</td>
+<td> 可视行模式</td>
+</tr>
+</tbody></table>
+<p>可视块模式有一个非常实用的作用：选多行进行注释</p>
+<ul>
+<li><p>多行添加注释：<br>- 光标置于行首<br>- <code>ctrl + v</code>，进入可视块模式<br>- 移动光标，选中的位置会有高亮显示<br>- <code>shift + i</code>，进入 insert 模式<br>- 输入 <code>//</code><br>- <code>esc</code></p>
+</li>
+<li><p>多行取消注释：<br>- 光标置于行首<br>- <code>ctrl + v</code>，进入可视块模式<br>- 移动光标，选中的位置会有高亮显示<br>- 按 <code>d</code></p>
+</li>
+</ul>
+<h2 id="同一窗口操作多个文件"><a href="#同一窗口操作多个文件" class="headerlink" title="同一窗口操作多个文件"></a>同一窗口操作多个文件</h2><ol>
+<li>同时打开两个文件并分割窗口</li>
+</ol>
+<p>上下分割：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ vim -o filename1 filename2  </span><br></pre></td></tr></tbody></table></figure>
+<p>左右分割：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ vim -O filename1 filename2</span><br></pre></td></tr></tbody></table></figure>
+
+<ol start="2">
+<li>已打开一个文件，同时再打开另一个文件</li>
+</ol>
+<p>上下分割：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">:vs filename</span><br></pre></td></tr></tbody></table></figure>
+<p>左右分割：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">:sp filename</span><br></pre></td></tr></tbody></table></figure>
+<blockquote>
+<p>其中，vs 可以用 vsplit 替换，sp 可以用 split 替换。<br>如果 finename 不存在，则会新建该文件并打开。</p>
+</blockquote>
+<ol start="3">
+<li>切换窗口</li>
+</ol>
+<p>先 <code>ctrl + w</code> 开启窗口切换后，再选择按上下左右键进行跳转：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">ctrl + w w  // 即按住ctrl键，再按两下w键。或者ctrl + w &lt;h|j|k|l&gt;</span><br></pre></td></tr></tbody></table></figure>
+<blockquote>
+<p>即按住 ctrl 键，按一次 w 键，再按一次表示方向的 h 或 j 或 k 或 l，则光标会切换到当前窗口的 左｜下｜上｜右 侧的窗口。</p>
+</blockquote>
+<ol start="4">
+<li>关闭 vim 窗口</li>
+</ol>
+<p>关闭光标所在的窗口：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">:q</span><br></pre></td></tr></tbody></table></figure>
+<p>关闭所有窗口：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">:qa</span><br></pre></td></tr></tbody></table></figure>
+<p>关闭除光标所在的窗口之外的其他窗口：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">:only</span><br></pre></td></tr></tbody></table></figure>
+
+
+<h2 id="统计字符串出现次数"><a href="#统计字符串出现次数" class="headerlink" title="统计字符串出现次数"></a>统计字符串出现次数</h2><ul>
+<li>命令 </li>
+</ul>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">:%s/pattern//gn</span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li>参数说明</li>
+</ul>
+<p> % ：指明操作区间，% 表示全文本；可以使用 1,$ 或者行区间代替<br> s：substitute，表示替换<br> pattern：要查找的字符串<br> //：替代文本应该放在这里，两个斜杠中间没有任何字符表示无替代文本<br> g：替换该行所有出现的字符串，如果没有该参数则只替换该行第一次出现的地方<br> n：表示匹配的行数</p>
+<ul>
+<li>扩展</li>
+</ul>
+<p>统计 k 行到 l 行出现 pattern 的次数：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">:k,ls/pattern//gn</span><br></pre></td></tr></tbody></table></figure>
+
+<p>统计在当前编辑文本出现的次数：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">:%s/pattern//gn</span><br></pre></td></tr></tbody></table></figure>
+
+<p>统计在文件中出现的行数：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cat file|greg –i pattern |wc –l</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="鼠标选中不能复制"><a href="#鼠标选中不能复制" class="headerlink" title="鼠标选中不能复制"></a>鼠标选中不能复制</h2><p>vim 中鼠标选中不能复制并进入可视模式，习惯了在 vim 中鼠标选中即复制的效果，对此问题从网上查了下发现是 vim 的默认配置导致的。</p>
+<ul>
+<li>解决方法：</li>
+</ul>
+<ol>
+<li><p>修改 vim 的默认配置文件</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">vim /usr/share/vim/vim81/defaults.vim</span><br></pre></td></tr></tbody></table></figure></li>
+<li><p>输入 <code>/mouse</code> 搜索关键词 <code>mouse</code> ，定位到下面位置</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">if has('mouse')</span><br><span class="line">set mouse=a</span><br><span class="line">endif</span><br></pre></td></tr></tbody></table></figure>
+<p>将 <code>set mouse=a</code> 改为 <code>set mouse-=a</code>（在等号前面加上一个减号）</p>
+</li>
+<li><p>输入 <code>:wq!</code> 保存即可解决问题。</p>
+</li>
+</ol>
+<h2 id="删除多余空格"><a href="#删除多余空格" class="headerlink" title="删除多余空格"></a>删除多余空格</h2><ul>
+<li><p>删除行尾多余的空格和 tab 符号。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">%s/\s\+$//g</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<p>命令解释：</p>
+<blockquote>
+<p>【% s】表示全文替换<br>【% s/str1/str2/g】表示将全文中 <code>str1</code> 替换成 <code>str2</code><br>【\s+$】要替换的内容 <code>str1</code>，其中 <code>\s</code> 表示空格和 tab，<code>\+</code> 表示一个或多个，<code>$</code> 表示行尾（表示行末（$）前的一个或者多个（+）空格（\s））<br>【//】替换后的内容 <code>str2</code>，其中 // 直接为空，表示替换为空，即达到删除效果<br>【g】表示全局替换（global）</p>
+</blockquote>
+<ul>
+<li><p>只删除行尾空格，不能删除 tab</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">%s/ *$//g</span><br></pre></td></tr></tbody></table></figure>
+<p>/ 和 * 中间有空格，只能删除行尾空格，对于 tab 不能删除</p>
+</li>
+</ul>
+<h2 id="vim新建文件自动添加头部注释"><a href="#vim新建文件自动添加头部注释" class="headerlink" title="vim新建文件自动添加头部注释"></a>vim 新建文件自动添加头部注释</h2><ul>
+<li>修改 <code>~/.vimrc</code>，在文件最后添加以下内容：<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">" 【vim创建程序文件自动添加头部注释】</span><br><span class="line">" 当新建.h .c .hpp .cpp .sh文件时自动调用SetTitle函数添加头部注释</span><br><span class="line">autocmd BufNewFile *.[ch],*.hpp,*.cpp,*.sh exec ":call SetTitle()"</span><br><span class="line">" 定义.h .c .hpp .cpp注释格式</span><br><span class="line">func SetComment()</span><br><span class="line">	call setline(1,"/*================================================================")</span><br><span class="line">	call append(line("."),   "*  Author: paopao")</span><br><span class="line">	call append(line(".")+1, "*  Date: ".strftime("%Y-%m-%d"))</span><br><span class="line">	call append(line(".")+2, "*  Description: ")</span><br><span class="line">	call append(line(".")+3, "================================================================*/")</span><br><span class="line">	call append(line(".")+4, "")</span><br><span class="line">endfunc</span><br><span class="line"></span><br><span class="line">" 定义.sh注释格式</span><br><span class="line">func SetComment_sh()</span><br><span class="line">	call setline(3, "#================================================================")</span><br><span class="line">	call setline(4, "#")</span><br><span class="line">	call setline(5, "#  Author: paopao")</span><br><span class="line">	call setline(6, "#  Date: ".strftime("%Y-%m-%d"))</span><br><span class="line">	call setline(7, "#  Description: ")</span><br><span class="line">	call setline(8, "#================================================================")</span><br><span class="line">	call setline(9, "")</span><br><span class="line">endfunc</span><br><span class="line"></span><br><span class="line">" 定义函数SetTitle，自动插入文件头</span><br><span class="line">func SetTitle()</span><br><span class="line">	if &amp;filetype == 'sh'</span><br><span class="line">		call setline(1,"#!/bin/sh")</span><br><span class="line">		call setline(2,"")</span><br><span class="line">		call SetComment_sh()</span><br><span class="line">	else</span><br><span class="line">	     call SetComment()</span><br><span class="line">	     if expand("%:e") == 'h'</span><br><span class="line">		call append(line(".")+5, "#ifndef _".toupper(expand("%:t:r"))."_H")</span><br><span class="line">		call append(line(".")+6, "#define _".toupper(expand("%:t:r"))."_H")</span><br><span class="line">		call append(line(".")+7, "")</span><br><span class="line">		call append(line(".")+8, "#endif //".toupper(expand("%:t:r"))."_H")</span><br><span class="line">	     elseif expand("%:e") == 'hpp'</span><br><span class="line">		call append(line(".")+5, "#ifndef _".toupper(expand("%:t:r"))."_HPP")</span><br><span class="line">		call append(line(".")+6, "#define _".toupper(expand("%:t:r"))."_HPP")</span><br><span class="line">		call append(line(".")+7, "")</span><br><span class="line">		call append(line(".")+8, "#endif //".toupper(expand("%:t:r"))."_HPP")</span><br><span class="line">	     endif</span><br><span class="line">	endif</span><br><span class="line">endfunc</span><br></pre></td></tr></tbody></table></figure></li>
+<li>新建 <code>a.sh</code> 和 <code>a.h</code> 来测试效果：<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ vim a.sh</span><br><span class="line"></span><br><span class="line">#!/bin/sh</span><br><span class="line"></span><br><span class="line">#================================================================</span><br><span class="line">#</span><br><span class="line">#  Author: paopao</span><br><span class="line">#  Date: 2022-04-30</span><br><span class="line">#  Description: </span><br><span class="line">#================================================================</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">lhx@ubuntu:~$ vim a.h</span><br><span class="line"></span><br><span class="line">/*================================================================</span><br><span class="line">*  Author: paopao</span><br><span class="line">*  Date: 2022-04-30</span><br><span class="line">*  Description: </span><br><span class="line">================================================================*/</span><br><span class="line"></span><br><span class="line">#ifndef _A_H</span><br><span class="line">#define _A_H</span><br><span class="line"></span><br><span class="line">#endif //A_H</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h2 id="底部状态行显示绝对路径和行列信息"><a href="#底部状态行显示绝对路径和行列信息" class="headerlink" title="底部状态行显示绝对路径和行列信息"></a>底部状态行显示绝对路径和行列信息</h2><ol>
+<li>打开 vim 配置文件 <figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">vim ~/.vimrc</span><br></pre></td></tr></tbody></table></figure></li>
+<li>修改方法</li>
+</ol>
+<ul>
+<li>方法 1：复制下面内容到配置文件最后面 </li>
+</ul>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">" 状态栏</span><br><span class="line">set laststatus=2 " 总是显示状态栏</span><br><span class="line">highlight StatusLine cterm=bold ctermfg=yellow ctermbg=blue</span><br><span class="line">" 获取当前路径，将$HOME转化为~</span><br><span class="line">function! CurDir()</span><br><span class="line"> let curdir = substitute(getcwd(), $HOME, "~", "g")</span><br><span class="line"> return curdir</span><br><span class="line">endfunction</span><br><span class="line">set statusline=[%n]\ %f%m%r%h\ \|\ \ pwd:\ %{CurDir()}\ \ \|%=\|\ %l,%c\ %p%%\ \|\ ascii=%b,hex=%b%{((&amp;fenc==\"\")?\"\":\"\ \|\ \".&amp;fenc)}\ \|\ %{$USER}\ @\ %{hostname()}\</span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li>方法 2：复制下面内容到配置文件最后面 </li>
+</ul>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%] "显示文件名：总行数，总的字符数</span><br><span class="line">set ruler "在编辑过程中，在右下角显示光标位置的状态行</span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li>参数列表</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> %{n}*</td>
+<td>% 对其余的行使用高亮显示组 Usern，直到另一个 % n*。数字 n 必须从 1 到 9。用 % <em>或 %0</em> 可以恢复正常的高亮显示。</td>
+</tr>
+<tr>
+<td>%&lt;</td>
+<td> 如果状态行过长，在何处换行。缺省是在开头。</td>
+</tr>
+<tr>
+<td>%=</td>
+<td> 左对齐和右对齐项目之间的分割点。</td>
+</tr>
+<tr>
+<td>%</td>
+<td> 字符 %</td>
+</tr>
+<tr>
+<td>%B</td>
+<td> 光标下字符的十六进制形式</td>
+</tr>
+<tr>
+<td> %F</td>
+<td> 缓冲区的文件完整路径</td>
+</tr>
+<tr>
+<td> %H</td>
+<td> 如果为帮助缓冲区则显示为 HLP</td>
+</tr>
+<tr>
+<td>%L</td>
+<td> 缓冲区中的行数</td>
+</tr>
+<tr>
+<td> %M</td>
+<td> 如果缓冲区修改过则显示为 +</td>
+</tr>
+<tr>
+<td>%N</td>
+<td> 打印机页号</td>
+</tr>
+<tr>
+<td> %O</td>
+<td> 以十六进制方式显示文件中的字符偏移</td>
+</tr>
+<tr>
+<td> %P</td>
+<td> 文件中光标前的 %</td>
+</tr>
+<tr>
+<td>%R</td>
+<td> 如果缓冲区只读则为 RO</td>
+</tr>
+<tr>
+<td>%V</td>
+<td> 列数。如果与 % c 相同则为空字符串</td>
+</tr>
+<tr>
+<td> %W</td>
+<td> 如果窗口为预览窗口则为 PRV</td>
+</tr>
+<tr>
+<td>%Y</td>
+<td> 缓冲区的文件类型，如 vim</td>
+</tr>
+<tr>
+<td>%a</td>
+<td> 如果编辑多行文本，这个字行串就是 ({current} of {arguments})，例如：(5 of 18)。如果在命令行中只有一行，这个字符串为空</td>
+</tr>
+<tr>
+<td> %b</td>
+<td> 光标下的字符的十进制表示形式</td>
+</tr>
+<tr>
+<td> %c</td>
+<td> 列号</td>
+</tr>
+<tr>
+<td> %f</td>
+<td> 缓冲区的文件路径</td>
+</tr>
+<tr>
+<td> %h</td>
+<td> 如果为帮助缓冲区显示为 [Help]</td>
+</tr>
+<tr>
+<td>%l</td>
+<td> 行号</td>
+</tr>
+<tr>
+<td> %m</td>
+<td> 如果缓冲区已修改则表示为 [+]</td>
+</tr>
+<tr>
+<td>%n</td>
+<td> 缓冲区号</td>
+</tr>
+<tr>
+<td> %o</td>
+<td> 在光标前的字符数（包括光标下的字符）</td>
+</tr>
+<tr>
+<td>%p</td>
+<td> 文件中所在行的百分比</td>
+</tr>
+<tr>
+<td> %r</td>
+<td> 如果缓冲区为只读则表示为 [RO]</td>
+</tr>
+<tr>
+<td>%t</td>
+<td> 文件名 (无路径)</td>
+</tr>
+<tr>
+<td>%v</td>
+<td> 虚列号</td>
+</tr>
+<tr>
+<td> %w</td>
+<td> 如果为预览窗口则显示为 [Preview]</td>
+</tr>
+<tr>
+<td>%y</td>
+<td> 缓冲区的文件类型，如 [vim]</td>
+</tr>
+<tr>
+<td>%{expr}</td>
+<td> 表达式的结果</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>Vim</category>
+      </categories>
+      <tags>
+        <tag>Vim</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>vim 速查图_中英文版</title>
+    <url>/posts/6c0adc53.html</url>
+    <content><![CDATA[<h2 id="中文翻译版"><a href="#中文翻译版" class="headerlink" title="中文翻译版"></a>中文翻译版</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202203181645094.jpg" alt="vim速查图_中文版"></p>
+<h2 id="英文原版"><a href="#英文原版" class="headerlink" title="英文原版"></a>英文原版</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202203181645480.jpg" alt="vim速查图_英文版"></p>
+]]></content>
+      <categories>
+        <category>Vim</category>
+      </categories>
+      <tags>
+        <tag>Vim</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>markdown 介绍和使用说明</title>
     <url>/posts/31824.html</url>
     <content><![CDATA[<p><a href="https://www.zhihu.com/people/chen-shu-yi-21"><img src="https://pic1.zhimg.com/v2-9d019104896d4a8c9b94ba1ea53eadc9_xs.jpg?source=172ae18b" alt="陈树义"></a></p>
@@ -1703,6 +1703,201 @@
       </categories>
   </entry>
   <entry>
+    <title>PowerPC 指令集架构介绍</title>
+    <url>/posts/a19ee375.html</url>
+    <content><![CDATA[<h2 id="PowerPC简介"><a href="#PowerPC简介" class="headerlink" title="PowerPC简介"></a>PowerPC 简介</h2><p>PowerPC，有时也被简称 PPC，是一种精简指令集（RISC）架构。PowerPC 英文全名为 “Performance Optimization With Enhanced RISC – Performance Computing”。</p>
+<span id="more"></span>
+
+<p>PowerPC 是由 Apple、IBM、Motorola 三家公司在 1991 年设计的，设计源自 IBM 的 POWER 架构，主要应用在通信、工控、航天国防等要求高性能和高可靠性的一些高端领域。</p>
+<p>PowerPC 指令集架构（PowerPC Instruction Set Architecture，PowerPC ISA），主要包括寄存器类别和指令格式两部分内容。</p>
+<p>PowerPC 处理器提供 32 位和 64 位两种指令运行环境。</p>
+<h2 id="寄存器类别"><a href="#寄存器类别" class="headerlink" title="寄存器类别"></a>寄存器类别</h2><p>PowerPC 用户态寄存器包括：</p>
+<ul>
+<li>GPR（General Purpose Registers，通用寄存器，64 位），32 个</li>
+<li> FPR（Floating-Point Registers，浮点寄存器，64 位），32 个</li>
+<li> FPSCR（Floating-Point Status and Control Register，浮点状态和控制寄存器，32 位）</li>
+<li>LR（Link Register，链接寄存器，64 位），用来存放函数的返回地址，转移指令的编码中 LK 位为 1 时，转移指令就会将当前指令地址加 4 后保存到 LR 寄存器，从而实现函数的调用和返回。</li>
+<li>CTR（ Count Register，计数寄存器，64 位），用来保存循环变量。</li>
+<li>XER（ Fixed-Point Exception Register，整数运算进位和溢出寄存器，64 位），用来存放整数运算的溢出、进位。分为 3 个有效位，1 个有效字段，其他是保留位。<ul>
+<li>SO（第 32 位）：当检测到有指令设置 OV 时，置 1</li>
+<li>OV（第 33 位）：有符号数算术运算出现溢位</li>
+<li> CA（第 34 位）：无符号数算术运算出现进位</li>
+<li>第 57~63 位：表示 load/store 指令传送的字节数</li>
+</ul>
+</li>
+<li> CR（Condition Register，条件寄存器，32 位），用来存放指令执行后的状态，分为 8 个字段（CR0 ~ CR7），每个字段 4 位。整数运算指令的结果状态保存到 CR0，浮点运算指令的结果状态保存到 CR1。<ul>
+<li>CR0 [0]：小于 LT，结果为负时置 1</li>
+<li>CR0 [0]：大于 GT，结果为正时置 1</li>
+<li>CR0 [0]：等于 EQ，结果为 0 时置 1</li>
+<li>CR0 [0]：溢出 SO，结果溢出时置 1</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304052225755.png" alt="image-20230405222500629"></p>
+<h2 id="指令格式"><a href="#指令格式" class="headerlink" title="指令格式"></a>指令格式</h2><ul>
+<li>指令长度 4 字节 32 位，按字对齐，通常采用大端存储，指令最低 2 位忽略，通常为 0。</li>
+<li>[0:5] 位表示操作码 OPCD，很多指令同时也有扩展码 XO（extended opcode）。</li>
+<li>[6:31] 位根据不同指令格式，分别表示不同含义。</li>
+</ul>
+<h3 id="I-Form"><a href="#I-Form" class="headerlink" title="I-Form"></a>I-Form</h3><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304052339845.png" alt="image-20230405225019176"></p>
+<p><strong>无条件转移指令格式</strong>，如函数调用 bl 指令，跳转到指定函数并保存下一条指令地址：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">bl LI AA=0,LK=1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>LI (6:29) ：立即数字段（Immediate field），表示 24 位带符号的二进制整数，右侧添加 0b00 （即 LI*4）并符号扩展为 64 位。</p>
+<p>AA (30) ：绝对地址位（Absolute Address bit）。</p>
+<blockquote>
+<p>AA=0 表示立即数字段为当前指令地址的相对地址。 对于 I-form 分支指令，分支目标的有效地址是 LI 字段符号扩展到 64 位后再加上分支指令地址。 对于 B-form 分支指令，分支目标的有效地址是 BD 字段符号扩展到 64 位后再加上分支指令地址。<br>AA=1 表示立即数字段代表一个绝对地址。 对于 I-form 分支指令，分支跳转目标的有效地址是 LI 字段符号扩展到 64 位。 对于 B-form 分支指令，分支跳转目标的有效地址是 BD 字段符号扩展到 64 位。</p>
+</blockquote>
+<p>LK (31) ：链接位（LINK bit）。</p>
+<blockquote>
+<p>0 表示不设置 LR 寄存器<br>1 表示将分支指令后的下一条指令地址设置到 LR 寄存器中。</p>
+</blockquote>
+<h3 id="B-Form"><a href="#B-Form" class="headerlink" title="B-Form"></a>B-Form</h3><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304052339810.png" alt="image-20230405231908193"></p>
+<p><strong>条件转移指令格式</strong></p>
+<p>BO (6:10)：该字段表示指令根据什么条件进行跳转。</p>
+<ul>
+<li>第 0 位为 1 时，bc 指令根据 CTR 寄存器进行条件跳转</li>
+<li>第 1 为为 1 时，表示条件为真时进行跳转</li>
+<li>第 2 为为 1 时，表示执行 bc 指令时 CTR 值不变</li>
+<li>……</li>
+</ul>
+<p>BI (11:15)：该字段用于指定 CR 中需要由分支条件指令测试的位。</p>
+<ul>
+<li>BI [3:4]=00，使用 LT 状态位用作指令转移条件</li>
+<li> BI [3:4]=01，使用 GT 状态位用作指令转移条件</li>
+<li> BI [3:4]=10，使用 EQ 状态位用作指令转移条件</li>
+<li> BI [3:4]=11，使用 SO 状态位用作指令转移条件</li>
+</ul>
+<p>BD (16:29)：该字段用于指定 14 位有符号数的分支位移的立即数，右侧添加 0b00 并符号扩展为 64 位。</p>
+<h3 id="SC-Form"><a href="#SC-Form" class="headerlink" title="SC-Form"></a>SC-Form</h3><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304052339466.png" alt="image-20230405232752028"></p>
+<p><strong>系统调用指令格式</strong>，即 sc 指令。</p>
+<p>LEV (20:26)：该字段被系统调用指令使用（System Call）。</p>
+<p><code>/，//，///</code> 表示指令中保留的字段。</p>
+<h3 id="D-Form和DS-Form"><a href="#D-Form和DS-Form" class="headerlink" title="D-Form和DS-Form"></a>D-Form 和 DS-Form</h3><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304152216874.png" alt="image-20230415221607770"></p>
+<p><strong>存储器、寄存器读写指令，立即数算术运算和逻辑运算指令</strong>，由 6 位操作码 + 10 位寄存器索引 + 16 位立即数构成。</p>
+<p>RT (6:10)：存放指令运算结果的寄存器索引，用作目标寄存器。</p>
+<p>RS (6:10)：存放指令运算结果的寄存器索引。</p>
+<p>RA (11:15)：存放指令所需数据源的寄存器索引。</p>
+<p>D (16:31)：存放指令所需另一个数据源，16 位有符号立即数，并符号扩展到 64 位。</p>
+<p>SI (16:31)：存放指令所需另一个数据源，16 位有符号立即数。</p>
+<p>UI (16:31)：存放指令所需另一个数据源，16 位无符号立即数。</p>
+<p>L (10)：表示进行 32 位还是 64 位比较。</p>
+<p>BF (6:8)：表示使用的 CR 字段或者 FPSCR 字段。</p>
+<p>TO (6:10)：表示 trap 自陷指令的条件。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304152231871.png" alt="image-20230415223101813"></p>
+<p>DS (16:29)：表示 14 位有符号立即数，右侧用 0x00 进行位拼接，并符号扩展到 64 位。</p>
+<p>XO (30:31)：表示扩展的操作码字段。</p>
+<h3 id="X-Form"><a href="#X-Form" class="headerlink" title="X-Form"></a>X-Form</h3><p><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20230415223333681.png" alt="image-20230415223333681"></p>
+<p>X-Form 格式指令与 D-Form 类似，只是将 D 字段拆分为 RB、XO、Rc。</p>
+<p>RB 和 RS 字段用来存放源操作数寄存器的索引，RT 字段存放目的操作寄存器的索引，RA 既可以当源操作数又可以当目的操作数。</p>
+<p>Rc 字段为 1 表示指令运算结果将改变 CR 寄存器的值，为 0 则不改变 CR 寄存器。具有<code>.</code> 后缀的指令，其 Rc 位为 1。</p>
+<h3 id="XL-Form"><a href="#XL-Form" class="headerlink" title="XL-Form"></a>XL-Form</h3><p><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20230415223357207.png" alt="image-20230415223357207"></p>
+<p>XL-Form 格式指令支持条件转移，与 B-Form 格式指令不同的是，此类指令使用 LR 或 CTR 寄存器进行跳转，而不是使用 16 位立即数进行跳转，因此可以实现一些 32 位的长跳转。</p>
+<h3 id="XFX-Form、XFL-Form、XS-Form、XO-Form与A-Form"><a href="#XFX-Form、XFL-Form、XS-Form、XO-Form与A-Form" class="headerlink" title="XFX-Form、XFL-Form、XS-Form、XO-Form与A-Form"></a>XFX-Form、XFL-Form、XS-Form、XO-Form 与 A-Form</h3><p><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20230415223415305.png" alt="image-20230415223415305"></p>
+<p>XFX-Form 格式指令用于访问 SPR 寄存器和 CR 寄存器。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162235074.png" alt="image-20230416223505933"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162235590.png" alt="image-20230416223530521"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162235669.png" alt="image-20230416223543594"></p>
+<p>XO-Form 格式指令用来支持带进位的算术运算和乘除法指令。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162235709.png" alt="image-20230416223558649"></p>
+<p>A-Form 格式指令用于浮点计算。</p>
+<h3 id="M-Form、MD-Form和MDS-Form"><a href="#M-Form、MD-Form和MDS-Form" class="headerlink" title="M-Form、MD-Form和MDS-Form"></a>M-Form、MD-Form 和 MDS-Form</h3><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162237885.png" alt="image-20230416223700825"></p>
+<p>M-Form 格式指令用于对选定的字段进行循环左移并做一些相应的掩码操作。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162237553.png" alt="image-20230416223714490"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162237330.png" alt="image-20230416223724263"></p>
+]]></content>
+      <categories>
+        <category>指令集架构</category>
+      </categories>
+      <tags>
+        <tag>PowerPC</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>aarch64 架构通过 mov 和 movk 指令实现立即数装载</title>
+    <url>/posts/2ed0bfd1.html</url>
+    <content><![CDATA[<p>对 64 位数据装载到寄存器这一操作不同架构实现不同，x86 能直接通过 mov 指令实现，而 aarch64 的 mov 指令一步只能装载 16 位，对于 64 位立即数必须分四部分进行装载，下面就是 x86 和 aarch64 对比验证过程。</p>
+<span id="more"></span>
+
+<p>x86 能够通过 mov 指令实现 64 位立即数装载到寄存器，测试过程如下，通过 mov 指令对寄存器 r9 进行赋值，然后通过嵌汇编获取 r9 的值并且打印出来。</p>
+<h2 id="测试用例test-asm-x86-c："><a href="#测试用例test-asm-x86-c：" class="headerlink" title="测试用例test_asm_x86.c："></a><strong>测试用例 test_asm_x86.c：</strong></h2><figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">print_r9</span><span class="params">(<span class="type">unsigned</span> <span class="type">long</span> <span class="type">long</span> *r9)</span> {</span><br><span class="line">    __asm__ __volatile__ (</span><br><span class="line">        <span class="string">"mov %%r9, %0"</span></span><br><span class="line">        :<span class="string">"=m"</span>(*r9)</span><br><span class="line">        ::<span class="string">"memory"</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"r9 = 0x%llx\n"</span>, *r9);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">{</span><br><span class="line">  <span class="type">unsigned</span> <span class="type">long</span> <span class="type">long</span> r9;</span><br><span class="line">  __asm__(<span class="string">"mov $0xa1b2, %r9"</span>);</span><br><span class="line">  print_r9(&amp;r9);</span><br><span class="line">  __asm__(<span class="string">"mov $0xa1b2c3d4, %r9"</span>);</span><br><span class="line">  print_r9(&amp;r9);</span><br><span class="line">  __asm__(<span class="string">"mov $0xa1b2c3d4e5f6f7f8, %r9"</span>);</span><br><span class="line">  print_r9(&amp;r9);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br><span class="line">````</span><br><span class="line"></span><br><span class="line">**结果为：**</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+<p>r9 = 0xa1b2<br>r9 = 0xa1b2c3d4<br>r9 = 0xa1b2c3d4e5f6f7f8</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line"></span><br><span class="line">## **测试用例test_asm_aarch64.c：**</span><br><span class="line"></span><br><span class="line">```c</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">// x19-x28 is callee-saved</span><br><span class="line">void print_x19() {</span><br><span class="line">    unsigned long long x19_val;</span><br><span class="line">    __asm__ __volatile__(</span><br><span class="line">        "mov %0, x19"</span><br><span class="line">        :"=r"(x19_val)</span><br><span class="line">        ::);</span><br><span class="line">    printf("x19 = 0x%llx\n", x19_val);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">{</span><br><span class="line">  __asm__("mov x19, #0xaaaa");</span><br><span class="line">  print_x19();</span><br><span class="line">  // Error: immediate cannot be moved by a single instruction</span><br><span class="line">  __asm__("mov x19, #0xbbbbaaaa");</span><br><span class="line">  print_x19();</span><br><span class="line">  return 0;</span><br><span class="line">}</span><br><span class="line">```</span><br><span class="line"></span><br><span class="line">**编译报错：**</span><br><span class="line"></span><br><span class="line">```</span><br><span class="line">Assembler messages:</span><br><span class="line">Error: immediate cannot be moved by a single instruction</span><br></pre></td></tr></tbody></table></figure>
+
+<p>报错来源于<code>__asm__("mov x19, #0xbbbbaaaa");</code> 这条汇编，查阅资料发现 aarch64 不能通过 mov 指令实现超过 16 位的立即数装载，即 mov 指令不能一次将 64 位立即数装入寄存器，需要借助 movk 指令分四次装载。movk 指令意思是 <code>move and keep</code>，可以将一个 16 位立即数偏移存入指定寄存器，并且保留寄存器其他位的数值。</p>
+<p>若想把 <code>0xddddccccbbbbaaaa</code>64 位立即数装入，则需要把立即数分割成四部分依次装载（对于 64 位指针也是这样分四次装载）：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">__asm__(<span class="string">"mov x19, #0xaaaa"</span>);</span><br><span class="line">__asm__(<span class="string">"movk x19, #0xbbbb, lsl #16"</span>);</span><br><span class="line">__asm__(<span class="string">"movk x19, #0xcccc, lsl #32"</span>);</span><br><span class="line">__asm__(<span class="string">"movk x19, #0xdddd, lsl #48"</span>);</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>结果为：</strong></p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">x19 = 0xaaaa</span><br><span class="line">x19 = 0xbbbbaaaa</span><br><span class="line">x19 = 0xccccbbbbaaaa</span><br><span class="line">x19 = 0xddddccccbbbbaaaa</span><br></pre></td></tr></tbody></table></figure>
+<p>如果想单独装载 16 位数据到高位，可以根据 mov 规则，对立即数先进行 16、32、48 移位，然后再根据需要往对应位置装载 16 位立即数，下面四条嵌汇编都能正确执行：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">__asm__(<span class="string">"mov x19, #0xaaaa"</span>);</span><br><span class="line">__asm__(<span class="string">"mov x19, #0xbbbb0000"</span>);</span><br><span class="line">__asm__(<span class="string">"mov x19, #0xcccc00000000"</span>);</span><br><span class="line">__asm__(<span class="string">"mov x19, #0xdddd000000000000"</span>);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>能够发现，上述四条汇编只是提前进行了 lsl 移位，所以本质上是一样的。如果没有根据规定进行 16、32、48 特定的移位就会报错，比如立即数 0xbbbb000 只是把 0xbbbb 左移 12 位，此时就会报错：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">__asm__(<span class="string">"mov x19, #0xbbbb000"</span>); <span class="comment">//Error: immediate cannot be moved by a single instruction</span></span><br></pre></td></tr></tbody></table></figure>]]></content>
+      <categories>
+        <category>指令集架构</category>
+      </categories>
+      <tags>
+        <tag>aarch64</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>通过 qemu 在 x86 上实现全系统模拟 PowerPC</title>
+    <url>/posts/66d22827.html</url>
+    <content><![CDATA[<p>某软件开发过程中，需要参考 PowerPC 架构代码，但并没有 ppc 架构的机器环境，VMware 只能模拟同架构的 OS，而想要模拟不同架构，进行跨架构开发的话只能通过 qemu 进行模拟。本文记录了在 Linux 和 Windows 两种环境下实现过程：在 Windows 通过 VMware 建立 Ubuntu18.04 虚拟机，然后在 Ubuntu18.04 下用 qemu 实现全系统模拟 PowerPC；或者直接在 Windows 下用 win-64bits 的 qemu 来实现，两种方法都可行。</p>
+<span id="more"></span>
+
+<h1 id="Ubuntu18-04搭建过程"><a href="#Ubuntu18-04搭建过程" class="headerlink" title="Ubuntu18.04搭建过程"></a>Ubuntu18.04 搭建过程</h1><h2 id="安装qemu"><a href="#安装qemu" class="headerlink" title="安装qemu"></a>安装 qemu</h2><figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">sudo apt-get install qemu</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="下载ppc镜像"><a href="#下载ppc镜像" class="headerlink" title="下载ppc镜像"></a>下载 ppc 镜像</h2><p>Ubuntu16.04.6 之后的版本不再支持 ppc 架构，这里使用最后一个发行版 <code>ubuntu-16.04.6-server-powerpc.iso</code>，下载地址：<br><a href="https://mirrors.tuna.tsinghua.edu.cn/ubuntu-cdimage/releases/16.04/release/ubuntu-16.04.6-server-powerpc.iso">https://mirrors.tuna.tsinghua.edu.cn/ubuntu-cdimage/releases/16.04/release/ubuntu-16.04.6-server-powerpc.iso</a></p>
+<h2 id="生成硬盘镜像"><a href="#生成硬盘镜像" class="headerlink" title="生成硬盘镜像"></a>生成硬盘镜像</h2><figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">qemu-img create -f qcow2 ubuntu16.qcow2 60G</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="安装系统"><a href="#安装系统" class="headerlink" title="安装系统"></a>安装系统</h2><figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">qemu-system-ppc -L pc-bios -boot d -M mac99 -m 1024 -net nic,model=sungem -net user -hda ubuntu16.qcow2 -cdrom ubuntu-16.04.6-server-powerpc.iso</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="开始运行"><a href="#开始运行" class="headerlink" title="开始运行"></a>开始运行</h2><figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">qemu-system-ppc -L pc-bios -boot c -prom-env "boot-device=hd:,\yaboot" -prom-env "boot-args=conf=hd:,\yaboot.conf" -M mac99 -m 1024 -net nic,model=sungem -net user -hda ubuntu16.qcow2 -g 1024x768x32</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305192313183.png" alt="image-20230519231357094"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305192326191.png" alt="image-20230519232612089"></p>
+<h1 id="Windows10搭建过程"><a href="#Windows10搭建过程" class="headerlink" title="Windows10搭建过程"></a>Windows10 搭建过程</h1><h2 id="安装qemu-1"><a href="#安装qemu-1" class="headerlink" title="安装qemu"></a>安装 qemu</h2><p><a href="https://www.qemu.org/download/#windows">qemu 官网</a>已经支持 Windows，并提供了二进制工具集，直接下载二进制使用最为方面。QEMU Binaries for Windows (64 bit) 下载地址：<br><a href="https://qemu.weilnetz.de/w64/">https://qemu.weilnetz.de/w64/</a></p>
+<h2 id="方法一：复制Linux硬盘镜像"><a href="#方法一：复制Linux硬盘镜像" class="headerlink" title="方法一：复制Linux硬盘镜像"></a>方法一：复制 Linux 硬盘镜像</h2><p>如果已经在 Ubuntu Linux 环境下成功安装了 ppc 系统，可以直接把 <code>ubuntu16.qcow2</code> 镜像文件复制到 Windows 环境下使用。</p>
+<p>进入 qemu 二进制存放目录，在 Windows 命令行下运行：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">.\qemu-system-ppc.exe -L pc-bios -boot c -prom-env "boot-device=hd:,\yaboot" -prom-env "boot-args=conf=hd:,\yaboot.conf" -M mac99 -m 1024 -net nic,model=sungem -net user -hda ubuntu16.qcow2 -g 1024x768x32</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="方法二：参照Ubuntu搭建过程从零开始"><a href="#方法二：参照Ubuntu搭建过程从零开始" class="headerlink" title="方法二：参照Ubuntu搭建过程从零开始"></a>方法二：参照 Ubuntu 搭建过程从零开始</h2><p>Windows 环境搭建过程和 Ubuntu 搭建方法一样，只是记得把命令中的 <code>qemu-system-ppc</code> 换成<code>.\qemu-system-ppc.exe</code>。</p>
+<p><strong>三步走：</strong></p>
+<ol>
+<li>生成硬盘镜像 </li>
+</ol>
+<figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">.\qemu-img.exe create -f qcow2 ubuntu16.qcow2 60G</span><br></pre></td></tr></tbody></table></figure>
+
+<ol start="2">
+<li>安装系统 </li>
+</ol>
+<figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">.\qemu-system-ppc.exe -L pc-bios -boot d -M mac99 -m 1024 -net nic,model=sungem -net user -hda ubuntu16.qcow2 -cdrom ubuntu-16.04.6-server-powerpc.iso</span><br></pre></td></tr></tbody></table></figure>
+
+<ol start="3">
+<li>开始运行 </li>
+</ol>
+<figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">.\qemu-system-ppc.exe -L pc-bios -boot c -prom-env "boot-device=hd:,\yaboot" -prom-env "boot-args=conf=hd:,\yaboot.conf" -M mac99 -m 1024 -net nic,model=sungem -net user -hda ubuntu16.qcow2 -g 1024x768x32</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="效果图-1"><a href="#效果图-1" class="headerlink" title="效果图"></a>效果图</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305192301296.png" alt="image-20230519230101675"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305192310523.png" alt="image-20230519231054400"></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>一开始查阅的中文教程，实操过程中出现各种问题，然后 google 上用英文搜索后，发现了一些英文靠谱的教程，一试便成功了。参考的是 GitHub 上 ross-newman 大佬给出的方法：</p>
+<p><a href="https://gist.github.com/ross-newman/a744988b298ea1ad47c5dae1baafcb22">https://gist.github.com/ross-newman/a744988b298ea1ad47c5dae1baafcb22</a></p>
+<p>Building PPC Linux code using QEMU on Ubuntu 18.04 LTS：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">echo "Building Debina 10 QEMU instance..."</span><br><span class="line">wget https://cdimage.debian.org/cdimage/ports/10.0/powerpc/iso-cd/debian-10.0-powerpc-NETINST-1.iso</span><br><span class="line">sudo apt install qemu</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Create new disk <span class="keyword">for</span> install</span></span><br><span class="line">qemu-img create -f qcow2 debian10.qcow2 2000M</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Boot the install image</span></span><br><span class="line">qemu-system-ppc -L pc-bios -boot d -M mac99 -m 1024 -net nic,model=sungem -net user -hda debian10.qcow2 -cdrom ./debian-10.0-powerpc-NETINST-1.iso -g 1024x768x8</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Run the image</span></span><br><span class="line">qemu-system-ppc -L pc-bios -boot c -prom-env "boot-device=hd:,\yaboot" -prom-env "boot-args=conf=hd:,\yaboot.conf" \</span><br><span class="line"> -M mac99 -m 1024 -net nic,model=sungem -net user -hda debian10.qcow2 -g 1024x768x32</span><br><span class="line"></span><br><span class="line">echo "Building lUbuntu 16.04 QEMU instance..."</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">wget http://cdimage.ubuntu.com/releases/14.04/release/ubuntu-14.04.6-server-powerpc.iso</span></span><br><span class="line">wget http://cdimage.ubuntu.com/lubuntu/releases/16.04.1/release/lubuntu-16.04-desktop-powerpc.iso</span><br><span class="line">qemu-img create -f qcow2 lubuntu14.qcow2 2000M</span><br><span class="line">qemu-system-ppc -L pc-bios -boot d -M mac99 -m 1024 -net nic,model=sungem -net user -hda lubuntu14.qcow2 -cdrom lubuntu-14.04.5-desktop-powerpc.iso</span><br><span class="line">qemu-system-ppc -L pc-bios -boot c -prom-env "boot-device=hd:,\yaboot" -prom-env "boot-args=conf=hd:,\yaboot.conf" -M mac99 -m 1024 -net nic,model=sungem -net user -hda lubuntu14.qcow2 -cdrom lubuntu-14.04.5-desktop-powerpc.iso</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">Building u-boot <span class="keyword">for</span> PPC</span></span><br><span class="line">echo "Building U-Boot for QEMU..."</span><br><span class="line">sudo apt install gcc-powerpc-linux-gnu</span><br><span class="line">git clone https://git.denx.de/u-boot.git</span><br><span class="line">make ARCH=powerpc CROSS_COMPILE=powerpc-linux-gnu- qemu-ppce500_defconfig</span><br><span class="line">make ARCH=powerpc CROSS_COMPILE=powerpc-linux-gnu-</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">qemu-system-ppc -machine <span class="built_in">help</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">qemu-system-ppc -cpu <span class="built_in">help</span></span></span><br><span class="line">qemu-system-ppc -M ppce500 -m 1024 -nographic -kernel ./u-boot</span><br></pre></td></tr></tbody></table></figure>
+
+]]></content>
+      <categories>
+        <category>指令集架构</category>
+      </categories>
+      <tags>
+        <tag>PowerPC</tag>
+        <tag>qemu</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Typora+Picgo+Gitee 构建网络图床笔记</title>
     <url>/posts/80f1815e.html</url>
     <content><![CDATA[<p><strong>前言</strong></p>
@@ -1753,32 +1948,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Next 主题美化修改记录（一）</title>
-    <url>/posts/d87f7e0c.html</url>
-    <content><![CDATA[<p>基于 Next 主题 V8.10.1，第一波美化修改记录。</p>
-<p>主要修改为：</p>
-<ul>
-<li>添加文章结束分割线</li>
-<li>添加上吊猫个性化回到顶部</li>
-<li>添加畅言评论系统</li>
-</ul>
-<span id="more"></span>
-
-<h2 id="git-status-结果"><a href="#git-status-结果" class="headerlink" title="git status 结果"></a>git status 结果</h2><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">Changed files:</span><br><span class="line">	modified:   layout/_macro/post.njk</span><br><span class="line">	modified:   layout/_partials/footer.njk</span><br><span class="line">	modified:   layout/_partials/page/tags.njk</span><br><span class="line">	modified:   source/css/_common/components/back-to-top.styl</span><br><span class="line"></span><br><span class="line">Untracked files:</span><br><span class="line">	layout/_macro/passage-end-tag.njk</span><br></pre></td></tr></tbody></table></figure>
-<p>新文件 layout/_macro/passage-end-tag.njk 内容：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    {% if not is_index %}</span><br><span class="line">        &lt;div style="text-align:center;color: #ccc;font-size:14px;"&gt;-------------     本文结束　&lt;i class="fa fa-heartbeat"&gt;&lt;/i&gt;　步履不止     -------------&lt;/div&gt;</span><br><span class="line">    {% endif %}</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></tbody></table></figure>
-
-<h2 id="git-diff-结果"><a href="#git-diff-结果" class="headerlink" title="git diff 结果"></a>git diff 结果</h2><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">diff --git a/layout/_macro/post.njk b/layout/_macro/post.njk</span><br><span class="line">index 27851de..6c994b4 100644</span><br><span class="line">--- a/layout/_macro/post.njk</span><br><span class="line">+++ b/layout/_macro/post.njk</span><br><span class="line">@@ -102,6 +102,12 @@</span><br><span class="line">       {{ partial('_partials/post/post-related.njk') }}</span><br><span class="line">     {%- endif %}</span><br><span class="line"> </span><br><span class="line">+&lt;div&gt;</span><br><span class="line">+  {% if not is_index %}</span><br><span class="line">+    {% include 'passage-end-tag.njk' %}</span><br><span class="line">+  {% endif %}</span><br><span class="line">+&lt;/div&gt;</span><br><span class="line">+</span><br><span class="line">     &lt;footer class="post-footer"&gt;</span><br><span class="line">       {%- if is_index %}</span><br><span class="line">         &lt;div class="post-eof"&gt;&lt;/div&gt;</span><br><span class="line">diff --git a/layout/_partials/footer.njk b/layout/_partials/footer.njk</span><br><span class="line">index d39307a..a060418 100644</span><br><span class="line">--- a/layout/_partials/footer.njk</span><br><span class="line">+++ b/layout/_partials/footer.njk</span><br><span class="line">@@ -19,7 +19,7 @@</span><br><span class="line">   &lt;/span&gt;</span><br><span class="line">   &lt;span class="author" itemprop="copyrightHolder"&gt;{{ theme.footer.copyright or author }}&lt;/span&gt;</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line">-</span><br><span class="line">+&lt;!--</span><br><span class="line"> {%- if config.symbols_count_time.total_symbols or config.symbols_count_time.total_time %}</span><br><span class="line"> &lt;div class="wordcount"&gt;</span><br><span class="line">   {%- if config.symbols_count_time.total_symbols %}</span><br><span class="line">@@ -47,7 +47,7 @@</span><br><span class="line">   {%- endif %}</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line"> {%- endif %}</span><br><span class="line">-</span><br><span class="line">+--&gt;</span><br><span class="line"> {%- if theme.busuanzi_count.enable %}</span><br><span class="line"> &lt;div class="busuanzi-count"&gt;</span><br><span class="line">   {%- if theme.busuanzi_count.total_visitors %}</span><br><span class="line">@@ -73,14 +73,14 @@</span><br><span class="line">   {%- endif %}</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line"> {%- endif %}</span><br><span class="line">-</span><br><span class="line">+&lt;!--</span><br><span class="line"> {%- if theme.footer.powered %}</span><br><span class="line">   &lt;div class="powered-by"&gt;</span><br><span class="line">     {%- set next_site = 'https://theme-next.js.org' if theme.scheme === 'Gemini' else 'https://theme-next.js.org/' + theme.scheme | lower + '/' %}</span><br><span class="line">     {{- __('footer.powered', next_url('https://hexo.io', 'Hexo') + ' &amp; ' + next_url(next_site, 'NexT.' + theme.scheme)) }}</span><br><span class="line">   &lt;/div&gt;</span><br><span class="line"> {%- endif %}</span><br><span class="line">-</span><br><span class="line">+--&gt;</span><br><span class="line"> {%- if theme.add_this_id %}</span><br><span class="line">   &lt;div class="addthis_inline_share_toolbox"&gt;</span><br><span class="line">     &lt;script src="//s7.addthis.com/js/300/addthis_widget.js#pubid={{ theme.add_this_id }}" async="async"&gt;&lt;/script&gt;</span><br><span class="line">diff --git a/layout/_partials/page/tags.njk b/layout/_partials/page/tags.njk</span><br><span class="line">index c6e55cc..7cbc75c 100644</span><br><span class="line">--- a/layout/_partials/page/tags.njk</span><br><span class="line">+++ b/layout/_partials/page/tags.njk</span><br><span class="line">@@ -13,4 +13,4 @@</span><br><span class="line">       })</span><br><span class="line">     }}</span><br><span class="line">   &lt;/div&gt;</span><br><span class="line">-&lt;/div&gt;</span><br><span class="line">+&lt;/div&gt;</span><br><span class="line">\ No newline at end of file</span><br><span class="line">diff --git a/source/css/_common/components/back-to-top.styl b/source/css/_common/components/back-to-top.styl</span><br><span class="line">index d1c9152..89af070 100644</span><br><span class="line">--- a/source/css/_common/components/back-to-top.styl</span><br><span class="line">+++ b/source/css/_common/components/back-to-top.styl</span><br><span class="line">@@ -43,3 +43,26 @@ if (hexo-config('back2top.enable')) {</span><br><span class="line">     }</span><br><span class="line">   }</span><br><span class="line"> }</span><br><span class="line">+</span><br><span class="line">+/* 这里已经注释掉，若想生效取消注释即可，其他不用设置</span><br><span class="line">+//自定义回到顶部样式-上吊猫</span><br><span class="line">+.back-to-top {</span><br><span class="line">+  right: 60px;</span><br><span class="line">+  width: 70px;  //图片素材宽度</span><br><span class="line">+  height: 900px;  //图片素材高度</span><br><span class="line">+  top: -900px;</span><br><span class="line">+  bottom: unset;</span><br><span class="line">+  transition: all .5s ease-in-out;</span><br><span class="line">+  background: url("/images/scroll.png");</span><br><span class="line">+</span><br><span class="line">+  //隐藏箭头图标</span><br><span class="line">+  &gt; i {</span><br><span class="line">+    display: none;</span><br><span class="line">+  }</span><br><span class="line">+</span><br><span class="line">+  &amp;.back-to-top-on {</span><br><span class="line">+    bottom: unset;</span><br><span class="line">+    top: 100vh &lt; (900px + 200px) ? calc( 100vh - 900px - 200px ) : 0px;</span><br><span class="line">+  }</span><br><span class="line">+}</span><br><span class="line">+*/</span><br><span class="line">\ No newline at end of file</span><br></pre></td></tr></tbody></table></figure>
-
-<h2 id="config-yml-修改情况"><a href="#config-yml-修改情况" class="headerlink" title="_config.yml 修改情况"></a>_config.yml 修改情况</h2><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">24c24</span><br><span class="line">&lt;   #sidebar: source/_data/sidebar.njk</span><br><span class="line">---</span><br><span class="line">&gt;   sidebar: source/_data/sidebar.njk</span><br><span class="line">53,54c53,54</span><br><span class="line">&lt;   small: /images/favicon-16x16-next.png</span><br><span class="line">&lt;   medium: /images/favicon-32x32-next.png</span><br><span class="line">---</span><br><span class="line">&gt;   small: /images/favicon-50.png # favicon-16x16-next.png</span><br><span class="line">&gt;   medium: /images/favicon-100.png # favicon-32x32-next.png</span><br><span class="line">98,102c98,102</span><br><span class="line">&lt;   #home: / || fa fa-home</span><br><span class="line">&lt;   #about: /about/ || fa fa-user</span><br><span class="line">&lt;   #tags: /tags/ || fa fa-tags</span><br><span class="line">&lt;   #categories: /categories/ || fa fa-th</span><br><span class="line">&lt;   #archives: /archives/ || fa fa-archive</span><br><span class="line">---</span><br><span class="line">&gt;   home: / || fa fa-home</span><br><span class="line">&gt;   categories: /categories/ || fa fa-folder-open</span><br><span class="line">&gt;   tags: /tags/ || fa fa-tags</span><br><span class="line">&gt;   archives: /archives/ || fa fa-calendar # fa fa-archive</span><br><span class="line">&gt;   about: /about/ || fa fa-user</span><br><span class="line">120,121c120,121</span><br><span class="line">&lt;   position: left</span><br><span class="line">&lt;   #position: right</span><br><span class="line">---</span><br><span class="line">&gt;   #position: left</span><br><span class="line">&gt;   position: right</span><br><span class="line">143c143</span><br><span class="line">&lt;   url: #/images/avatar.gif</span><br><span class="line">---</span><br><span class="line">&gt;   url: /images/avatar.jpg</span><br><span class="line">145c145</span><br><span class="line">&lt;   rounded: false</span><br><span class="line">---</span><br><span class="line">&gt;   rounded: true</span><br><span class="line">147c147</span><br><span class="line">&lt;   rotated: false</span><br><span class="line">---</span><br><span class="line">&gt;   rotated: true</span><br><span class="line">157,158c157,158</span><br><span class="line">&lt;   #GitHub: https://github.com/yourname || fab fa-github</span><br><span class="line">&lt;   #E-Mail: mailto:yourname@gmail.com || fa fa-envelope</span><br><span class="line">---</span><br><span class="line">&gt;   #GitHub: https://github.com/liu-paopao || fab fa-github</span><br><span class="line">&gt;   #E-Mail: mailto:liupaopao520@163.com || fa fa-envelope</span><br><span class="line">170c170</span><br><span class="line">&lt;   icons_only: false</span><br><span class="line">---</span><br><span class="line">&gt;   icons_only: true</span><br><span class="line">212c212</span><br><span class="line">&lt;     name: fa fa-heart</span><br><span class="line">---</span><br><span class="line">&gt;     name: fa fa-heartbeat</span><br><span class="line">222c222</span><br><span class="line">&lt;   powered: true</span><br><span class="line">---</span><br><span class="line">&gt;   powered: false</span><br><span class="line">262a263</span><br><span class="line">&gt; </span><br><span class="line">264c265</span><br><span class="line">&lt; tag_icon: false</span><br><span class="line">---</span><br><span class="line">&gt; tag_icon: true</span><br><span class="line">375c376</span><br><span class="line">&lt;     enable: false</span><br><span class="line">---</span><br><span class="line">&gt;     enable: true</span><br><span class="line">384c385</span><br><span class="line">&lt;   scrollpercent: false</span><br><span class="line">---</span><br><span class="line">&gt;   scrollpercent: true</span><br><span class="line">409c410</span><br><span class="line">&lt;   permalink: https://github.com/yourname</span><br><span class="line">---</span><br><span class="line">&gt;   permalink: https://github.com/liu-paopao</span><br><span class="line">529c530</span><br><span class="line">&lt; fancybox: false</span><br><span class="line">---</span><br><span class="line">&gt; fancybox: true</span><br><span class="line">610,612c611,613</span><br><span class="line">&lt;   enable: false</span><br><span class="line">&lt;   appid:</span><br><span class="line">&lt;   appkey:</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br><span class="line">&gt;   appid: cyw09gPog</span><br><span class="line">&gt;   appkey: 4488e6b82bfe3d819f4971a5e5c115f4</span><br><span class="line">745c746</span><br><span class="line">&lt;   enable: false</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br><span class="line">857c858</span><br><span class="line">&lt;   enable: false</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br></pre></td></tr></tbody></table></figure>]]></content>
-      <categories>
-        <category>折腾日记</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>搭建个人免费稳定图床 GitHub+jsDelivr+PicGo+Typora</title>
     <url>/posts/4169710f.html</url>
     <content><![CDATA[<h1 id="搭建个人免费稳定图床GitHub-jsDelivr-PicGo-Typora"><a href="#搭建个人免费稳定图床GitHub-jsDelivr-PicGo-Typora" class="headerlink" title="搭建个人免费稳定图床GitHub+jsDelivr+PicGo+Typora"></a>搭建个人免费稳定图床 GitHub+jsDelivr+PicGo+Typora</h1><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311104520.gif" alt="IMG_256"></p>
@@ -1822,6 +1991,58 @@
       </categories>
       <tags>
         <tag>Markdown</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>NexT 主题添加霞鹜文楷字体</title>
+    <url>/posts/f775e49.html</url>
+    <content><![CDATA[<p>最近发现了一款好看的开源字体：<strong>霞鹜文楷字体 </strong> <a href="https://github.com/lxgw/LxgwWenKai">https://github.com/lxgw/LxgwWenKai</a>，于是打算用到我的 Hexo-NexT 博客主题里面，这里记录一下修改过程。</p>
+<span id="more"></span>
+
+<p>效果图如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202308251056769.png" alt="霞鹜文楷字体"></p>
+<h2 id="新建source-data-head-njk"><a href="#新建source-data-head-njk" class="headerlink" title="新建source/_data/head.njk"></a>新建 source/_data/head.njk</h2><p>添加内容：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" /&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>目前最新版本为 1.7.0，可以点开网址 <a href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/">https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/</a> 查询下最新版本。</p>
+<h2 id="修改-config-next-yml"><a href="#修改-config-next-yml" class="headerlink" title="修改_config.next.yml"></a>修改_config.next.yml</h2><p>修改内容 1：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">custom_file_path:</span><br><span class="line">  head: source/_data/head.njk</span><br></pre></td></tr></tbody></table></figure>
+
+<p>修改内容 2：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line"># ---------------------------------------------------------------</span><br><span class="line"># Font Settings</span><br><span class="line"># ---------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">font:</span><br><span class="line">  enable: true</span><br><span class="line"></span><br><span class="line">  # Uri of fonts host, e.g. https://fonts.googleapis.com (Default).</span><br><span class="line">  host: https://fonts.googleapis.com</span><br><span class="line"></span><br><span class="line">  # Font options:</span><br><span class="line">  # `external: true` will load this font family from `host` above.</span><br><span class="line">  # `family: Times New Roman`. Without any quotes.</span><br><span class="line">  # `size: x.x`. Use `em` as unit. Default: 1 (16px)</span><br><span class="line"></span><br><span class="line">  # Global font settings used for all elements inside &lt;body&gt;.</span><br><span class="line">  global:</span><br><span class="line">    external: false</span><br><span class="line">    family: "LXGW WenKai"</span><br><span class="line">    size:</span><br><span class="line"></span><br><span class="line">  # Font settings for site title (.site-title).</span><br><span class="line">  title:</span><br><span class="line">    external: true</span><br><span class="line">    family:</span><br><span class="line">    size:</span><br><span class="line"></span><br><span class="line">  # Font settings for headlines (&lt;h1&gt; to &lt;h6&gt;).</span><br><span class="line">  headings:</span><br><span class="line">    external: true</span><br><span class="line">    family:</span><br><span class="line">    size:</span><br><span class="line"></span><br><span class="line">  # Font settings for posts (.post-body).</span><br><span class="line">  posts:</span><br><span class="line">    external: true</span><br><span class="line">    family:</span><br><span class="line"></span><br><span class="line">  # Font settings for &lt;code&gt; and code blocks.</span><br><span class="line">  codes:</span><br><span class="line">    external: false</span><br><span class="line">    family: "LXGW WenKai Mono, Source Code Pro"</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+]]></content>
+      <categories>
+        <category>折腾日记</category>
+      </categories>
+      <tags>
+        <tag>NexT</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>NexT 主题美化修改记录（一）</title>
+    <url>/posts/d87f7e0c.html</url>
+    <content><![CDATA[<p>基于 NexT 主题 V8.10.1，第一波美化修改记录。</p>
+<p>主要修改为：</p>
+<ul>
+<li>添加文章结束分割线</li>
+<li>添加上吊猫个性化回到顶部</li>
+<li>添加畅言评论系统</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="git-status-结果"><a href="#git-status-结果" class="headerlink" title="git status 结果"></a>git status 结果</h2><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">Changed files:</span><br><span class="line">	modified:   layout/_macro/post.njk</span><br><span class="line">	modified:   layout/_partials/footer.njk</span><br><span class="line">	modified:   layout/_partials/page/tags.njk</span><br><span class="line">	modified:   source/css/_common/components/back-to-top.styl</span><br><span class="line"></span><br><span class="line">Untracked files:</span><br><span class="line">	layout/_macro/passage-end-tag.njk</span><br></pre></td></tr></tbody></table></figure>
+<p>新文件 layout/_macro/passage-end-tag.njk 内容：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    {% if not is_index %}</span><br><span class="line">        &lt;div style="text-align:center;color: #ccc;font-size:14px;"&gt;-------------     本文结束　&lt;i class="fa fa-heartbeat"&gt;&lt;/i&gt;　步履不止     -------------&lt;/div&gt;</span><br><span class="line">    {% endif %}</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="git-diff-结果"><a href="#git-diff-结果" class="headerlink" title="git diff 结果"></a>git diff 结果</h2><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">diff --git a/layout/_macro/post.njk b/layout/_macro/post.njk</span><br><span class="line">index 27851de..6c994b4 100644</span><br><span class="line">--- a/layout/_macro/post.njk</span><br><span class="line">+++ b/layout/_macro/post.njk</span><br><span class="line">@@ -102,6 +102,12 @@</span><br><span class="line">       {{ partial('_partials/post/post-related.njk') }}</span><br><span class="line">     {%- endif %}</span><br><span class="line"> </span><br><span class="line">+&lt;div&gt;</span><br><span class="line">+  {% if not is_index %}</span><br><span class="line">+    {% include 'passage-end-tag.njk' %}</span><br><span class="line">+  {% endif %}</span><br><span class="line">+&lt;/div&gt;</span><br><span class="line">+</span><br><span class="line">     &lt;footer class="post-footer"&gt;</span><br><span class="line">       {%- if is_index %}</span><br><span class="line">         &lt;div class="post-eof"&gt;&lt;/div&gt;</span><br><span class="line">diff --git a/layout/_partials/footer.njk b/layout/_partials/footer.njk</span><br><span class="line">index d39307a..a060418 100644</span><br><span class="line">--- a/layout/_partials/footer.njk</span><br><span class="line">+++ b/layout/_partials/footer.njk</span><br><span class="line">@@ -19,7 +19,7 @@</span><br><span class="line">   &lt;/span&gt;</span><br><span class="line">   &lt;span class="author" itemprop="copyrightHolder"&gt;{{ theme.footer.copyright or author }}&lt;/span&gt;</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line">-</span><br><span class="line">+&lt;!--</span><br><span class="line"> {%- if config.symbols_count_time.total_symbols or config.symbols_count_time.total_time %}</span><br><span class="line"> &lt;div class="wordcount"&gt;</span><br><span class="line">   {%- if config.symbols_count_time.total_symbols %}</span><br><span class="line">@@ -47,7 +47,7 @@</span><br><span class="line">   {%- endif %}</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line"> {%- endif %}</span><br><span class="line">-</span><br><span class="line">+--&gt;</span><br><span class="line"> {%- if theme.busuanzi_count.enable %}</span><br><span class="line"> &lt;div class="busuanzi-count"&gt;</span><br><span class="line">   {%- if theme.busuanzi_count.total_visitors %}</span><br><span class="line">@@ -73,14 +73,14 @@</span><br><span class="line">   {%- endif %}</span><br><span class="line"> &lt;/div&gt;</span><br><span class="line"> {%- endif %}</span><br><span class="line">-</span><br><span class="line">+&lt;!--</span><br><span class="line"> {%- if theme.footer.powered %}</span><br><span class="line">   &lt;div class="powered-by"&gt;</span><br><span class="line">     {%- set next_site = 'https://theme-next.js.org' if theme.scheme === 'Gemini' else 'https://theme-next.js.org/' + theme.scheme | lower + '/' %}</span><br><span class="line">     {{- __('footer.powered', next_url('https://hexo.io', 'Hexo') + ' &amp; ' + next_url(next_site, 'NexT.' + theme.scheme)) }}</span><br><span class="line">   &lt;/div&gt;</span><br><span class="line"> {%- endif %}</span><br><span class="line">-</span><br><span class="line">+--&gt;</span><br><span class="line"> {%- if theme.add_this_id %}</span><br><span class="line">   &lt;div class="addthis_inline_share_toolbox"&gt;</span><br><span class="line">     &lt;script src="//s7.addthis.com/js/300/addthis_widget.js#pubid={{ theme.add_this_id }}" async="async"&gt;&lt;/script&gt;</span><br><span class="line">diff --git a/layout/_partials/page/tags.njk b/layout/_partials/page/tags.njk</span><br><span class="line">index c6e55cc..7cbc75c 100644</span><br><span class="line">--- a/layout/_partials/page/tags.njk</span><br><span class="line">+++ b/layout/_partials/page/tags.njk</span><br><span class="line">@@ -13,4 +13,4 @@</span><br><span class="line">       })</span><br><span class="line">     }}</span><br><span class="line">   &lt;/div&gt;</span><br><span class="line">-&lt;/div&gt;</span><br><span class="line">+&lt;/div&gt;</span><br><span class="line">\ No newline at end of file</span><br><span class="line">diff --git a/source/css/_common/components/back-to-top.styl b/source/css/_common/components/back-to-top.styl</span><br><span class="line">index d1c9152..89af070 100644</span><br><span class="line">--- a/source/css/_common/components/back-to-top.styl</span><br><span class="line">+++ b/source/css/_common/components/back-to-top.styl</span><br><span class="line">@@ -43,3 +43,26 @@ if (hexo-config('back2top.enable')) {</span><br><span class="line">     }</span><br><span class="line">   }</span><br><span class="line"> }</span><br><span class="line">+</span><br><span class="line">+/* 这里已经注释掉，若想生效取消注释即可，其他不用设置</span><br><span class="line">+//自定义回到顶部样式-上吊猫</span><br><span class="line">+.back-to-top {</span><br><span class="line">+  right: 60px;</span><br><span class="line">+  width: 70px;  //图片素材宽度</span><br><span class="line">+  height: 900px;  //图片素材高度</span><br><span class="line">+  top: -900px;</span><br><span class="line">+  bottom: unset;</span><br><span class="line">+  transition: all .5s ease-in-out;</span><br><span class="line">+  background: url("/images/scroll.png");</span><br><span class="line">+</span><br><span class="line">+  //隐藏箭头图标</span><br><span class="line">+  &gt; i {</span><br><span class="line">+    display: none;</span><br><span class="line">+  }</span><br><span class="line">+</span><br><span class="line">+  &amp;.back-to-top-on {</span><br><span class="line">+    bottom: unset;</span><br><span class="line">+    top: 100vh &lt; (900px + 200px) ? calc( 100vh - 900px - 200px ) : 0px;</span><br><span class="line">+  }</span><br><span class="line">+}</span><br><span class="line">+*/</span><br><span class="line">\ No newline at end of file</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="config-yml-修改情况"><a href="#config-yml-修改情况" class="headerlink" title="_config.yml 修改情况"></a>_config.yml 修改情况</h2><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">24c24</span><br><span class="line">&lt;   #sidebar: source/_data/sidebar.njk</span><br><span class="line">---</span><br><span class="line">&gt;   sidebar: source/_data/sidebar.njk</span><br><span class="line">53,54c53,54</span><br><span class="line">&lt;   small: /images/favicon-16x16-next.png</span><br><span class="line">&lt;   medium: /images/favicon-32x32-next.png</span><br><span class="line">---</span><br><span class="line">&gt;   small: /images/favicon-50.png # favicon-16x16-next.png</span><br><span class="line">&gt;   medium: /images/favicon-100.png # favicon-32x32-next.png</span><br><span class="line">98,102c98,102</span><br><span class="line">&lt;   #home: / || fa fa-home</span><br><span class="line">&lt;   #about: /about/ || fa fa-user</span><br><span class="line">&lt;   #tags: /tags/ || fa fa-tags</span><br><span class="line">&lt;   #categories: /categories/ || fa fa-th</span><br><span class="line">&lt;   #archives: /archives/ || fa fa-archive</span><br><span class="line">---</span><br><span class="line">&gt;   home: / || fa fa-home</span><br><span class="line">&gt;   categories: /categories/ || fa fa-folder-open</span><br><span class="line">&gt;   tags: /tags/ || fa fa-tags</span><br><span class="line">&gt;   archives: /archives/ || fa fa-calendar # fa fa-archive</span><br><span class="line">&gt;   about: /about/ || fa fa-user</span><br><span class="line">120,121c120,121</span><br><span class="line">&lt;   position: left</span><br><span class="line">&lt;   #position: right</span><br><span class="line">---</span><br><span class="line">&gt;   #position: left</span><br><span class="line">&gt;   position: right</span><br><span class="line">143c143</span><br><span class="line">&lt;   url: #/images/avatar.gif</span><br><span class="line">---</span><br><span class="line">&gt;   url: /images/avatar.jpg</span><br><span class="line">145c145</span><br><span class="line">&lt;   rounded: false</span><br><span class="line">---</span><br><span class="line">&gt;   rounded: true</span><br><span class="line">147c147</span><br><span class="line">&lt;   rotated: false</span><br><span class="line">---</span><br><span class="line">&gt;   rotated: true</span><br><span class="line">157,158c157,158</span><br><span class="line">&lt;   #GitHub: https://github.com/yourname || fab fa-github</span><br><span class="line">&lt;   #E-Mail: mailto:yourname@gmail.com || fa fa-envelope</span><br><span class="line">---</span><br><span class="line">&gt;   #GitHub: https://github.com/liu-paopao || fab fa-github</span><br><span class="line">&gt;   #E-Mail: mailto:liupaopao520@163.com || fa fa-envelope</span><br><span class="line">170c170</span><br><span class="line">&lt;   icons_only: false</span><br><span class="line">---</span><br><span class="line">&gt;   icons_only: true</span><br><span class="line">212c212</span><br><span class="line">&lt;     name: fa fa-heart</span><br><span class="line">---</span><br><span class="line">&gt;     name: fa fa-heartbeat</span><br><span class="line">222c222</span><br><span class="line">&lt;   powered: true</span><br><span class="line">---</span><br><span class="line">&gt;   powered: false</span><br><span class="line">262a263</span><br><span class="line">&gt; </span><br><span class="line">264c265</span><br><span class="line">&lt; tag_icon: false</span><br><span class="line">---</span><br><span class="line">&gt; tag_icon: true</span><br><span class="line">375c376</span><br><span class="line">&lt;     enable: false</span><br><span class="line">---</span><br><span class="line">&gt;     enable: true</span><br><span class="line">384c385</span><br><span class="line">&lt;   scrollpercent: false</span><br><span class="line">---</span><br><span class="line">&gt;   scrollpercent: true</span><br><span class="line">409c410</span><br><span class="line">&lt;   permalink: https://github.com/yourname</span><br><span class="line">---</span><br><span class="line">&gt;   permalink: https://github.com/liu-paopao</span><br><span class="line">529c530</span><br><span class="line">&lt; fancybox: false</span><br><span class="line">---</span><br><span class="line">&gt; fancybox: true</span><br><span class="line">610,612c611,613</span><br><span class="line">&lt;   enable: false</span><br><span class="line">&lt;   appid:</span><br><span class="line">&lt;   appkey:</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br><span class="line">&gt;   appid: cyw09gPog</span><br><span class="line">&gt;   appkey: 4488e6b82bfe3d819f4971a5e5c115f4</span><br><span class="line">745c746</span><br><span class="line">&lt;   enable: false</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br><span class="line">857c858</span><br><span class="line">&lt;   enable: false</span><br><span class="line">---</span><br><span class="line">&gt;   enable: true</span><br></pre></td></tr></tbody></table></figure>]]></content>
+      <categories>
+        <category>折腾日记</category>
+      </categories>
+      <tags>
+        <tag>NexT</tag>
       </tags>
   </entry>
   <entry>
@@ -1987,201 +2208,6 @@
       </categories>
       <tags>
         <tag>私人网盘</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>aarch64 架构通过 mov 和 movk 指令实现立即数装载</title>
-    <url>/posts/2ed0bfd1.html</url>
-    <content><![CDATA[<p>对 64 位数据装载到寄存器这一操作不同架构实现不同，x86 能直接通过 mov 指令实现，而 aarch64 的 mov 指令一步只能装载 16 位，对于 64 位立即数必须分四部分进行装载，下面就是 x86 和 aarch64 对比验证过程。</p>
-<span id="more"></span>
-
-<p>x86 能够通过 mov 指令实现 64 位立即数装载到寄存器，测试过程如下，通过 mov 指令对寄存器 r9 进行赋值，然后通过嵌汇编获取 r9 的值并且打印出来。</p>
-<h2 id="测试用例test-asm-x86-c："><a href="#测试用例test-asm-x86-c：" class="headerlink" title="测试用例test_asm_x86.c："></a><strong>测试用例 test_asm_x86.c：</strong></h2><figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">print_r9</span><span class="params">(<span class="type">unsigned</span> <span class="type">long</span> <span class="type">long</span> *r9)</span> {</span><br><span class="line">    __asm__ __volatile__ (</span><br><span class="line">        <span class="string">"mov %%r9, %0"</span></span><br><span class="line">        :<span class="string">"=m"</span>(*r9)</span><br><span class="line">        ::<span class="string">"memory"</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"r9 = 0x%llx\n"</span>, *r9);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">{</span><br><span class="line">  <span class="type">unsigned</span> <span class="type">long</span> <span class="type">long</span> r9;</span><br><span class="line">  __asm__(<span class="string">"mov $0xa1b2, %r9"</span>);</span><br><span class="line">  print_r9(&amp;r9);</span><br><span class="line">  __asm__(<span class="string">"mov $0xa1b2c3d4, %r9"</span>);</span><br><span class="line">  print_r9(&amp;r9);</span><br><span class="line">  __asm__(<span class="string">"mov $0xa1b2c3d4e5f6f7f8, %r9"</span>);</span><br><span class="line">  print_r9(&amp;r9);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br><span class="line">````</span><br><span class="line"></span><br><span class="line">**结果为：**</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
-<p>r9 = 0xa1b2<br>r9 = 0xa1b2c3d4<br>r9 = 0xa1b2c3d4e5f6f7f8</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line"></span><br><span class="line">## **测试用例test_asm_aarch64.c：**</span><br><span class="line"></span><br><span class="line">```c</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">// x19-x28 is callee-saved</span><br><span class="line">void print_x19() {</span><br><span class="line">    unsigned long long x19_val;</span><br><span class="line">    __asm__ __volatile__(</span><br><span class="line">        "mov %0, x19"</span><br><span class="line">        :"=r"(x19_val)</span><br><span class="line">        ::);</span><br><span class="line">    printf("x19 = 0x%llx\n", x19_val);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">{</span><br><span class="line">  __asm__("mov x19, #0xaaaa");</span><br><span class="line">  print_x19();</span><br><span class="line">  // Error: immediate cannot be moved by a single instruction</span><br><span class="line">  __asm__("mov x19, #0xbbbbaaaa");</span><br><span class="line">  print_x19();</span><br><span class="line">  return 0;</span><br><span class="line">}</span><br><span class="line">```</span><br><span class="line"></span><br><span class="line">**编译报错：**</span><br><span class="line"></span><br><span class="line">```</span><br><span class="line">Assembler messages:</span><br><span class="line">Error: immediate cannot be moved by a single instruction</span><br></pre></td></tr></tbody></table></figure>
-
-<p>报错来源于<code>__asm__("mov x19, #0xbbbbaaaa");</code> 这条汇编，查阅资料发现 aarch64 不能通过 mov 指令实现超过 16 位的立即数装载，即 mov 指令不能一次将 64 位立即数装入寄存器，需要借助 movk 指令分四次装载。movk 指令意思是 <code>move and keep</code>，可以将一个 16 位立即数偏移存入指定寄存器，并且保留寄存器其他位的数值。</p>
-<p>若想把 <code>0xddddccccbbbbaaaa</code>64 位立即数装入，则需要把立即数分割成四部分依次装载（对于 64 位指针也是这样分四次装载）：</p>
-<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">__asm__(<span class="string">"mov x19, #0xaaaa"</span>);</span><br><span class="line">__asm__(<span class="string">"movk x19, #0xbbbb, lsl #16"</span>);</span><br><span class="line">__asm__(<span class="string">"movk x19, #0xcccc, lsl #32"</span>);</span><br><span class="line">__asm__(<span class="string">"movk x19, #0xdddd, lsl #48"</span>);</span><br></pre></td></tr></tbody></table></figure>
-
-<p><strong>结果为：</strong></p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">x19 = 0xaaaa</span><br><span class="line">x19 = 0xbbbbaaaa</span><br><span class="line">x19 = 0xccccbbbbaaaa</span><br><span class="line">x19 = 0xddddccccbbbbaaaa</span><br></pre></td></tr></tbody></table></figure>
-<p>如果想单独装载 16 位数据到高位，可以根据 mov 规则，对立即数先进行 16、32、48 移位，然后再根据需要往对应位置装载 16 位立即数，下面四条嵌汇编都能正确执行：</p>
-<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">__asm__(<span class="string">"mov x19, #0xaaaa"</span>);</span><br><span class="line">__asm__(<span class="string">"mov x19, #0xbbbb0000"</span>);</span><br><span class="line">__asm__(<span class="string">"mov x19, #0xcccc00000000"</span>);</span><br><span class="line">__asm__(<span class="string">"mov x19, #0xdddd000000000000"</span>);</span><br></pre></td></tr></tbody></table></figure>
-
-<p>能够发现，上述四条汇编只是提前进行了 lsl 移位，所以本质上是一样的。如果没有根据规定进行 16、32、48 特定的移位就会报错，比如立即数 0xbbbb000 只是把 0xbbbb 左移 12 位，此时就会报错：</p>
-<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">__asm__(<span class="string">"mov x19, #0xbbbb000"</span>); <span class="comment">//Error: immediate cannot be moved by a single instruction</span></span><br></pre></td></tr></tbody></table></figure>]]></content>
-      <categories>
-        <category>指令集架构</category>
-      </categories>
-      <tags>
-        <tag>aarch64</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>PowerPC 指令集架构介绍</title>
-    <url>/posts/a19ee375.html</url>
-    <content><![CDATA[<h2 id="PowerPC简介"><a href="#PowerPC简介" class="headerlink" title="PowerPC简介"></a>PowerPC 简介</h2><p>PowerPC，有时也被简称 PPC，是一种精简指令集（RISC）架构。PowerPC 英文全名为 “Performance Optimization With Enhanced RISC – Performance Computing”。</p>
-<span id="more"></span>
-
-<p>PowerPC 是由 Apple、IBM、Motorola 三家公司在 1991 年设计的，设计源自 IBM 的 POWER 架构，主要应用在通信、工控、航天国防等要求高性能和高可靠性的一些高端领域。</p>
-<p>PowerPC 指令集架构（PowerPC Instruction Set Architecture，PowerPC ISA），主要包括寄存器类别和指令格式两部分内容。</p>
-<p>PowerPC 处理器提供 32 位和 64 位两种指令运行环境。</p>
-<h2 id="寄存器类别"><a href="#寄存器类别" class="headerlink" title="寄存器类别"></a>寄存器类别</h2><p>PowerPC 用户态寄存器包括：</p>
-<ul>
-<li>GPR（General Purpose Registers，通用寄存器，64 位），32 个</li>
-<li> FPR（Floating-Point Registers，浮点寄存器，64 位），32 个</li>
-<li> FPSCR（Floating-Point Status and Control Register，浮点状态和控制寄存器，32 位）</li>
-<li>LR（Link Register，链接寄存器，64 位），用来存放函数的返回地址，转移指令的编码中 LK 位为 1 时，转移指令就会将当前指令地址加 4 后保存到 LR 寄存器，从而实现函数的调用和返回。</li>
-<li>CTR（ Count Register，计数寄存器，64 位），用来保存循环变量。</li>
-<li>XER（ Fixed-Point Exception Register，整数运算进位和溢出寄存器，64 位），用来存放整数运算的溢出、进位。分为 3 个有效位，1 个有效字段，其他是保留位。<ul>
-<li>SO（第 32 位）：当检测到有指令设置 OV 时，置 1</li>
-<li>OV（第 33 位）：有符号数算术运算出现溢位</li>
-<li> CA（第 34 位）：无符号数算术运算出现进位</li>
-<li>第 57~63 位：表示 load/store 指令传送的字节数</li>
-</ul>
-</li>
-<li> CR（Condition Register，条件寄存器，32 位），用来存放指令执行后的状态，分为 8 个字段（CR0 ~ CR7），每个字段 4 位。整数运算指令的结果状态保存到 CR0，浮点运算指令的结果状态保存到 CR1。<ul>
-<li>CR0 [0]：小于 LT，结果为负时置 1</li>
-<li>CR0 [0]：大于 GT，结果为正时置 1</li>
-<li>CR0 [0]：等于 EQ，结果为 0 时置 1</li>
-<li>CR0 [0]：溢出 SO，结果溢出时置 1</li>
-</ul>
-</li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304052225755.png" alt="image-20230405222500629"></p>
-<h2 id="指令格式"><a href="#指令格式" class="headerlink" title="指令格式"></a>指令格式</h2><ul>
-<li>指令长度 4 字节 32 位，按字对齐，通常采用大端存储，指令最低 2 位忽略，通常为 0。</li>
-<li>[0:5] 位表示操作码 OPCD，很多指令同时也有扩展码 XO（extended opcode）。</li>
-<li>[6:31] 位根据不同指令格式，分别表示不同含义。</li>
-</ul>
-<h3 id="I-Form"><a href="#I-Form" class="headerlink" title="I-Form"></a>I-Form</h3><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304052339845.png" alt="image-20230405225019176"></p>
-<p><strong>无条件转移指令格式</strong>，如函数调用 bl 指令，跳转到指定函数并保存下一条指令地址：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">bl LI AA=0,LK=1</span><br></pre></td></tr></tbody></table></figure>
-
-<p>LI (6:29) ：立即数字段（Immediate field），表示 24 位带符号的二进制整数，右侧添加 0b00 （即 LI*4）并符号扩展为 64 位。</p>
-<p>AA (30) ：绝对地址位（Absolute Address bit）。</p>
-<blockquote>
-<p>AA=0 表示立即数字段为当前指令地址的相对地址。 对于 I-form 分支指令，分支目标的有效地址是 LI 字段符号扩展到 64 位后再加上分支指令地址。 对于 B-form 分支指令，分支目标的有效地址是 BD 字段符号扩展到 64 位后再加上分支指令地址。<br>AA=1 表示立即数字段代表一个绝对地址。 对于 I-form 分支指令，分支跳转目标的有效地址是 LI 字段符号扩展到 64 位。 对于 B-form 分支指令，分支跳转目标的有效地址是 BD 字段符号扩展到 64 位。</p>
-</blockquote>
-<p>LK (31) ：链接位（LINK bit）。</p>
-<blockquote>
-<p>0 表示不设置 LR 寄存器<br>1 表示将分支指令后的下一条指令地址设置到 LR 寄存器中。</p>
-</blockquote>
-<h3 id="B-Form"><a href="#B-Form" class="headerlink" title="B-Form"></a>B-Form</h3><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304052339810.png" alt="image-20230405231908193"></p>
-<p><strong>条件转移指令格式</strong></p>
-<p>BO (6:10)：该字段表示指令根据什么条件进行跳转。</p>
-<ul>
-<li>第 0 位为 1 时，bc 指令根据 CTR 寄存器进行条件跳转</li>
-<li>第 1 为为 1 时，表示条件为真时进行跳转</li>
-<li>第 2 为为 1 时，表示执行 bc 指令时 CTR 值不变</li>
-<li>……</li>
-</ul>
-<p>BI (11:15)：该字段用于指定 CR 中需要由分支条件指令测试的位。</p>
-<ul>
-<li>BI [3:4]=00，使用 LT 状态位用作指令转移条件</li>
-<li> BI [3:4]=01，使用 GT 状态位用作指令转移条件</li>
-<li> BI [3:4]=10，使用 EQ 状态位用作指令转移条件</li>
-<li> BI [3:4]=11，使用 SO 状态位用作指令转移条件</li>
-</ul>
-<p>BD (16:29)：该字段用于指定 14 位有符号数的分支位移的立即数，右侧添加 0b00 并符号扩展为 64 位。</p>
-<h3 id="SC-Form"><a href="#SC-Form" class="headerlink" title="SC-Form"></a>SC-Form</h3><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304052339466.png" alt="image-20230405232752028"></p>
-<p><strong>系统调用指令格式</strong>，即 sc 指令。</p>
-<p>LEV (20:26)：该字段被系统调用指令使用（System Call）。</p>
-<p><code>/，//，///</code> 表示指令中保留的字段。</p>
-<h3 id="D-Form和DS-Form"><a href="#D-Form和DS-Form" class="headerlink" title="D-Form和DS-Form"></a>D-Form 和 DS-Form</h3><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304152216874.png" alt="image-20230415221607770"></p>
-<p><strong>存储器、寄存器读写指令，立即数算术运算和逻辑运算指令</strong>，由 6 位操作码 + 10 位寄存器索引 + 16 位立即数构成。</p>
-<p>RT (6:10)：存放指令运算结果的寄存器索引，用作目标寄存器。</p>
-<p>RS (6:10)：存放指令运算结果的寄存器索引。</p>
-<p>RA (11:15)：存放指令所需数据源的寄存器索引。</p>
-<p>D (16:31)：存放指令所需另一个数据源，16 位有符号立即数，并符号扩展到 64 位。</p>
-<p>SI (16:31)：存放指令所需另一个数据源，16 位有符号立即数。</p>
-<p>UI (16:31)：存放指令所需另一个数据源，16 位无符号立即数。</p>
-<p>L (10)：表示进行 32 位还是 64 位比较。</p>
-<p>BF (6:8)：表示使用的 CR 字段或者 FPSCR 字段。</p>
-<p>TO (6:10)：表示 trap 自陷指令的条件。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304152231871.png" alt="image-20230415223101813"></p>
-<p>DS (16:29)：表示 14 位有符号立即数，右侧用 0x00 进行位拼接，并符号扩展到 64 位。</p>
-<p>XO (30:31)：表示扩展的操作码字段。</p>
-<h3 id="X-Form"><a href="#X-Form" class="headerlink" title="X-Form"></a>X-Form</h3><p><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20230415223333681.png" alt="image-20230415223333681"></p>
-<p>X-Form 格式指令与 D-Form 类似，只是将 D 字段拆分为 RB、XO、Rc。</p>
-<p>RB 和 RS 字段用来存放源操作数寄存器的索引，RT 字段存放目的操作寄存器的索引，RA 既可以当源操作数又可以当目的操作数。</p>
-<p>Rc 字段为 1 表示指令运算结果将改变 CR 寄存器的值，为 0 则不改变 CR 寄存器。具有<code>.</code> 后缀的指令，其 Rc 位为 1。</p>
-<h3 id="XL-Form"><a href="#XL-Form" class="headerlink" title="XL-Form"></a>XL-Form</h3><p><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20230415223357207.png" alt="image-20230415223357207"></p>
-<p>XL-Form 格式指令支持条件转移，与 B-Form 格式指令不同的是，此类指令使用 LR 或 CTR 寄存器进行跳转，而不是使用 16 位立即数进行跳转，因此可以实现一些 32 位的长跳转。</p>
-<h3 id="XFX-Form、XFL-Form、XS-Form、XO-Form与A-Form"><a href="#XFX-Form、XFL-Form、XS-Form、XO-Form与A-Form" class="headerlink" title="XFX-Form、XFL-Form、XS-Form、XO-Form与A-Form"></a>XFX-Form、XFL-Form、XS-Form、XO-Form 与 A-Form</h3><p><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20230415223415305.png" alt="image-20230415223415305"></p>
-<p>XFX-Form 格式指令用于访问 SPR 寄存器和 CR 寄存器。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162235074.png" alt="image-20230416223505933"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162235590.png" alt="image-20230416223530521"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162235669.png" alt="image-20230416223543594"></p>
-<p>XO-Form 格式指令用来支持带进位的算术运算和乘除法指令。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162235709.png" alt="image-20230416223558649"></p>
-<p>A-Form 格式指令用于浮点计算。</p>
-<h3 id="M-Form、MD-Form和MDS-Form"><a href="#M-Form、MD-Form和MDS-Form" class="headerlink" title="M-Form、MD-Form和MDS-Form"></a>M-Form、MD-Form 和 MDS-Form</h3><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162237885.png" alt="image-20230416223700825"></p>
-<p>M-Form 格式指令用于对选定的字段进行循环左移并做一些相应的掩码操作。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162237553.png" alt="image-20230416223714490"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202304162237330.png" alt="image-20230416223724263"></p>
-]]></content>
-      <categories>
-        <category>指令集架构</category>
-      </categories>
-      <tags>
-        <tag>PowerPC</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>通过 qemu 在 x86 上实现全系统模拟 PowerPC</title>
-    <url>/posts/66d22827.html</url>
-    <content><![CDATA[<p>某软件开发过程中，需要参考 PowerPC 架构代码，但并没有 ppc 架构的机器环境，VMware 只能模拟同架构的 OS，而想要模拟不同架构，进行跨架构开发的话只能通过 qemu 进行模拟。本文记录了在 Linux 和 Windows 两种环境下实现过程：在 Windows 通过 VMware 建立 Ubuntu18.04 虚拟机，然后在 Ubuntu18.04 下用 qemu 实现全系统模拟 PowerPC；或者直接在 Windows 下用 win-64bits 的 qemu 来实现，两种方法都可行。</p>
-<span id="more"></span>
-
-<h1 id="Ubuntu18-04搭建过程"><a href="#Ubuntu18-04搭建过程" class="headerlink" title="Ubuntu18.04搭建过程"></a>Ubuntu18.04 搭建过程</h1><h2 id="安装qemu"><a href="#安装qemu" class="headerlink" title="安装qemu"></a>安装 qemu</h2><figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">sudo apt-get install qemu</span><br></pre></td></tr></tbody></table></figure>
-
-<h2 id="下载ppc镜像"><a href="#下载ppc镜像" class="headerlink" title="下载ppc镜像"></a>下载 ppc 镜像</h2><p>Ubuntu16.04.6 之后的版本不再支持 ppc 架构，这里使用最后一个发行版 <code>ubuntu-16.04.6-server-powerpc.iso</code>，下载地址：<br><a href="https://mirrors.tuna.tsinghua.edu.cn/ubuntu-cdimage/releases/16.04/release/ubuntu-16.04.6-server-powerpc.iso">https://mirrors.tuna.tsinghua.edu.cn/ubuntu-cdimage/releases/16.04/release/ubuntu-16.04.6-server-powerpc.iso</a></p>
-<h2 id="生成硬盘镜像"><a href="#生成硬盘镜像" class="headerlink" title="生成硬盘镜像"></a>生成硬盘镜像</h2><figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">qemu-img create -f qcow2 ubuntu16.qcow2 60G</span><br></pre></td></tr></tbody></table></figure>
-
-<h2 id="安装系统"><a href="#安装系统" class="headerlink" title="安装系统"></a>安装系统</h2><figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">qemu-system-ppc -L pc-bios -boot d -M mac99 -m 1024 -net nic,model=sungem -net user -hda ubuntu16.qcow2 -cdrom ubuntu-16.04.6-server-powerpc.iso</span><br></pre></td></tr></tbody></table></figure>
-
-<h2 id="开始运行"><a href="#开始运行" class="headerlink" title="开始运行"></a>开始运行</h2><figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">qemu-system-ppc -L pc-bios -boot c -prom-env "boot-device=hd:,\yaboot" -prom-env "boot-args=conf=hd:,\yaboot.conf" -M mac99 -m 1024 -net nic,model=sungem -net user -hda ubuntu16.qcow2 -g 1024x768x32</span><br></pre></td></tr></tbody></table></figure>
-
-<h2 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305192313183.png" alt="image-20230519231357094"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305192326191.png" alt="image-20230519232612089"></p>
-<h1 id="Windows10搭建过程"><a href="#Windows10搭建过程" class="headerlink" title="Windows10搭建过程"></a>Windows10 搭建过程</h1><h2 id="安装qemu-1"><a href="#安装qemu-1" class="headerlink" title="安装qemu"></a>安装 qemu</h2><p><a href="https://www.qemu.org/download/#windows">qemu 官网</a>已经支持 Windows，并提供了二进制工具集，直接下载二进制使用最为方面。QEMU Binaries for Windows (64 bit) 下载地址：<br><a href="https://qemu.weilnetz.de/w64/">https://qemu.weilnetz.de/w64/</a></p>
-<h2 id="方法一：复制Linux硬盘镜像"><a href="#方法一：复制Linux硬盘镜像" class="headerlink" title="方法一：复制Linux硬盘镜像"></a>方法一：复制 Linux 硬盘镜像</h2><p>如果已经在 Ubuntu Linux 环境下成功安装了 ppc 系统，可以直接把 <code>ubuntu16.qcow2</code> 镜像文件复制到 Windows 环境下使用。</p>
-<p>进入 qemu 二进制存放目录，在 Windows 命令行下运行：</p>
-<figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">.\qemu-system-ppc.exe -L pc-bios -boot c -prom-env "boot-device=hd:,\yaboot" -prom-env "boot-args=conf=hd:,\yaboot.conf" -M mac99 -m 1024 -net nic,model=sungem -net user -hda ubuntu16.qcow2 -g 1024x768x32</span><br></pre></td></tr></tbody></table></figure>
-
-<h2 id="方法二：参照Ubuntu搭建过程从零开始"><a href="#方法二：参照Ubuntu搭建过程从零开始" class="headerlink" title="方法二：参照Ubuntu搭建过程从零开始"></a>方法二：参照 Ubuntu 搭建过程从零开始</h2><p>Windows 环境搭建过程和 Ubuntu 搭建方法一样，只是记得把命令中的 <code>qemu-system-ppc</code> 换成<code>.\qemu-system-ppc.exe</code>。</p>
-<p><strong>三步走：</strong></p>
-<ol>
-<li>生成硬盘镜像 </li>
-</ol>
-<figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">.\qemu-img.exe create -f qcow2 ubuntu16.qcow2 60G</span><br></pre></td></tr></tbody></table></figure>
-
-<ol start="2">
-<li>安装系统 </li>
-</ol>
-<figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">.\qemu-system-ppc.exe -L pc-bios -boot d -M mac99 -m 1024 -net nic,model=sungem -net user -hda ubuntu16.qcow2 -cdrom ubuntu-16.04.6-server-powerpc.iso</span><br></pre></td></tr></tbody></table></figure>
-
-<ol start="3">
-<li>开始运行 </li>
-</ol>
-<figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">.\qemu-system-ppc.exe -L pc-bios -boot c -prom-env "boot-device=hd:,\yaboot" -prom-env "boot-args=conf=hd:,\yaboot.conf" -M mac99 -m 1024 -net nic,model=sungem -net user -hda ubuntu16.qcow2 -g 1024x768x32</span><br></pre></td></tr></tbody></table></figure>
-
-<h2 id="效果图-1"><a href="#效果图-1" class="headerlink" title="效果图"></a>效果图</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305192301296.png" alt="image-20230519230101675"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202305192310523.png" alt="image-20230519231054400"></p>
-<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>一开始查阅的中文教程，实操过程中出现各种问题，然后 google 上用英文搜索后，发现了一些英文靠谱的教程，一试便成功了。参考的是 GitHub 上 ross-newman 大佬给出的方法：</p>
-<p><a href="https://gist.github.com/ross-newman/a744988b298ea1ad47c5dae1baafcb22">https://gist.github.com/ross-newman/a744988b298ea1ad47c5dae1baafcb22</a></p>
-<p>Building PPC Linux code using QEMU on Ubuntu 18.04 LTS：</p>
-<figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">echo "Building Debina 10 QEMU instance..."</span><br><span class="line">wget https://cdimage.debian.org/cdimage/ports/10.0/powerpc/iso-cd/debian-10.0-powerpc-NETINST-1.iso</span><br><span class="line">sudo apt install qemu</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Create new disk <span class="keyword">for</span> install</span></span><br><span class="line">qemu-img create -f qcow2 debian10.qcow2 2000M</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Boot the install image</span></span><br><span class="line">qemu-system-ppc -L pc-bios -boot d -M mac99 -m 1024 -net nic,model=sungem -net user -hda debian10.qcow2 -cdrom ./debian-10.0-powerpc-NETINST-1.iso -g 1024x768x8</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Run the image</span></span><br><span class="line">qemu-system-ppc -L pc-bios -boot c -prom-env "boot-device=hd:,\yaboot" -prom-env "boot-args=conf=hd:,\yaboot.conf" \</span><br><span class="line"> -M mac99 -m 1024 -net nic,model=sungem -net user -hda debian10.qcow2 -g 1024x768x32</span><br><span class="line"></span><br><span class="line">echo "Building lUbuntu 16.04 QEMU instance..."</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">wget http://cdimage.ubuntu.com/releases/14.04/release/ubuntu-14.04.6-server-powerpc.iso</span></span><br><span class="line">wget http://cdimage.ubuntu.com/lubuntu/releases/16.04.1/release/lubuntu-16.04-desktop-powerpc.iso</span><br><span class="line">qemu-img create -f qcow2 lubuntu14.qcow2 2000M</span><br><span class="line">qemu-system-ppc -L pc-bios -boot d -M mac99 -m 1024 -net nic,model=sungem -net user -hda lubuntu14.qcow2 -cdrom lubuntu-14.04.5-desktop-powerpc.iso</span><br><span class="line">qemu-system-ppc -L pc-bios -boot c -prom-env "boot-device=hd:,\yaboot" -prom-env "boot-args=conf=hd:,\yaboot.conf" -M mac99 -m 1024 -net nic,model=sungem -net user -hda lubuntu14.qcow2 -cdrom lubuntu-14.04.5-desktop-powerpc.iso</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">Building u-boot <span class="keyword">for</span> PPC</span></span><br><span class="line">echo "Building U-Boot for QEMU..."</span><br><span class="line">sudo apt install gcc-powerpc-linux-gnu</span><br><span class="line">git clone https://git.denx.de/u-boot.git</span><br><span class="line">make ARCH=powerpc CROSS_COMPILE=powerpc-linux-gnu- qemu-ppce500_defconfig</span><br><span class="line">make ARCH=powerpc CROSS_COMPILE=powerpc-linux-gnu-</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">qemu-system-ppc -machine <span class="built_in">help</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">qemu-system-ppc -cpu <span class="built_in">help</span></span></span><br><span class="line">qemu-system-ppc -M ppce500 -m 1024 -nographic -kernel ./u-boot</span><br></pre></td></tr></tbody></table></figure>
-
-]]></content>
-      <categories>
-        <category>指令集架构</category>
-      </categories>
-      <tags>
-        <tag>PowerPC</tag>
-        <tag>qemu</tag>
       </tags>
   </entry>
   <entry>
@@ -2754,8 +2780,8 @@
         <category>编译器</category>
       </categories>
       <tags>
-        <tag>aarch64</tag>
         <tag>PowerPC</tag>
+        <tag>aarch64</tag>
         <tag>交叉编译</tag>
       </tags>
   </entry>

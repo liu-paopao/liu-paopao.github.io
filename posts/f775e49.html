@@ -20,28 +20,30 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="记录 git 各种常用操作方法">
+    <meta name="description" content="最近发现了一款好看的开源字体：霞鹜文楷字体  https:&#x2F;&#x2F;github.com&#x2F;lxgw&#x2F;LxgwWenKai，于是打算用到我的 Hexo-NexT 博客主题里面，这里记录一下修改过程。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="git 学习笔记">
-<meta property="og:url" content="https://liu-paopao.github.io/posts/21db94ec.html">
+<meta property="og:title" content="NexT 主题添加霞鹜文楷字体">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/f775e49.html">
 <meta property="og:site_name" content="PaoPao&#39;s Blog">
-<meta property="og:description" content="记录 git 各种常用操作方法">
+<meta property="og:description" content="最近发现了一款好看的开源字体：霞鹜文楷字体  https:&#x2F;&#x2F;github.com&#x2F;lxgw&#x2F;LxgwWenKai，于是打算用到我的 Hexo-NexT 博客主题里面，这里记录一下修改过程。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-05-17T08:42:57.000Z">
-<meta property="article:modified_time" content="2022-07-20T03:26:16.596Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202308251056769.png">
+<meta property="article:published_time" content="2023-08-25T02:46:51.000Z">
+<meta property="article:modified_time" content="2023-08-25T03:13:06.443Z">
 <meta property="article:author" content="paopao">
-<meta property="article:tag" content="git">
+<meta property="article:tag" content="NexT">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202308251056769.png">
 
 
-<link rel="canonical" href="https://liu-paopao.github.io/posts/21db94ec.html">
+<link rel="canonical" href="https://liu-paopao.github.io/posts/f775e49.html">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/21db94ec.html","path":"posts/21db94ec.html","title":"git 学习笔记"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/f775e49.html","path":"posts/f775e49.html","title":"NexT 主题添加霞鹜文楷字体"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>git 学习笔记 | PaoPao's Blog</title>
+<title>NexT 主题添加霞鹜文楷字体 | PaoPao's Blog</title>
   
 
 
@@ -140,7 +142,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E4%B8%8A%E6%AC%A1git-commit%E6%97%B6%E9%97%B4"><span class="nav-number">1.</span> <span class="nav-text">修改上次 git commit 时间</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%BB%BAsource-data-head-njk"><span class="nav-number">1.</span> <span class="nav-text">新建 source&#x2F;_data&#x2F;head.njk</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9-config-next-yml"><span class="nav-number">2.</span> <span class="nav-text">修改_config.next.yml</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -223,7 +225,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/21db94ec.html">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/f775e49.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -236,12 +238,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="git 学习笔记 | PaoPao's Blog">
-      <meta itemprop="description" content="记录 git 各种常用操作方法">
+      <meta itemprop="name" content="NexT 主题添加霞鹜文楷字体 | PaoPao's Blog">
+      <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          git 学习笔记
+          NexT 主题添加霞鹜文楷字体
         </h1>
 
         <div class="post-meta-container">
@@ -251,15 +253,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2022-05-17 16:42:57" itemprop="dateCreated datePublished" datetime="2022-05-17T16:42:57+08:00">2022-05-17</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-07-20 11:26:16" itemprop="dateModified" datetime="2022-07-20T11:26:16+08:00">2022-07-20</time>
+      <time title="创建时间：2023-08-25 10:46:51 / 修改时间：11:13:06" itemprop="dateCreated datePublished" datetime="2023-08-25T10:46:51+08:00">2023-08-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -267,7 +263,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
+          <a href="/categories/%E6%8A%98%E8%85%BE%E6%97%A5%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">折腾日记</span></a>
         </span>
     </span>
 
@@ -276,24 +272,28 @@
   
 </div>
 
-            <div class="post-description">记录 git 各种常用操作方法</div>
         </div>
       </header>
 
     
     
     
-    <div class="post-body" itemprop="articleBody"><h2 id="修改上次git-commit时间"><a href="#修改上次git-commit时间" class="headerlink" title="修改上次git commit时间"></a>修改上次 git commit 时间</h2><p>命令：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit --amend  --date="commit_time_you_want_change"</span><br></pre></td></tr></tbody></table></figure>
+    <div class="post-body" itemprop="articleBody"><p>最近发现了一款好看的开源字体：<strong>霞鹜文楷字体 </strong> <a target="_blank" rel="noopener" href="https://github.com/lxgw/LxgwWenKai">https://github.com/lxgw/LxgwWenKai</a>，于是打算用到我的 Hexo-NexT 博客主题里面，这里记录一下修改过程。</p>
+<span id="more"></span>
 
-<p>这里需要填写的时间 <code>commit_time_you_want_change</code> 具有特定的格式要求，和 <code>date -R</code> 命令的输出格式保持一致：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ date -R</span><br><span class="line">Tue, 17 May 2022 19:03:12 +0800</span><br></pre></td></tr></tbody></table></figure>
+<p>效果图如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202308251056769.png" alt="霞鹜文楷字体"></p>
+<h2 id="新建source-data-head-njk"><a href="#新建source-data-head-njk" class="headerlink" title="新建source/_data/head.njk"></a>新建 source/_data/head.njk</h2><p>添加内容：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" /&gt;</span><br></pre></td></tr></tbody></table></figure>
 
-<p>如果想改成当前时间，直接使用：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit --amend --date="$(date -R)"</span><br></pre></td></tr></tbody></table></figure>
+<p>目前最新版本为 1.7.0，可以点开网址 <a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/">https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/</a> 查询下最新版本。</p>
+<h2 id="修改-config-next-yml"><a href="#修改-config-next-yml" class="headerlink" title="修改_config.next.yml"></a>修改_config.next.yml</h2><p>修改内容 1：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">custom_file_path:</span><br><span class="line">  head: source/_data/head.njk</span><br></pre></td></tr></tbody></table></figure>
 
-<p>如果想改成其他时间，需要按照格式构造时间：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit --amend --date="Tue, 17 May 2022 19:03:12 +0800"</span><br></pre></td></tr></tbody></table></figure>
+<p>修改内容 2：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"># ---------------------------------------------------------------</span><br><span class="line"># Font Settings</span><br><span class="line"># ---------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">font:</span><br><span class="line">  enable: true</span><br><span class="line"></span><br><span class="line">  # Uri of fonts host, e.g. https://fonts.googleapis.com (Default).</span><br><span class="line">  host: https://fonts.googleapis.com</span><br><span class="line"></span><br><span class="line">  # Font options:</span><br><span class="line">  # `external: true` will load this font family from `host` above.</span><br><span class="line">  # `family: Times New Roman`. Without any quotes.</span><br><span class="line">  # `size: x.x`. Use `em` as unit. Default: 1 (16px)</span><br><span class="line"></span><br><span class="line">  # Global font settings used for all elements inside &lt;body&gt;.</span><br><span class="line">  global:</span><br><span class="line">    external: false</span><br><span class="line">    family: "LXGW WenKai"</span><br><span class="line">    size:</span><br><span class="line"></span><br><span class="line">  # Font settings for site title (.site-title).</span><br><span class="line">  title:</span><br><span class="line">    external: true</span><br><span class="line">    family:</span><br><span class="line">    size:</span><br><span class="line"></span><br><span class="line">  # Font settings for headlines (&lt;h1&gt; to &lt;h6&gt;).</span><br><span class="line">  headings:</span><br><span class="line">    external: true</span><br><span class="line">    family:</span><br><span class="line">    size:</span><br><span class="line"></span><br><span class="line">  # Font settings for posts (.post-body).</span><br><span class="line">  posts:</span><br><span class="line">    external: true</span><br><span class="line">    family:</span><br><span class="line"></span><br><span class="line">  # Font settings for &lt;code&gt; and code blocks.</span><br><span class="line">  codes:</span><br><span class="line">    external: false</span><br><span class="line">    family: "LXGW WenKai Mono, Source Code Pro"</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+
     </div>
 
     
@@ -302,21 +302,18 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/git/" rel="tag"><i class="fa fa-tag"></i> git</a>
+              <a href="/tags/NexT/" rel="tag"><i class="fa fa-tag"></i> NexT</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/posts/b6b9c575.html" rel="prev" title="Linux 和 Windows 下查看文件哈希值">
-                  <i class="fa fa-angle-left"></i> Linux 和 Windows 下查看文件哈希值
+                <a href="/posts/4119ab6c.html" rel="prev" title="每天学个 Linux 命令 | dpkg">
+                  <i class="fa fa-angle-left"></i> 每天学个 Linux 命令 | dpkg
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/posts/831131d.html" rel="next" title="Linux 下段错误生成 core 文件的相关配置">
-                  Linux 下段错误生成 core 文件的相关配置 <i class="fa fa-angle-right"></i>
-                </a>
             </div>
           </div>
     </footer>
