@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>eBPF 相关 PPT</title>
+    <url>/posts/9e845b8f.html</url>
+    <content><![CDATA[<p>这里 mark 几个 eBPF 相关 PPT。</p>
+<span id="more"></span>
+
+
+<div class="pdf-container" data-target="https://cdn.jsdelivr.net/gh/HanxuLiu/learn-eBPF/Slides/LISA2021_BPF_Internals.pdf" data-height="500px"></div>
+
+<div class="pdf-container" data-target="https://cdn.jsdelivr.net/gh/HanxuLiu/learn-eBPF/Slides/Linux_Tracing_System_and_eBPF.pdf" data-height="500px"></div>
+
+<div class="pdf-container" data-target="https://cdn.jsdelivr.net/gh/HanxuLiu/learn-eBPF/Slides/ebpf_concept_and_application.pdf" data-height="500px"></div>
+
+<div class="pdf-container" data-target="https://cdn.jsdelivr.net/gh/HanxuLiu/learn-eBPF/Slides/operating_principle_of_ebpf.pdf" data-height="500px"></div>
+
+<div class="pdf-container" data-target="https://cdn.jsdelivr.net/gh/HanxuLiu/learn-eBPF/Slides/高效入门eBPF.pdf" data-height="500px"></div>
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>内核</tag>
+        <tag>eBPF</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>内核相关的思维导图</title>
     <url>/posts/e72cba4c.html</url>
     <content><![CDATA[<p>这里 mark 几张内核相关的思维导图。</p>
@@ -10,7 +36,8 @@
 
 <h2 id="linux内核动态追踪技术20讲"><a href="#linux内核动态追踪技术20讲" class="headerlink" title="linux内核动态追踪技术20讲"></a>linux 内核动态追踪技术 20 讲</h2><iframe src="https://www.processon.com/embed/6284b55363768936dabbffc1" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen=""></iframe>
 
-<h2 id="linux性能调试和优化"><a href="#linux性能调试和优化" class="headerlink" title="linux性能调试和优化"></a>linux 性能调试和优化</h2><iframe src="https://www.processon.com/embed/62b445eb1e08530756f27e1e" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen=""></iframe>]]></content>
+<h2 id="linux性能调试和优化"><a href="#linux性能调试和优化" class="headerlink" title="linux性能调试和优化"></a>linux 性能调试和优化</h2><iframe src="https://www.processon.com/embed/62b445eb1e08530756f27e1e" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen=""></iframe>
+]]></content>
       <categories>
         <category>Linux</category>
       </categories>
@@ -994,19 +1021,6 @@
       </tags>
   </entry>
   <entry>
-    <title>vim 速查图_中英文版</title>
-    <url>/posts/6c0adc53.html</url>
-    <content><![CDATA[<h2 id="中文翻译版"><a href="#中文翻译版" class="headerlink" title="中文翻译版"></a>中文翻译版</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202203181645094.jpg" alt="vim速查图_中文版"></p>
-<h2 id="英文原版"><a href="#英文原版" class="headerlink" title="英文原版"></a>英文原版</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202203181645480.jpg" alt="vim速查图_英文版"></p>
-]]></content>
-      <categories>
-        <category>Vim</category>
-      </categories>
-      <tags>
-        <tag>Vim</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>vim 学习笔记</title>
     <url>/posts/102383ca.html</url>
     <content><![CDATA[<h2 id="多行添加注释和取消注释"><a href="#多行添加注释和取消注释" class="headerlink" title="多行添加注释和取消注释"></a>多行添加注释和取消注释</h2><p><strong>正常模式 –&gt; 可视模式：</strong></p>
@@ -1281,6 +1295,19 @@
 <td> 表达式的结果</td>
 </tr>
 </tbody></table>
+]]></content>
+      <categories>
+        <category>Vim</category>
+      </categories>
+      <tags>
+        <tag>Vim</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>vim 速查图_中英文版</title>
+    <url>/posts/6c0adc53.html</url>
+    <content><![CDATA[<h2 id="中文翻译版"><a href="#中文翻译版" class="headerlink" title="中文翻译版"></a>中文翻译版</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202203181645094.jpg" alt="vim速查图_中文版"></p>
+<h2 id="英文原版"><a href="#英文原版" class="headerlink" title="英文原版"></a>英文原版</h2><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202203181645480.jpg" alt="vim速查图_英文版"></p>
 ]]></content>
       <categories>
         <category>Vim</category>
