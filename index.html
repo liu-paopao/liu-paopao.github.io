@@ -254,7 +254,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-10-13 17:05:21" itemprop="dateModified" datetime="2023-10-13T17:05:21+08:00">2023-10-13</time>
+      <time title="修改时间：2023-10-13 21:58:05" itemprop="dateModified" datetime="2023-10-13T21:58:05+08:00">2023-10-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -278,108 +278,18 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202310131702116.png" alt="debuginfod_demo"></p>
-<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Ubuntu 22.10 版本才默认安装 debuginfod，对于之前的发行版都需要手动配置。gdb 从 10.1 版本才开始支持 debuginfod，而 Ubuntu 旧的发行版里 gdb 都低于 10.1 版本。另外，debuginfod 被包含在 elfutils 里面，且从 elfutils-0.178 版本后才支持，而 Ubuntu 旧的发行版里 elfutils 版本都低于 0.178，因此需要先源码编译安装高版本 elfutils，再编译安装高版本 gdb，最终才能实现在 Ubuntu 旧的发行版中使用支持 debuginfod 的 gdb 来调试程序。</p>
+          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Ubuntu 22.10 版本才默认安装 debuginfod，对于之前的发行版都需要手动配置。gdb 从 10.1 版本才开始支持 debuginfod，而 Ubuntu 旧的发行版里 gdb 都低于 10.1 版本。另外，debuginfod 被包含在 elfutils 里面，且从 elfutils-0.178 版本后才支持，而 Ubuntu 旧的发行版里 elfutils 版本都低于 0.178，因此需要先源码编译安装高版本 elfutils，再编译安装高版本 gdb，最终才能实现在 Ubuntu 旧的发行版中使用支持 debuginfod 的 gdb 来调试程序。</p>
 <blockquote>
 <p>注意：gdb-10.1 及以后版本要求 libdebuginfod &gt;= 0.179，所以 elfutils 最低版本为 0.179。</p>
 </blockquote>
-<h2 id="编译安装elfutils-0-179"><a href="#编译安装elfutils-0-179" class="headerlink" title="编译安装elfutils-0.179"></a>编译安装 elfutils-0.179</h2><ol>
-<li>下载 elfutils-0.179：</li>
-</ol>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://sourceware.org/elfutils/ftp/0.179/elfutils-0.179.tar.bz2</span><br></pre></td></tr></tbody></table></figure>
-
-<ol start="2">
-<li>解压后， 通过./configure &amp;&amp; make &amp;&amp; make install 编译安装，这里我手动指定了安装路径：</li>
-</ol>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/home/geduer/elfutils-0.179</span><br></pre></td></tr></tbody></table></figure>
-
-<ol start="3">
-<li>在 configure 时会遇到下面报错：</li>
-</ol>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">checking for libmicrohttpd... no</span><br><span class="line">checking for libcurl... no</span><br><span class="line">checking for sqlite3... no</span><br><span class="line">checking for libarchive... no</span><br><span class="line">configure: error: C++ compiler or dependencies not found, use --disable-debuginfod to disable.</span><br></pre></td></tr></tbody></table></figure>
-
-<p>原因是系统下缺少 libmicrohttpd、libcurl 、sqlite3、libarchive 这四个依赖库，通过 apt 来安装这些依赖库，还需要安装对应的 dev 开发包，所以选择直接安装 dev 包，默认会把依赖库也安装。</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install libcurl4-openssl-dev</span><br><span class="line">sudo apt-get install libsqlite3-dev</span><br><span class="line">sudo apt-get install libarchive-dev</span><br><span class="line">sudo apt-get install  libmicrohttpd-dev</span><br></pre></td></tr></tbody></table></figure>
-
-<ol start="4">
-<li>安装好依赖库后再 configure 就不报错了，最后会显示 elfutils 配置清单，可以看到此时已支持 Debuginfod 特性：</li>
-</ol>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">        elfutils: 0.179 (eu_version: 179)</span><br><span class="line">......</span><br><span class="line">  OTHER FEATURES</span><br><span class="line">......</span><br><span class="line">    Debuginfod client/server support   : yes</span><br><span class="line">......</span><br></pre></td></tr></tbody></table></figure>
-
-<ol start="5">
-<li>最后把自定义的安装路径添加到系统环境变量里，这样启动 gdb 时才能识别到 debuginfod 库。</li>
-</ol>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/home/geduer/elfutils-0.179/bin:$PATH</span><br><span class="line">export LD_LIBRARY_PATH=/home/geduer/elfutils-0.179/lib:$LD_LIBRARY_PATH</span><br></pre></td></tr></tbody></table></figure>
-
-<h2 id="编译安装gdb-13-1"><a href="#编译安装gdb-13-1" class="headerlink" title="编译安装gdb-13.1"></a>编译安装 gdb-13.1</h2><ol>
-<li>下载源码 </li>
-</ol>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://ftp.gnu.org/gnu/gdb/gdb-13.1.tar.gz</span><br></pre></td></tr></tbody></table></figure>
-
-<ol start="2">
-<li>编译安装 </li>
-</ol>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/home/geduer/gdb/install --enable-tui --with-debuginfod</span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></tbody></table></figure>
-
-<p>虽然已经安装了 debuginfod，但是 gdb 编译还是同样报错：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">checking for aarch64-unknown-linux-gnu-pkg-config... /usr/bin/aarch64-unknown-linux-gnu-pkg-config</span><br><span class="line">checking pkg-config is at least version 0.9.0... yes</span><br><span class="line">checking whether to use debuginfod... yes</span><br><span class="line">checking for libdebuginfod &gt;= 0.179... no</span><br><span class="line">configure: error: "--with-debuginfod was given, but libdebuginfod is missing or unusable."</span><br></pre></td></tr></tbody></table></figure>
-
-<p>排查发现，gdb 编译时识别到 <code>--with-debuginfod</code> 选项后，会通过 <code>pkg-config</code> 工具来查找 <code>debuginfod</code> 依赖库。<code>pkg-config</code> 是通过查找后缀名为 pc 的配置文件判断依赖库是否存在，结果没找到 <code>libdebuginfod.pc</code> 文件，就认为缺少 <code>debuginfod</code> 库。可以从 <code>gdb/configure</code> 里截取相关命令来手动检测：</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">/usr/bin/aarch64-unknown-linux-gnu-pkg-config --exists --print-errors <span class="string">"libdebuginfod &gt;= 0.179"</span></span></span><br><span class="line">Package libdebuginfod was not found in the pkg-config search path.</span><br><span class="line">Perhaps you should add the directory containing `libdebuginfod.pc'</span><br><span class="line">to the PKG_CONFIG_PATH environment variable</span><br><span class="line">No package 'libdebuginfod' found</span><br></pre></td></tr></tbody></table></figure>
-
-<p>然后到 debuginfod 安装目录查找一下，发现配置文件路径为：<code>lib/pkgconfig/libdebuginfod.pc</code>。最后需要把包含的 <code>libdebuginfod.pc</code> 路径导入到环境变量 <code>PKG_CONFIG_LIBDIR</code>：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PKG_CONFIG_LIBDIR=/home/geduer/elfutils-0.179/lib/pkgconfig</span><br></pre></td></tr></tbody></table></figure>
-
-<blockquote>
-<p>注意：如果把 libdebuginfod.pc 路径导入到环境变量 PKG_CONFIG_PATH，结果还是会识别不到。查 pkg-config 手册发现 PKG_CONFIG_LIBDIR 比 PKG_CONFIG_PATH 优先级更高，PKG_CONFIG_PATH 只是附加一个搜索路径，PKG_CONFIG_LIBDIR 则是覆盖默认的搜索路径。如果嫌配置麻烦，可以在安装 elfutils 时，选择默认安装路径，即 /usr/local 目录，pkg-config 默认会搜索 /usr/local 目录。</p>
-</blockquote>
-<p>可以通过下面命令测试下是否能成功搜索到 pc 配置文件（<code>echo $?</code> 结果为 0 表示执行成功，为 1 表示错误）：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pkg-config --exists libdebuginfod</span><br><span class="line">echo $?</span><br><span class="line">0</span><br></pre></td></tr></tbody></table></figure>
-
-<h2 id="debuginfod的使用方法"><a href="#debuginfod的使用方法" class="headerlink" title="debuginfod的使用方法"></a>debuginfod 的使用方法</h2><h3 id="配置debuginfod服务器地址"><a href="#配置debuginfod服务器地址" class="headerlink" title="配置debuginfod服务器地址"></a>配置 debuginfod 服务器地址</h3><p>首先配置 debuginfod 服务器地址 <a target="_blank" rel="noopener" href="https://debuginfod.ubuntu.com,将其添加到`~/.bashrc%60%E9%87%8C%EF%BC%9A">https://debuginfod.ubuntu.com，将其添加到 `~/.bashrc` 里：</a></p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export DEBUGINFOD_URLS="https://debuginfod.ubuntu.com"</span><br></pre></td></tr></tbody></table></figure>
-
-<p>当使用 gdb 调试程序时，会通过 http 远程访问 debuginfod 服务器，根据程序唯一的 build-id 下载对应的调试符号和源文件（前提时服务器里有对应的符号文件和源码包）到本地 <code>~/.cache/debuginfod_client</code> 目录。</p>
-<h3 id="gdb中debuginfod命令"><a href="#gdb中debuginfod命令" class="headerlink" title="gdb中debuginfod命令"></a>gdb 中 debuginfod 命令</h3><p>启动 gdb-13.1，通过命令 <code>show debuginfod</code> 查看 debuginfod 配置，主要包括三个配置：</p>
-<ul>
-<li>每次启动 gdb 会主动询问是否开启 debuginfod 功能，可以把命令 <code>set debuginfod enabled on</code> 添加到 <code>~/.gdbinit</code> 里永久开启；</li>
-<li>设置 debuginfod 服务器地址，不同发行版厂商会维护自己的 debuginfod 服务器。</li>
-<li>打开 debuginfod 运行时的详细输出信息，可以通过命令 <code>set debuginfod verbose 0</code> 关闭符号下载过程信息打印。</li>
-</ul>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(gdb) show debuginfod </span><br><span class="line">debuginfod enabled:  Debuginfod functionality is currently set to "ask".</span><br><span class="line">debuginfod urls:  Debuginfod URLs are currently set to:</span><br><span class="line">https://debuginfod.ubuntu.com</span><br><span class="line">debuginfod verbose:  Debuginfod verbose output is set to 1.</span><br></pre></td></tr></tbody></table></figure>
-
-<p>gdb 里和 debuginfod 相关的命令如下，主要用来设置和显示上述的三个配置。</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(gdb) apropos debuginfod</span><br><span class="line">set debuginfod -- Set debuginfod options.</span><br><span class="line">set debuginfod enabled -- Set whether to use debuginfod.</span><br><span class="line">set debuginfod urls -- Set the list of debuginfod server URLs.</span><br><span class="line">set debuginfod verbose -- Set verbosity of debuginfod output.</span><br><span class="line">show debuginfod -- Show debuginfod options.</span><br><span class="line">show debuginfod enabled -- Show whether to use debuginfod.</span><br><span class="line">show debuginfod urls -- Show the list of debuginfod server URLs.</span><br><span class="line">show debuginfod verbose -- Show debuginfod debugging.</span><br><span class="line">(gdb)</span><br></pre></td></tr></tbody></table></figure>
-
-<h3 id="使用演示"><a href="#使用演示" class="headerlink" title="使用演示"></a>使用演示</h3><ol>
-<li>通过 gdb 调试 git，启动后输入 <code>y</code> 启用 debuginfod 后便自动下载调试符号：</li>
-</ol>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">geduer@gdk8:~/gdb/install/bin$ ./gdb /usr/bin/git -q</span><br><span class="line">Reading symbols from /usr/bin/git...</span><br><span class="line">This GDB supports auto-downloading debuginfo from the following URLs:</span><br><span class="line">  &lt;https://debuginfod.ubuntu.com&gt;</span><br><span class="line">Enable debuginfod for this session? (y or [n]) y</span><br><span class="line">Debuginfod has been enabled.</span><br><span class="line">To make this setting permanent, add 'set debuginfod enabled on' to .gdbinit.</span><br><span class="line">Downloading separate debug info for /usr/bin/git</span><br><span class="line"><span class="meta prompt_">[#</span><span class="language-bash"><span class="comment">###################################                                    ]  32% (4.19 M)</span></span></span><br></pre></td></tr></tbody></table></figure>
-
-<ol start="2">
-<li>下载完后会自动读取符号文件，设置 main 断点后提示源码下载失败，这因为 debuginfod 是新特性，所以 debuginfod 服务器里对旧版 Ubuntu 的调试符号和源码支持不够完善，这里需要我们自己手动下载源码，并添加到 gdb 源码搜索路径里：</li>
-</ol>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">   Reading symbols from /home/geduer/.cache/debuginfod_client/f1b3574e4c6c4600819de4fe860b1912235a8be3/debuginfo...                     </span><br><span class="line">   (gdb) b main</span><br><span class="line">   Download failed: Invalid argument.  Continuing without source file ./common-main.c.</span><br><span class="line">   Breakpoint 1 at 0x17108: file common-main.c, line 27.</span><br><span class="line">   (gdb) !sudo apt source git</span><br><span class="line">Reading package lists... Done</span><br><span class="line">NOTICE: 'git' packaging is maintained in the 'Git' version control system at:</span><br><span class="line">https://repo.or.cz/r/git/debian.git/</span><br><span class="line">Please use:</span><br><span class="line">git clone https://repo.or.cz/r/git/debian.git/</span><br><span class="line">to retrieve the latest (possibly unreleased) updates to the package.</span><br><span class="line">Skipping already downloaded file 'git_2.17.1-1ubuntu0.18.dsc'</span><br><span class="line">Skipping already downloaded file 'git_2.17.1.orig.tar.xz'</span><br><span class="line">Skipping already downloaded file 'git_2.17.1-1ubuntu0.18.debian.tar.xz'</span><br><span class="line">Need to get 0 B of source archives.</span><br><span class="line">Skipping unpack of already unpacked source in git-2.17.1</span><br><span class="line">(gdb) directory git-2.17.1/</span><br><span class="line">Source directories searched: /home/geduer/gdb/install/bin/git-2.17.1:$cdir:$cwd</span><br></pre></td></tr></tbody></table></figure>
-
-<ol start="3">
-<li>开始调试运行程序，debuginfod 会自动判断下载的其他依赖库的调试符号：</li>
-</ol>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">(gdb) run</span><br><span class="line">Starting program: /usr/bin/git </span><br><span class="line">Downloading separate debug info for /lib/ld-linux-aarch64.so.1</span><br><span class="line">Downloading separate debug info for system-supplied DSO at 0x7ff7ffc000 </span><br><span class="line">Downloading separate debug info for /lib/aarch64-linux-gnu/libpcre.so.3                   Downloading separate debug info for /lib/aarch64-linux-gnu/libz.so.1                     Downloading separate debug info for /lib/aarch64-linux-gnu/libpthread.so.0               [Thread debugging using libthread_db enabled]                                             Using host libthread_db library "/lib/aarch64-linux-gnu/libthread_db.so.1".</span><br><span class="line">Downloading separate debug info for /lib/aarch64-linux-gnu/libc.so.6</span><br><span class="line"></span><br><span class="line">Breakpoint 1, main (argc=1, argv=0x7ffffff3d8) at common-main.c:27</span><br><span class="line">warning: Source file is more recent than executable.</span><br><span class="line">27	{</span><br><span class="line">(gdb) l</span><br><span class="line">22		sigprocmask(SIG_UNBLOCK, &amp;unblock, NULL);</span><br><span class="line">23		signal(SIGPIPE, SIG_DFL);</span><br><span class="line">24	}</span><br><span class="line">25	</span><br><span class="line">26	int main(int argc, const char **argv)</span><br><span class="line">27	{</span><br><span class="line">28		/*</span><br><span class="line">29		 * Always open file descriptors 0/1/2 to avoid clobbering files</span><br><span class="line">30		 * in die().  It also avoids messing up when the pipes are dup'ed</span><br><span class="line">31		 * onto stdin/stdout/stderr in the child processes we spawn.</span><br></pre></td></tr></tbody></table></figure>
-<ol start="4">
-<li>还可以根据源文件和行号设置断点，注意自己下载的源码和系统下的二进制可能不是完全匹配，基于符号调试时可能源码行号对应信息有偏移误差，自行诊断：</li>
-</ol>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">(gdb) b git.c:666</span><br><span class="line">Breakpoint 2 at 0x555556d49c: file git.c, line 666.</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Breakpoint 2, cmd_main (argc=&lt;optimized out&gt;, argc@entry=1, argv=&lt;optimized out&gt;, argv@entry=0x7ffffff3d8) at git.c:666</span><br><span class="line">warning: Source file is more recent than executable.</span><br><span class="line">666			commit_pager_choice();</span><br><span class="line">(gdb) n</span><br><span class="line">667			printf("usage: %s\n\n", git_usage_string);</span><br><span class="line">(gdb) p git_usage_string</span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">2 = 0x55556f8870 &lt;git_usage_string&gt; <span class="string">"git [--version] [--help] [-C &lt;path&gt;] [-c &lt;name&gt;=&lt;value&gt;]\n"</span>, <span class="string">' '</span> &lt;repeats 11 <span class="built_in">times</span>&gt;, <span class="string">"[--exec-path[=&lt;path&gt;]] [--html-path] [--man-path] [--info-path]\n"</span>, <span class="string">' '</span> &lt;repeats 11 <span class="built_in">times</span>&gt;, <span class="string">"[-p | --paginate | --no-pager] [--no-replace-objects] [--"</span>...</span></span><br><span class="line">(gdb) n</span><br><span class="line">usage: git [--version] [--help] [-C &lt;path&gt;] [-c &lt;name&gt;=&lt;value&gt;]</span><br><span class="line">           [--exec-path[=&lt;path&gt;]] [--html-path] [--man-path] [--info-path]</span><br><span class="line">           [-p | --paginate | --no-pager] [--no-replace-objects] [--bare]</span><br><span class="line">           [--git-dir=&lt;path&gt;] [--work-tree=&lt;path&gt;] [--namespace=&lt;name&gt;]</span><br><span class="line">           &lt;command&gt; [&lt;args&gt;]</span><br><span class="line"></span><br><span class="line">668			list_common_cmds_help();</span><br><span class="line">(gdb)</span><br></pre></td></tr></tbody></table></figure>
-
-<h2 id="Ubuntu-22-xx安装方法"><a href="#Ubuntu-22-xx安装方法" class="headerlink" title="Ubuntu 22.xx安装方法"></a>Ubuntu 22.xx 安装方法</h2><p>Ubuntu22.xx 版本系统仓库里有 debuginfod，可以直接 apt 安装：</p>
-<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install debuginfod</span><br></pre></td></tr></tbody></table></figure>
-
-<p>然后在 <code>~/.bashrc</code> 里配置服务器地址即可：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export DEBUGINFOD_URLS="https://debuginfod.ubuntu.com"</span><br></pre></td></tr></tbody></table></figure>
-
-<blockquote>
-<p>Ubuntu 23.xx 最新版本自带的 gdb 版本为 13.1，默认支持 debuginfod，可以无需任何操作即可使用。</p>
-</blockquote>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/posts/1ab83ecf.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
