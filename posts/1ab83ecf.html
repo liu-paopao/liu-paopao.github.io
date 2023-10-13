@@ -20,25 +20,30 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Stay hungry, stay foolish.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="PaoPao&#39;s Blog">
-<meta property="og:url" content="https://liu-paopao.github.io/index.html">
+    <meta name="description" content="介绍Ubuntu 22.10 版本才默认安装 debuginfod，对于之前的发行版都需要手动配置。gdb 从 10.1 版本才开始支持 debuginfod，而 Ubuntu 旧的发行版里 gdb 都低于 10.1 版本。另外，debuginfod 被包含在 elfutils 里面，且从 elfutils-0.178 版本后才支持，而 Ubuntu 旧的发行版里 elfutils 版本都低于">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ubuntu18.04 环境下编译支持 debuginfod 的 gdb">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/1ab83ecf.html">
 <meta property="og:site_name" content="PaoPao&#39;s Blog">
-<meta property="og:description" content="Stay hungry, stay foolish.">
+<meta property="og:description" content="介绍Ubuntu 22.10 版本才默认安装 debuginfod，对于之前的发行版都需要手动配置。gdb 从 10.1 版本才开始支持 debuginfod，而 Ubuntu 旧的发行版里 gdb 都低于 10.1 版本。另外，debuginfod 被包含在 elfutils 里面，且从 elfutils-0.178 版本后才支持，而 Ubuntu 旧的发行版里 elfutils 版本都低于">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202310131702116.png">
+<meta property="article:published_time" content="2023-10-11T08:16:52.000Z">
+<meta property="article:modified_time" content="2023-10-13T09:03:30.143Z">
 <meta property="article:author" content="paopao">
+<meta property="article:tag" content="gdb">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202310131702116.png">
 
 
-<link rel="canonical" href="https://liu-paopao.github.io/">
+<link rel="canonical" href="https://liu-paopao.github.io/posts/1ab83ecf.html">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/1ab83ecf.html","path":"posts/1ab83ecf.html","title":"ubuntu18.04 环境下编译支持 debuginfod 的 gdb"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>PaoPao's Blog</title>
+<title>ubuntu18.04 环境下编译支持 debuginfod 的 gdb | PaoPao's Blog</title>
   
 
 
@@ -71,7 +76,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">PaoPao's Blog</h1>
+      <p class="site-title">PaoPao's Blog</p>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -124,7 +129,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -137,6 +142,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85elfutils-0-179"><span class="nav-number">2.</span> <span class="nav-text">编译安装 elfutils-0.179</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85gdb-13-1"><span class="nav-number">3.</span> <span class="nav-text">编译安装 gdb-13.1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#debuginfod%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">debuginfod 的使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEdebuginfod%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%9C%B0%E5%9D%80"><span class="nav-number">4.1.</span> <span class="nav-text">配置 debuginfod 服务器地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gdb%E4%B8%ADdebuginfod%E5%91%BD%E4%BB%A4"><span class="nav-number">4.2.</span> <span class="nav-text">gdb 中 debuginfod 命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%BC%94%E7%A4%BA"><span class="nav-number">4.3.</span> <span class="nav-text">使用演示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ubuntu-22-xx%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">Ubuntu 22.xx 安装方法</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -208,16 +214,17 @@
 
     </div>
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/1ab83ecf.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -231,13 +238,13 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | PaoPao's Blog">
+      <meta itemprop="name" content="ubuntu18.04 环境下编译支持 debuginfod 的 gdb | PaoPao's Blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/1ab83ecf.html" class="post-title-link" itemprop="url">ubuntu18.04 环境下编译支持 debuginfod 的 gdb</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          ubuntu18.04 环境下编译支持 debuginfod 的 gdb
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -277,8 +284,7 @@
     
     
     
-    <div class="post-body" itemprop="articleBody">
-          <p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202310131702116.png" alt="debuginfod_demo"></p>
+    <div class="post-body" itemprop="articleBody"><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202310131702116.png" alt="debuginfod_demo"></p>
 <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Ubuntu 22.10 版本才默认安装 debuginfod，对于之前的发行版都需要手动配置。gdb 从 10.1 版本才开始支持 debuginfod，而 Ubuntu 旧的发行版里 gdb 都低于 10.1 版本。另外，debuginfod 被包含在 elfutils 里面，且从 elfutils-0.178 版本后才支持，而 Ubuntu 旧的发行版里 elfutils 版本都低于 0.178，因此需要先源码编译安装高版本 elfutils，再编译安装高版本 gdb，最终才能实现在 Ubuntu 旧的发行版中使用支持 debuginfod 的 gdb 来调试程序。</p>
 <blockquote>
 <p>注意：gdb-10.1 及以后版本要求 libdebuginfod &gt;= 0.179，所以 elfutils 最低版本为 0.179。</p>
@@ -380,7 +386,6 @@
 <p>Ubuntu 23.xx 最新版本自带的 gdb 版本为 13.1，默认支持 debuginfod，可以无需任何操作即可使用。</p>
 </blockquote>
 
-      
     </div>
 
     
@@ -388,389 +393,21 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
+          <div class="post-tags">
+              <a href="/tags/gdb/" rel="tag"><i class="fa fa-tag"></i> gdb</a>
+          </div>
 
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/16cc400d.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PaoPao's Blog">
-      <meta itemprop="description" content="Stay hungry, stay foolish.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | PaoPao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/16cc400d.html" class="post-title-link" itemprop="url">工具篇</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2023-09-29 22:21:03 / 修改时间：22:23:15" itemprop="dateCreated datePublished" datetime="2023-09-29T22:21:03+08:00">2023-09-29</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%85%B6%E4%BB%96/" itemprop="url" rel="index"><span itemprop="name">其他</span></a>
-        </span>
-    </span>
-
-  
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>💡 <strong>学习资源</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://csdiy.wiki/">CS 自学指南</a>：一个由北大信科学生整理的、全网精品课程资源聚合网站。</li>
-<li><a target="_blank" rel="noopener" href="https://imageslr.com/">Images’ Blog</a></li>
-<li><a target="_blank" rel="noopener" href="https://catcoding.me/">程序员的喵</a></li>
-</ul>
-<p>🔨 <strong>实用工具</strong></p>
-<ul>
-<li><p>博客写作</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://typora.io/">Typora</a>：极简高效的 Markdown 编辑器 </li>
-<li><a target="_blank" rel="noopener" href="https://app.diagrams.net/">Draw.io</a>：强大简洁的绘图工具 </li>
-<li><a target="_blank" rel="noopener" href="https://excalidraw.com/">Excalidraw</a>：手绘风格的绘图工具 </li>
-<li><a target="_blank" rel="noopener" href="https://molunerfinn.com/PicGo/">PicGo</a>：支持多场景的图床工具 </li>
-<li><a target="_blank" rel="noopener" href="https://www.emojiall.com/zh-hans">Emoji 大全</a>：Emoji 表情列表</li>
-</ul>
-</li>
-<li><p>科学上网</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/2dust/v2rayN">V2RayN</a>： Windows 客户端 </li>
-<li><a target="_blank" rel="noopener" href="https://github.com/2dust/v2rayNG">V2RayNG</a> ： Android 客户端 </li>
-<li><a target="_blank" rel="noopener" href="https://v2raya.org/">v2rayA</a>：跨平台 Web 客户端（可用于 Linux）</li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/e72cba4c.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PaoPao's Blog">
-      <meta itemprop="description" content="Stay hungry, stay foolish.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | PaoPao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/e72cba4c.html" class="post-title-link" itemprop="url">内核相关的思维导图</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-08-30 09:26:49" itemprop="dateCreated datePublished" datetime="2023-08-30T09:26:49+08:00">2023-08-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-08-31 16:26:59" itemprop="dateModified" datetime="2023-08-31T16:26:59+08:00">2023-08-31</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-    </span>
-
-  
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>这里 mark 几张内核相关的思维导图。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/e72cba4c.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/9e845b8f.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PaoPao's Blog">
-      <meta itemprop="description" content="Stay hungry, stay foolish.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | PaoPao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/9e845b8f.html" class="post-title-link" itemprop="url">eBPF 相关 PPT</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-08-30 09:26:49" itemprop="dateCreated datePublished" datetime="2023-08-30T09:26:49+08:00">2023-08-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-08-31 16:27:23" itemprop="dateModified" datetime="2023-08-31T16:27:23+08:00">2023-08-31</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-    </span>
-
-  
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>这里 mark 几个 eBPF 相关 PPT。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/9e845b8f.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/16cc400d.html" rel="prev" title="工具篇">
+                  <i class="fa fa-angle-left"></i> 工具篇
+                </a>
             </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/f775e49.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PaoPao's Blog">
-      <meta itemprop="description" content="Stay hungry, stay foolish.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | PaoPao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/f775e49.html" class="post-title-link" itemprop="url">NexT 主题添加霞鹜文楷字体</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2023-08-25 10:46:51 / 修改时间：13:55:05" itemprop="dateCreated datePublished" datetime="2023-08-25T10:46:51+08:00">2023-08-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%98%E8%85%BE%E6%97%A5%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">折腾日记</span></a>
-        </span>
-    </span>
-
-  
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>最近发现了一款好看的开源字体：<strong>霞鹜文楷字体 </strong> <a target="_blank" rel="noopener" href="https://github.com/lxgw/LxgwWenKai">https://github.com/lxgw/LxgwWenKai</a>，于是打算用到我的 Hexo-NexT 博客主题里面，这里记录一下修改过程。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/f775e49.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
+            <div class="post-nav-item">
             </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+          </div>
     </footer>
   </article>
 </div>
@@ -778,456 +415,7 @@
 
 
 
-    
 
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/4119ab6c.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PaoPao's Blog">
-      <meta itemprop="description" content="Stay hungry, stay foolish.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | PaoPao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/4119ab6c.html" class="post-title-link" itemprop="url">每天学个 Linux 命令 | dpkg</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2023-08-16 16:51:53 / 修改时间：17:34:34" itemprop="dateCreated datePublished" datetime="2023-08-16T16:51:53+08:00">2023-08-16</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-    </span>
-
-  
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><code>dpkg</code> 命令全称是 <code>Debian package</code>，即 Debian 系统的软件安装、管理、卸载工具，基于 Debian 系列 Linux 发行版基本都用 <code>dpkg</code> 命令来管理软件安装包。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/4119ab6c.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/e2bc80af.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PaoPao's Blog">
-      <meta itemprop="description" content="Stay hungry, stay foolish.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | PaoPao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/e2bc80af.html" class="post-title-link" itemprop="url">解决 v2ray 代理下无法登录 OneDrive 问题</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2023-08-10 15:10:02 / 修改时间：15:57:44" itemprop="dateCreated datePublished" datetime="2023-08-10T15:10:02+08:00">2023-08-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" itemprop="url" rel="index"><span itemprop="name">科学上网</span></a>
-        </span>
-    </span>
-
-  
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>点击阅读全文查看详细内容</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/e2bc80af.html">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/2ed0bfd1.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PaoPao's Blog">
-      <meta itemprop="description" content="Stay hungry, stay foolish.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | PaoPao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/2ed0bfd1.html" class="post-title-link" itemprop="url">aarch64 架构通过 mov 和 movk 指令实现立即数装载</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-07-12 16:42:15" itemprop="dateCreated datePublished" datetime="2023-07-12T16:42:15+08:00">2023-07-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-07-13 10:17:09" itemprop="dateModified" datetime="2023-07-13T10:17:09+08:00">2023-07-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8C%87%E4%BB%A4%E9%9B%86%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">指令集架构</span></a>
-        </span>
-    </span>
-
-  
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>对 64 位数据装载到寄存器这一操作不同架构实现不同，x86 能直接通过 mov 指令实现，而 aarch64 的 mov 指令一步只能装载 16 位，对于 64 位立即数必须分四部分进行装载，下面就是 x86 和 aarch64 对比验证过程。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/2ed0bfd1.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/35593d27.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PaoPao's Blog">
-      <meta itemprop="description" content="Stay hungry, stay foolish.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | PaoPao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/35593d27.html" class="post-title-link" itemprop="url">如何在 Ubuntu-64 位环境下编译 32 位程序</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2023-07-03 16:43:45 / 修改时间：17:40:35" itemprop="dateCreated datePublished" datetime="2023-07-03T16:43:45+08:00">2023-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E7%BC%96%E8%AF%91%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">编译器</span></a>
-        </span>
-    </span>
-
-  
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>如果 gcc 编译时直接用 <code>-m32</code> 选项，则会由于找不到一些库而报错：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/35593d27.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/c34223c8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PaoPao's Blog">
-      <meta itemprop="description" content="Stay hungry, stay foolish.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | PaoPao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/c34223c8.html" class="post-title-link" itemprop="url">Linux 关闭地址空间随机化 ASLR</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2023-06-25 15:49:43 / 修改时间：17:34:41" itemprop="dateCreated datePublished" datetime="2023-06-25T15:49:43+08:00">2023-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-    </span>
-
-  
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>在编写 Linux 简单的调试器代码时，调试发现每次 ptrace 获取的 IP 寄存器都不一样，地址总是在变化，于是联想到 Linux 内核的 ASLR 机制，关闭地址空间随机化后，IP 指针值就固定下来了。</p>
-<p>开启 ASLR 后，每次程序运行时的时候，装载的可执行文件和共享库都会被映射到虚拟地址空间的不同地址处；而关掉 ASLR，则可以保证每次运行时都会被映射到虚拟地址空间的相同地址处。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/c34223c8.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
 
 </div>
   </main>
