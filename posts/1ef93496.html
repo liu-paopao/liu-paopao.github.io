@@ -20,12 +20,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="记录鲲鹏性能分析工具 Hyper_tuner 和代码迁移工具 Porting-advisor 的详细安装过程。 安装环境：  服务器：树莓派 4B（aarch64 架构） 操作系统：openEuler 22.03 LTS  安装包：  Hyper-Tuner_23.0.RC2_linux.tar.gz（1.6G） Porting-advisor_23.0.RC2_linux-Kunpeng.tar">
+    <meta name="description" content="记录鲲鹏性能分析工具 Hyper_tuner 和代码迁移工具 Porting-advisor 的详细安装过程。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="鲲鹏性能分析工具和代码迁移工具安装过程">
 <meta property="og:url" content="https://liu-paopao.github.io/posts/1ef93496.html">
 <meta property="og:site_name" content="PaoPao&#39;s Blog">
-<meta property="og:description" content="记录鲲鹏性能分析工具 Hyper_tuner 和代码迁移工具 Porting-advisor 的详细安装过程。 安装环境：  服务器：树莓派 4B（aarch64 架构） 操作系统：openEuler 22.03 LTS  安装包：  Hyper-Tuner_23.0.RC2_linux.tar.gz（1.6G） Porting-advisor_23.0.RC2_linux-Kunpeng.tar">
+<meta property="og:description" content="记录鲲鹏性能分析工具 Hyper_tuner 和代码迁移工具 Porting-advisor 的详细安装过程。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202310211424681.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202310211425272.png">
@@ -36,7 +36,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202310211428866.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202310211428004.png">
 <meta property="article:published_time" content="2023-10-21T08:06:27.000Z">
-<meta property="article:modified_time" content="2023-10-21T10:25:51.114Z">
+<meta property="article:modified_time" content="2024-02-19T01:21:59.044Z">
 <meta property="article:author" content="paopao">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2023/202310211424681.png">
@@ -163,7 +163,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -259,9 +259,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-10-21 16:06:27 / 修改时间：18:25:51" itemprop="dateCreated datePublished" datetime="2023-10-21T16:06:27+08:00">2023-10-21</time>
+      <time title="创建时间：2023-10-21 16:06:27" itemprop="dateCreated datePublished" datetime="2023-10-21T16:06:27+08:00">2023-10-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-02-19 09:21:59" itemprop="dateModified" datetime="2024-02-19T09:21:59+08:00">2024-02-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -285,6 +291,8 @@
     
     
     <div class="post-body" itemprop="articleBody"><p>记录鲲鹏性能分析工具 Hyper_tuner 和代码迁移工具 Porting-advisor 的详细安装过程。</p>
+<span id="more"></span>
+
 <p><strong>安装环境：</strong></p>
 <ul>
 <li>服务器：树莓派 4B（aarch64 架构）</li>
@@ -295,8 +303,6 @@
 <li>Hyper-Tuner_23.0.RC2_linux.tar.gz（1.6G）</li>
 <li>Porting-advisor_23.0.RC2_linux-Kunpeng.tar.gz（437M）</li>
 </ul>
-<span id="more"></span>
-
 <h2 id="解压Hyper-Tuner-23-0-RC2-linux-tar-gz"><a href="#解压Hyper-Tuner-23-0-RC2-linux-tar-gz" class="headerlink" title="解压Hyper-Tuner_23.0.RC2_linux.tar.gz"></a>解压 Hyper-Tuner_23.0.RC2_linux.tar.gz</h2><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@openEuler ~]# tar -xvf Hyper-Tuner_23.0.RC2_linux.tar.gz </span><br><span class="line">Hyper_tuner/</span><br><span class="line">Hyper_tuner/Hyper-Tuner_23.0.RC2_linux.tar.gz</span><br><span class="line">Hyper_tuner/Hyper-Tuner_23.0.RC2_linux_HPC-Tools.tar.gz</span><br><span class="line">Hyper_tuner/Open_Source_Software_Notice.txt</span><br><span class="line">Hyper_tuner/crldata.crl</span><br><span class="line">Hyper_tuner/file_list.txt</span><br><span class="line">Hyper_tuner/file_list.txt.cms</span><br><span class="line">Hyper_tuner/install.sh</span><br><span class="line"></span><br><span class="line">[root@openEuler ~]# ls</span><br><span class="line">Hyper-Tuner_23.0.RC2_linux.tar.gz  Hyper_tuner  Pictures  get-docker.sh  openEuler-22.03-LTS-everything-debug-aarch64-dvd.iso</span><br><span class="line">[root@openEuler ~]# cd Hyper_tuner/</span><br><span class="line"></span><br><span class="line">[root@openEuler Hyper_tuner]# ls</span><br><span class="line">Hyper-Tuner_23.0.RC2_linux.tar.gz            Open_Source_Software_Notice.txt  file_list.txt      install.sh</span><br><span class="line">Hyper-Tuner_23.0.RC2_linux_HPC-Tools.tar.gz  crldata.crl                      file_list.txt.cms</span><br></pre></td></tr></tbody></table></figure>
 
 

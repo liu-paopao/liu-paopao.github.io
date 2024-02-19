@@ -151,7 +151,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -209,6 +209,187 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/22588541.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/posts/22588541.html" class="post-title-link" itemprop="url">RPM 介绍</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-09-17 18:10:04 / 修改时间：18:11:46" itemprop="dateCreated datePublished" datetime="2021-09-17T18:10:04+08:00">2021-09-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Changyan：</span>
+    
+    <a title="RPM 介绍" href="/posts/22588541.html#SOHUCS" itemprop="discussionUrl">
+      <span id="sourceId::01f8ef51f599adc8fd3f5975cfa02d85" class="cy_cmt_count" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="RPM-命令"><a href="#RPM-命令" class="headerlink" title="RPM 命令"></a>RPM 命令</h1><p><strong>一、RPM 介绍</strong></p>
+<p>1. 什么是 rpm ？</p>
+<p>rpm 即 RedHat Package Management，是 RedHat 的发明之一</p>
+<p>2. 为什么需要 rpm ？</p>
+<p>在一个操作系统下，需要安装实现各种功能的软件包。这些软件包一般都有各自的程序，<br>但是同时也有错综复杂的依赖关系。同时还需要 解决软件包的版本，以及安装，配置，<br>卸载的自动化问题。为了解决 这些问题，RedHat 针对自己的系统提出了一个较好的办法<br>来管理成千 上百的软件。这就是 RPM 管理系统。在系统中安装了 rpm 管理系统以后，<br>只要是符合 rpm 文件标准的打包程序都可以方便地安装、升级、卸载。</p>
+<p>3. 是不是所有的 linux 都使用 rpm ？</p>
+<p>任何系统都需要包管理系统，因此很多 linux 都使用 rpm 系统。 rpm 系统是 Redhat Linux 和<br>Fedora Core 的软件包管理器，但是 Mandriva、SuSE 等 Linux 发行版也都使用 rpm。由于 rpm<br>的源程序可以在别的系统上进行编译，所以有可能在别的系统上也使用 rpm。除了 rpm，<br>其他一些系统也有自己的软件包管理程序， 例如 debian 的 deb 包。</p>
+<p>4.rpm 包的文件名为什么那么长 ？</p>
+<p>rpm 包的文件名中包含了这个软件包的版本信息，操作系统信息，硬件要求等等。<br>比如 mypackage-1.1-2RH.i386.rpm，其中 mypackage 是在系统中登记的软件包的名字 1.1<br>是软件的版本号，2 是发行号，RH 表示用于 RH 操作系统。i386 表示用于 intel x86 平台。</p>
+<p>5. 软件包文件名中的 i386,i686 是什么意思</p>
+<p>rpm 软件包的文件名中，不仅包含了软件名称，版本信息，还包括了适用的硬件架构的信息。</p>
+<p>i386 指这个软件包适用于 intel 80386 以上的 x86 架构的计算机 (AI32)<br>i686 指这个软件包适用于 intel 80686 以上 (奔腾 pro 以上) 的 x86 架构的计算机 (IA32)<br>noarch 指这个软件包与硬件架构无关，可以通用。</p>
+<p>i686 软件包通常针对 CPU 进行了优化，现在通常配置的机器都可以使用 i686 软件包。</p>
+<p>6. 不同操作系统发行的 rpm 包可否混用？</p>
+<p>对于已经编译成二进制的 rpm 包，由于操作系统环境不同，一般不能混用。<br>对于以 src.rpm 发行的软件包，由于需要安装时进行本地编译，所以通常可以在不同系统下安装。</p>
+<p><strong>二、RPM 包管理的用途</strong></p>
+<p>1、可以安装、删除、升级和管理以 rpm 包形式发布的软件；<br>2、可以查询某个 rpm 包中包含哪些文件，以及某个指定文件属于哪个 rpm 包；<br>3、可以在查询系统中的某个 rpm 包是否已安装以及其版本；<br>4、作为开发者可以把自己开发的软件打成 rpm 包发布；<br>5、依赖性的检查，查询安装某个 rpm 包时，需要哪些其它的 rpm 包。</p>
+<p>注：RPM 软件的安装、删除、更新只有 root 权限才能使用；<br>对于查询功能任何用户都可以操作。</p>
+<p><strong>三、rpm 的一点简单用法</strong></p>
+<p>rpm 的一般格式：</p>
+<p>rpm [选项] [rpm 软件包]</p>
+<p>1、初始化 rpm 数据库（可以省略）</p>
+<p>rpm –initdb<br>rpm –rebuilddb % 注：这个要花好长时间</p>
+<p>% 注：有时 rpm 系统出了问题，不能安装和查询，大多是这里出了问题。</p>
+<p>2、RPM 软件包管理的查询功能：</p>
+<p>rpm -q [select-options] [query-options]</p>
+<p>RPM 的查询功能是极为强大，是极为重要的功能之一；这里举几个常用的例子，更为详细的具体的，请参考 man rpm</p>
+<p><em>对系统中已安装软件的查询</em></p>
+<p>1）查询系统已安装的软件</p>
+<p>语法：rpm -q 软件名</p>
+<p>例：rpm -q gaim<br>% -q 就是 –query，此选项表示询问系统是不是安装了 gaim 软件包；<br>% 如果已安装会有信息输出；如果没有安装，会输出 gaim 没有安装的信息；</p>
+<p>% 查看系统中所有已经安装的包，要加 -a 参数<br>rpm -qa</p>
+<p>% 如果分页查看，再加一个管道 | 和 more 命令<br>rpm -qa |more</p>
+<p>% 如果要查找某个软件包，可以用 grep 抽取出来<br>rpm -qa |grep mplayer</p>
+<p>2）查询一个已经安装的文件属于哪个软件包；</p>
+<p>语法: rpm -qf 文件名</p>
+<p>注：文件名所在的绝对路径要指出</p>
+<p>例：rpm -qf /usr/lib/libacl.la</p>
+<p>3）查询已安装软件包都安装到何处；</p>
+<p>语法：rpm -ql 软件包名</p>
+<p>例：rpm -ql mplayer</p>
+<p>4）查询一个已安装软件包的信息</p>
+<p>语法： rpm -qi 软件包名</p>
+<p>例：rpm -qi mplayer</p>
+<p>5）查看一下已安装软件的配置文件；</p>
+<p>语法格式：rpm -qc 软件名</p>
+<p>例：rpm -qc mplayer</p>
+<p>6）查看一个已经安装软件的文档安装位置：</p>
+<p>语法格式： rpm -qd 软件名</p>
+<p>例：rpm -qd mplayer</p>
+<p>7）查看一下已安装软件所依赖的软件包及文件；</p>
+<p>语法格式： rpm -qR 软件名</p>
+<p>例：rpm -qR mplayer</p>
+<p><strong>注</strong>：可以把几个参数组合起来用，如 rpm -qil mplayer</p>
+<p><em>对于未安装的软件包的查看</em> : 查看的前提是当前目录下已存在一个.rpm 文件。</p>
+<p>1）查看一个软件包的用途、版本等信息；</p>
+<p>语法： rpm -qpi file.rpm</p>
+<p>例：rpm -qpi mplayer-1.0pre7try2-2.i386.rpm</p>
+<p>2）查看一件软件包所包含的文件；</p>
+<p>语法： rpm -qpl file.rpm</p>
+<p>例：rpm -qpl mplayer-1.0pre7try2-2.i386.rpm</p>
+<p>3）查看软件包的文档所在的位置；</p>
+<p>语法： rpm -qpd file.rpm</p>
+<p>例：rpm -qpd mplayer-1.0pre7try2-2.i386.rpm</p>
+<p>4）查看一个软件包的配置文件；</p>
+<p>语法： rpm -qpc file.rpm</p>
+<p>例：rpm -qpc mplayer-1.0pre7try2-2.i386.rpm</p>
+<p>5）查看一个软件包的依赖关系</p>
+<p>语法： rpm -qpR file.rpm</p>
+<p>例：rpm -qpR mplayer-1.0pre7try2-2.i386.rpm</p>
+<p>3、软件包的安装、升级、删除等； <em>安装和升级一个 rpm 包</em></p>
+<p>语法：<br>rpm -ivh file.rpm % 这个是用来安装一个新的 rpm 包<br>rpm -Uvh file.rpm % 这是用来升级一个 rpm 包</p>
+<p>% 如果有依赖关系的，需解决依赖关系。<br>% 如果找不到依赖关系的包，可以用下面的命令强制安装：</p>
+<p>rpm -ivh –nodeps –force file.rpm<br>rpm -Uvh –nodeps –force file.rpm</p>
+<p>例：<br>rpm -ivh –test mplayer-1.0pre7try2-2.i386.rpm<br>% –test 表示测试，并不真正安装。</p>
+<p>rpm -ivh –relocate /=/usr/local/mplayer mplayer-1.0pre7try2-2.i386.rpm<br>% 为软件包指定安装目录：要加 –relocate 参数<br>% 安装在指定目录中的程序如何调用呢？<br>% 通常可执行程序都放在安装目录下的 bin 或者 sbin 目录中。</p>
+<p><em>删除一个 rpm 包</em></p>
+<p>首先查出需要删除的 rpm 包，然后用下面的命令来卸载：</p>
+<p>rpm -e 软件包名</p>
+<p>例：rpm -e mplayer % 卸载 mplayer<br>% 如果有其它的 rpm 依赖于该 rpm 包，系统会出现警告。<br>% 如果一定要卸载，可以用选项 –nodeps 忽略依赖关系。但最好不要这么做。</p>
+<p><strong>四、RPM 管理包管理器支持网络安装和查询</strong></p>
+<p>rpm [选项] rpm 包的 http 或者 ftp 的地址</p>
+<p>比如我们想通过 Fedora Core 4.0 的一个镜像查询、安装软件包。</p>
+<p>rpm -qpi <a target="_blank" rel="noopener" href="http://mirrors.kernel.org/.../RPMS/rsh-0.17-29.rpm">http://mirrors.kernel.org/.../RPMS/rsh-0.17-29.rpm</a><br>% 查询</p>
+<p>rpm -ivh <a target="_blank" rel="noopener" href="http://mirrors.kernel.org/.../RPMS/rsh-0.17-29.rpm">http://mirrors.kernel.org/.../RPMS/rsh-0.17-29.rpm</a><br>% 安装</p>
+<p><strong>五、对已安装 rpm 包查询的一点补充</strong></p>
+<p>可以用 locate 来查询一些软件的安装位置，可能需要先运行 updatedb 来更新已安装软件库</p>
+<p><strong>六、从 rpm 软件包抽取文件</strong></p>
+<p>rpm2cpio xxx.rpm | cpio -idmv<br>% i 表示提取文件，v 表示指示执行进程<br>% d 表示根据包中文件原来的路径建立目录<br>% m 表示保持文件的更新时间</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1524,100 +1705,6 @@
 </blockquote>
 <p>执行此命令后，在弹出框中选择要上传的文件即可。</p>
 
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/39483.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PaoPao's Blog">
-      <meta itemprop="description" content="Stay hungry, stay foolish.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | PaoPao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/39483.html" class="post-title-link" itemprop="url">V2Ray 配置教程</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-07-03 13:06:13" itemprop="dateCreated datePublished" datetime="2021-07-03T13:06:13+08:00">2021-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-04-02 10:12:28" itemprop="dateModified" datetime="2022-04-02T10:12:28+08:00">2022-04-02</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%85%B6%E4%BB%96/" itemprop="url" rel="index"><span itemprop="name">其他</span></a>
-        </span>
-    </span>
-
-  
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>点击阅读全文查看详细内容</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/39483.html">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
       
     </div>
 

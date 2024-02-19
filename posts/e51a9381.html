@@ -20,15 +20,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="在 Linux 内核中，ucontext_t 结构体的偏移量可以根据不同的架构和操作系统的实现而有所不同。这些偏移量表示了结构体中各个字段的位置相对于结构体起始地址的偏移量。 因为 ucontext_t 结构体的定义与特定的架构和操作系统相关，所以它的偏移量也是特定于该架构和操作系统的。要查找特定系统中 ucontext_t 结构体中各字段的偏移量，你可以查看相应的内核源代码或者相关的头文件。 一">
+    <meta name="description" content="在 Linux 内核中，ucontext_t 结构体的偏移量可以根据不同的架构和操作系统的实现而有所不同。这些偏移量表示了结构体中各个字段的位置相对于结构体起始地址的偏移量。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="获取 Linux 内核源码中结构体某个字段偏移量">
 <meta property="og:url" content="https://liu-paopao.github.io/posts/e51a9381.html">
 <meta property="og:site_name" content="PaoPao&#39;s Blog">
-<meta property="og:description" content="在 Linux 内核中，ucontext_t 结构体的偏移量可以根据不同的架构和操作系统的实现而有所不同。这些偏移量表示了结构体中各个字段的位置相对于结构体起始地址的偏移量。 因为 ucontext_t 结构体的定义与特定的架构和操作系统相关，所以它的偏移量也是特定于该架构和操作系统的。要查找特定系统中 ucontext_t 结构体中各字段的偏移量，你可以查看相应的内核源代码或者相关的头文件。 一">
+<meta property="og:description" content="在 Linux 内核中，ucontext_t 结构体的偏移量可以根据不同的架构和操作系统的实现而有所不同。这些偏移量表示了结构体中各个字段的位置相对于结构体起始地址的偏移量。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-12-05T07:25:34.000Z">
-<meta property="article:modified_time" content="2023-12-27T06:59:46.128Z">
+<meta property="article:modified_time" content="2024-02-19T01:24:14.551Z">
 <meta property="article:author" content="paopao">
 <meta property="article:tag" content="结构体">
 <meta name="twitter:card" content="summary">
@@ -155,7 +155,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -259,7 +259,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-12-27 14:59:46" itemprop="dateModified" datetime="2023-12-27T14:59:46+08:00">2023-12-27</time>
+      <time title="修改时间：2024-02-19 09:24:14" itemprop="dateModified" datetime="2024-02-19T09:24:14+08:00">2024-02-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -283,11 +283,11 @@
     
     
     <div class="post-body" itemprop="articleBody"><p>在 Linux 内核中，<code>ucontext_t</code> 结构体的偏移量可以根据不同的架构和操作系统的实现而有所不同。这些偏移量表示了结构体中各个字段的位置相对于结构体起始地址的偏移量。</p>
+<span id="more"></span>
+
 <p>因为 <code>ucontext_t</code> 结构体的定义与特定的架构和操作系统相关，所以它的偏移量也是特定于该架构和操作系统的。要查找特定系统中 <code>ucontext_t</code> 结构体中各字段的偏移量，你可以查看相应的内核源代码或者相关的头文件。</p>
 <p>一种常见的方法是查看 <code>&lt;sys/ucontext.h&gt;</code> 头文件以及体系结构相关的头文件。在这些文件中，通常可以找到 <code>ucontext_t</code> 结构体的定义，以及它包含的字段和各个字段的偏移量定义。</p>
 <p>另外，你也可以使用 <code>offsetof</code> 宏来获取结构体中各字段的偏移量。这个宏可以在 C 语言中使用，它能够计算结构体中特定字段的偏移量。例如，你可以按照以下方式使用 <code>offsetof</code> 宏获取某个字段的偏移量：</p>
-<span id="more"></span>
-
 <figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stddef.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/ucontext.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> {</span><br><span class="line">    <span class="comment">// 获取某个字段的偏移量</span></span><br><span class="line">    <span class="type">size_t</span> offset = offsetof(<span class="type">ucontext_t</span>, uc_mcontext); <span class="comment">// 这里以 uc_mcontext 字段为例</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
 
 <p>这段代码将会计算 <code>ucontext_t</code> 结构体中 <code>uc_mcontext</code> 字段的偏移量，并将结果存储在 <code>offset</code> 变量中。</p>
@@ -323,6 +323,9 @@
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/posts/671f4d3c.html" rel="next" title="spec2006 测试命令">
+                  spec2006 测试命令 <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>

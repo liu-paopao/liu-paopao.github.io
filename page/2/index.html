@@ -151,7 +151,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -209,6 +209,100 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/2ed0bfd1.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/posts/2ed0bfd1.html" class="post-title-link" itemprop="url">aarch64 架构通过 mov 和 movk 指令实现立即数装载</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-07-12 16:42:15" itemprop="dateCreated datePublished" datetime="2023-07-12T16:42:15+08:00">2023-07-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-07-13 10:17:09" itemprop="dateModified" datetime="2023-07-13T10:17:09+08:00">2023-07-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8C%87%E4%BB%A4%E9%9B%86%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">指令集架构</span></a>
+        </span>
+    </span>
+
+  
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>对 64 位数据装载到寄存器这一操作不同架构实现不同，x86 能直接通过 mov 指令实现，而 aarch64 的 mov 指令一步只能装载 16 位，对于 64 位立即数必须分四部分进行装载，下面就是 x86 和 aarch64 对比验证过程。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/posts/2ed0bfd1.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -342,7 +436,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-12-27 15:00:30" itemprop="dateModified" datetime="2023-12-27T15:00:30+08:00">2023-12-27</time>
+      <time title="修改时间：2024-02-19 09:24:30" itemprop="dateModified" datetime="2024-02-19T09:24:30+08:00">2024-02-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -367,7 +461,6 @@
     
     <div class="post-body" itemprop="articleBody">
           <p>在编写 Linux 简单的调试器代码时，调试发现每次 ptrace 获取的 IP 寄存器都不一样，地址总是在变化，于是联想到 Linux 内核的 ASLR 机制，关闭地址空间随机化后，IP 指针值就固定下来了。</p>
-<p>开启 ASLR 后，每次程序运行时的时候，装载的可执行文件和共享库都会被映射到虚拟地址空间的不同地址处；而关掉 ASLR，则可以保证每次运行时都会被映射到虚拟地址空间的相同地址处。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/posts/c34223c8.html#more" rel="contents">
@@ -1017,100 +1110,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/posts/7862bee9.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/66d22827.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PaoPao's Blog">
-      <meta itemprop="description" content="Stay hungry, stay foolish.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | PaoPao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/66d22827.html" class="post-title-link" itemprop="url">通过 qemu 在 x86 上实现全系统模拟 PowerPC</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-05-19 22:17:36" itemprop="dateCreated datePublished" datetime="2023-05-19T22:17:36+08:00">2023-05-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-07-12 14:54:49" itemprop="dateModified" datetime="2023-07-12T14:54:49+08:00">2023-07-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8C%87%E4%BB%A4%E9%9B%86%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">指令集架构</span></a>
-        </span>
-    </span>
-
-  
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>某软件开发过程中，需要参考 PowerPC 架构代码，但并没有 ppc 架构的机器环境，VMware 只能模拟同架构的 OS，而想要模拟不同架构，进行跨架构开发的话只能通过 qemu 进行模拟。本文记录了在 Linux 和 Windows 两种环境下实现过程：在 Windows 通过 VMware 建立 Ubuntu18.04 虚拟机，然后在 Ubuntu18.04 下用 qemu 实现全系统模拟 PowerPC；或者直接在 Windows 下用 win-64bits 的 qemu 来实现，两种方法都可行。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/66d22827.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>

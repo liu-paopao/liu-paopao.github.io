@@ -151,7 +151,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -218,6 +218,118 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/671f4d3c.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/posts/671f4d3c.html" class="post-title-link" itemprop="url">spec2006 测试命令</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-02-02 09:00:16 / 修改时间：09:27:03" itemprop="dateCreated datePublished" datetime="2024-02-02T09:00:16+08:00">2024-02-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E8%AF%91%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">编译器</span></a>
+        </span>
+    </span>
+
+  
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>############################spec2006.iso spec 最原始的代码 ######################################<br>#在 x86 上安装 spec2006</p>
+<ol>
+<li>mount spec2006 /mnt</li>
+<li>cd /mnt</li>
+<li>./install.sh  安装 spec2006，需要输入安装路径<br>  ./install.sh -h     # 查看 help 信息<br>  ./install.sh -d [self-defined dir]        # 可以自己设定目标安装路径</li>
+</ol>
+<p>############################spec2006-ubuntu20.04.tar.gz for ubuntu20.04######################################<br>配置文件为 config/gcc.cfg</p>
+<p>############################spec2006-gcc710-9906-sw.tar.gz for origin18.04######################################</p>
+<ol>
+<li>vim bin/runspec        修改路径</li>
+<li> vim bin/specdiff        修改路径</li>
+<li>. ./shrc                  更新环境变量</li>
+<li> runspec -c swgcc710-base-correct-02.cfg -a scrub all </li>
+</ol>
+<pre><code>清理相应的题，all：清理所有，或者指定题名
+</code></pre>
+<ol start="5">
+<li>runspec -c swgcc710-base-correct-02.cfg -T peak -i ref -n 1 -r 1 all –noreportable </li>
+</ol>
+<pre><code>编译运行，
+
+-n指定运行次数，默认跑三遍
+-r指定运行核数，默认4核
+-all为所有题目，可选项为int,fp或者单题题号
+--noreportable  出错情况下继续测试，参数下-n 1才能生效
+-i测试规模，从小到大规模依次为test train  ref, 如果想要计算分数，选ref
+-T 优化规模，默认base
+</code></pre>
+<ol start="6">
+<li>ls benchspec/CPU2006    查看 cpu2006 相应的题，共 31 题，其中 29 题可计分<br>      400.perlbench<br>      401.bzip2<br>      403.gcc<br>      410.bwaves<br>      416.gamess<br>      429.mcf<br>      433.milc<br>      434.zeusmp<br>      435.gromacs<br>      436.cactusADM<br>      437.leslie3d<br>      444.namd<br>      445.gobmk<br>      447.dealII<br>      450.soplex<br>      453.povray<br>      454.calculix<br>      456.hmmer<br>      458.sjeng<br>      459.GemsFDTD<br>      462.libquantum<br>      464.h264ref<br>      465.tonto<br>      470.lbm<br>      471.omnetpp<br>      473.astar<br>      481.wrf<br>      482.sphinx3<br>      483.xalancbmk<br>      998.specrand<br>      999.specrand</li>
+<li> 进入相应的题，如:<br>  cd benchspec/CPU2006/400.perlbench/build/build_base_* &amp;&amp; make 进行编译<br>  cd benchspec/CPU200</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/e51a9381.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -254,7 +366,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-12-27 14:59:46" itemprop="dateModified" datetime="2023-12-27T14:59:46+08:00">2023-12-27</time>
+      <time title="修改时间：2024-02-19 09:24:14" itemprop="dateModified" datetime="2024-02-19T09:24:14+08:00">2024-02-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -279,9 +391,6 @@
     
     <div class="post-body" itemprop="articleBody">
           <p>在 Linux 内核中，<code>ucontext_t</code> 结构体的偏移量可以根据不同的架构和操作系统的实现而有所不同。这些偏移量表示了结构体中各个字段的位置相对于结构体起始地址的偏移量。</p>
-<p>因为 <code>ucontext_t</code> 结构体的定义与特定的架构和操作系统相关，所以它的偏移量也是特定于该架构和操作系统的。要查找特定系统中 <code>ucontext_t</code> 结构体中各字段的偏移量，你可以查看相应的内核源代码或者相关的头文件。</p>
-<p>一种常见的方法是查看 <code>&lt;sys/ucontext.h&gt;</code> 头文件以及体系结构相关的头文件。在这些文件中，通常可以找到 <code>ucontext_t</code> 结构体的定义，以及它包含的字段和各个字段的偏移量定义。</p>
-<p>另外，你也可以使用 <code>offsetof</code> 宏来获取结构体中各字段的偏移量。这个宏可以在 C 语言中使用，它能够计算结构体中特定字段的偏移量。例如，你可以按照以下方式使用 <code>offsetof</code> 宏获取某个字段的偏移量：</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/posts/e51a9381.html#more" rel="contents">
@@ -343,9 +452,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-10-21 16:06:27 / 修改时间：18:25:51" itemprop="dateCreated datePublished" datetime="2023-10-21T16:06:27+08:00">2023-10-21</time>
+      <time title="创建时间：2023-10-21 16:06:27" itemprop="dateCreated datePublished" datetime="2023-10-21T16:06:27+08:00">2023-10-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-02-19 09:21:59" itemprop="dateModified" datetime="2024-02-19T09:21:59+08:00">2024-02-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -370,16 +485,6 @@
     
     <div class="post-body" itemprop="articleBody">
           <p>记录鲲鹏性能分析工具 Hyper_tuner 和代码迁移工具 Porting-advisor 的详细安装过程。</p>
-<p><strong>安装环境：</strong></p>
-<ul>
-<li>服务器：树莓派 4B（aarch64 架构）</li>
-<li>操作系统：openEuler 22.03 LTS</li>
-</ul>
-<p><strong>安装包：</strong></p>
-<ul>
-<li>Hyper-Tuner_23.0.RC2_linux.tar.gz（1.6G）</li>
-<li>Porting-advisor_23.0.RC2_linux-Kunpeng.tar.gz（437M）</li>
-</ul>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/posts/1ef93496.html#more" rel="contents">
@@ -1037,100 +1142,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/posts/e2bc80af.html">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/2ed0bfd1.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PaoPao's Blog">
-      <meta itemprop="description" content="Stay hungry, stay foolish.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | PaoPao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/2ed0bfd1.html" class="post-title-link" itemprop="url">aarch64 架构通过 mov 和 movk 指令实现立即数装载</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-07-12 16:42:15" itemprop="dateCreated datePublished" datetime="2023-07-12T16:42:15+08:00">2023-07-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-07-13 10:17:09" itemprop="dateModified" datetime="2023-07-13T10:17:09+08:00">2023-07-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8C%87%E4%BB%A4%E9%9B%86%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">指令集架构</span></a>
-        </span>
-    </span>
-
-  
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>对 64 位数据装载到寄存器这一操作不同架构实现不同，x86 能直接通过 mov 指令实现，而 aarch64 的 mov 指令一步只能装载 16 位，对于 64 位立即数必须分四部分进行装载，下面就是 x86 和 aarch64 对比验证过程。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/2ed0bfd1.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
