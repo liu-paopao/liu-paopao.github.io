@@ -151,7 +151,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">96</span>
+          <span class="site-state-item-count">97</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -218,6 +218,97 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/6861ce4b.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/posts/6861ce4b.html" class="post-title-link" itemprop="url">通过 cmake 命令获取 lldb 源码 git tag 信息</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-02-28 15:58:49 / 修改时间：16:33:10" itemprop="dateCreated datePublished" datetime="2024-02-28T15:58:49+08:00">2024-02-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%B0%83%E8%AF%95%E8%B0%83%E4%BC%98/" itemprop="url" rel="index"><span itemprop="name">调试调优</span></a>
+        </span>
+    </span>
+
+  
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h2><ul>
+<li>仅修改源码里 CMakeLists.txt，添加获取 tag 的命令，保存到编译目录新建的头文件里。</li>
+<li>通过字符串操作，提取想要的 tag 名称，比如将 tag 原始名称 v9.0.0-sw1.0.0 改为 sw1.0.0。</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/posts/6861ce4b.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/671f4d3c.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -254,7 +345,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-02-19 23:13:04" itemprop="dateModified" datetime="2024-02-19T23:13:04+08:00">2024-02-19</time>
+      <time title="修改时间：2024-02-28 15:55:22" itemprop="dateModified" datetime="2024-02-28T15:55:22+08:00">2024-02-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -278,40 +369,20 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <span id="more"></span>
-
-<h2 id="spec2006-iso-spec最原始的代码"><a href="#spec2006-iso-spec最原始的代码" class="headerlink" title="spec2006.iso spec最原始的代码"></a>spec2006.iso spec 最原始的代码</h2><p>在 x86 上安装 spec2006</p>
+          <h2 id="spec2006-iso-spec最原始的代码"><a href="#spec2006-iso-spec最原始的代码" class="headerlink" title="spec2006.iso spec最原始的代码"></a>spec2006.iso spec 最原始的代码</h2><p>在 x86 上安装 spec2006</p>
 <ol>
 <li>mount spec2006 /mnt</li>
 <li>cd /mnt</li>
 <li>./install.sh  安装 spec2006，需要输入安装路径<br>  ./install.sh -h     # 查看 help 信息<br>  ./install.sh -d [self-defined dir]        # 可以自己设定目标安装路径</li>
 </ol>
-<p>spec2006-ubuntu20.04.tar.gz for ubuntu20.04<br>配置文件为 config/gcc.cfg</p>
-<ol>
-<li>vim bin/runspec        修改路径</li>
-<li> vim bin/specdiff        修改路径</li>
-<li>. ./shrc                  更新环境变量</li>
-<li> runspec -c gcc710-base-correct-02.cfg -a scrub all </li>
-</ol>
-<pre><code>清理相应的题，all：清理所有，或者指定题名
-</code></pre>
-<ol start="5">
-<li>runspec -c gcc710-base-correct-02.cfg -T peak -i ref -n 1 -r 1 all –noreportable </li>
-</ol>
-<pre><code>编译运行，
-
--n指定运行次数，默认跑三遍
--r指定运行核数，默认4核
--all为所有题目，可选项为int,fp或者单题题号
---noreportable  出错情况下继续测试，参数下-n 1才能生效
--i测试规模，从小到大规模依次为test train  ref, 如果想要计算分数，选ref
--T 优化规模，默认base
-</code></pre>
-<ol start="6">
-<li>ls benchspec/CPU2006    查看 cpu2006 相应的题，共 31 题，其中 29 题可计分<br>      400.perlbench<br>      401.bzip2<br>      403.gcc<br>      410.bwaves<br>      416.gamess<br>      429.mcf<br>      433.milc<br>      434.zeusmp<br>      435.gromacs<br>      436.cactusADM<br>      437.leslie3d<br>      444.namd<br>      445.gobmk<br>      447.dealII<br>      450.soplex<br>      453.povray<br>      454.calculix<br>      456.hmmer<br>      458.sjeng<br>      459.GemsFDTD<br>      462.libquantum<br>      464.h264ref<br>      465.tonto<br>      470.lbm<br>      471.omnetpp<br>      473.astar<br>      481.wrf<br>      482.sphinx3<br>      483.xalancbmk<br>      998.specrand<br>      999.specrand</li>
-<li> 进入相应的题，如:<br>  cd benchspec/CPU2006/400.perlbench/build/build_base_* &amp;&amp; make 进行编译<br>  cd benchspec/CPU200</li>
-</ol>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/posts/671f4d3c.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1055,100 +1126,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/posts/4119ab6c.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/e2bc80af.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PaoPao's Blog">
-      <meta itemprop="description" content="Stay hungry, stay foolish.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | PaoPao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/e2bc80af.html" class="post-title-link" itemprop="url">解决 v2ray 代理下无法登录 OneDrive 问题</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-08-10 15:10:02" itemprop="dateCreated datePublished" datetime="2023-08-10T15:10:02+08:00">2023-08-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-10-27 15:22:09" itemprop="dateModified" datetime="2023-10-27T15:22:09+08:00">2023-10-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%85%B6%E4%BB%96/" itemprop="url" rel="index"><span itemprop="name">其他</span></a>
-        </span>
-    </span>
-
-  
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>点击阅读全文查看详细内容</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/e2bc80af.html">
                 阅读全文 &raquo;
               </a>
             </div>

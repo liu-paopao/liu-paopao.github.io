@@ -20,28 +20,29 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"liu-paopao.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="1. 软件安装rz&#x2F;sz 命令用来在 xshell 远程服务器和本地之间传输文件，主要有两种方式安装，yum 安装或者编译安装。 1.1 yum 包安装root 账号登陆后执行以下命令：  yum install -y lrzsz  2.2 源码编译安装root 账号登陆后，依次执行以下命令：  cd &#x2F;tmpwget http:&#x2F;&#x2F;www.ohse.de&#x2F;uwe&#x2F;releases&#x2F;lrzsz-0">
+    <meta name="description" content="最终效果 仅修改源码里 CMakeLists.txt，添加获取 tag 的命令，保存到编译目录新建的头文件里。 通过字符串操作，提取想要的 tag 名称，比如将 tag 原始名称 v9.0.0-sw1.0.0 改为 sw1.0.0。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="rz、sz 命令 - 文件传输">
-<meta property="og:url" content="https://liu-paopao.github.io/posts/42689.html">
+<meta property="og:title" content="通过 cmake 命令获取 lldb 源码 git tag 信息">
+<meta property="og:url" content="https://liu-paopao.github.io/posts/6861ce4b.html">
 <meta property="og:site_name" content="PaoPao&#39;s Blog">
-<meta property="og:description" content="1. 软件安装rz&#x2F;sz 命令用来在 xshell 远程服务器和本地之间传输文件，主要有两种方式安装，yum 安装或者编译安装。 1.1 yum 包安装root 账号登陆后执行以下命令：  yum install -y lrzsz  2.2 源码编译安装root 账号登陆后，依次执行以下命令：  cd &#x2F;tmpwget http:&#x2F;&#x2F;www.ohse.de&#x2F;uwe&#x2F;releases&#x2F;lrzsz-0">
+<meta property="og:description" content="最终效果 仅修改源码里 CMakeLists.txt，添加获取 tag 的命令，保存到编译目录新建的头文件里。 通过字符串操作，提取想要的 tag 名称，比如将 tag 原始名称 v9.0.0-sw1.0.0 改为 sw1.0.0。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-07-03T06:04:41.000Z">
-<meta property="article:modified_time" content="2021-07-14T14:43:07.173Z">
+<meta property="article:published_time" content="2024-02-28T07:58:49.000Z">
+<meta property="article:modified_time" content="2024-02-28T08:33:10.964Z">
 <meta property="article:author" content="paopao">
-<meta property="article:tag" content="Linux命令">
+<meta property="article:tag" content="git">
+<meta property="article:tag" content="lldb">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://liu-paopao.github.io/posts/42689.html">
+<link rel="canonical" href="https://liu-paopao.github.io/posts/6861ce4b.html">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://liu-paopao.github.io/posts/42689.html","path":"posts/42689.html","title":"rz、sz 命令 - 文件传输"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://liu-paopao.github.io/posts/6861ce4b.html","path":"posts/6861ce4b.html","title":"通过 cmake 命令获取 lldb 源码 git tag 信息"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>rz、sz 命令 - 文件传输 | PaoPao's Blog</title>
+<title>通过 cmake 命令获取 lldb 源码 git tag 信息 | PaoPao's Blog</title>
   
 
 
@@ -140,7 +141,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">1. 软件安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-yum%E5%8C%85%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 yum 包安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85"><span class="nav-number">1.2.</span> <span class="nav-text">2.2 源码编译安装</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E"><span class="nav-number">2.</span> <span class="nav-text">2. 使用说明</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-sz%E5%91%BD%E4%BB%A4%EF%BC%9A%E5%8F%91%E9%80%81%E6%96%87%E4%BB%B6%E5%88%B0%E6%9C%AC%E5%9C%B0%E7%9B%AE%E5%BD%95"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 sz 命令：发送文件到本地目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-rz%E5%91%BD%E4%BB%A4%EF%BC%9A%E5%B0%86%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%88%B0linux%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 rz 命令：将本地文件上传到 linux 服务器</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E6%95%88%E6%9E%9C"><span class="nav-number">1.</span> <span class="nav-text">最终效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#llvm%E4%B8%AD%E8%8E%B7%E5%8F%96git%E4%BF%A1%E6%81%AF%E7%9A%84%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">llvm 中获取 git 信息的思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A8%E9%83%A8%E4%BF%AE%E6%94%B9%E5%86%85%E5%AE%B9%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">全部修改内容：</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -223,7 +224,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/42689.html">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/6861ce4b.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -236,12 +237,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="rz、sz 命令 - 文件传输 | PaoPao's Blog">
+      <meta itemprop="name" content="通过 cmake 命令获取 lldb 源码 git tag 信息 | PaoPao's Blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          rz、sz 命令 - 文件传输
+          通过 cmake 命令获取 lldb 源码 git tag 信息
         </h1>
 
         <div class="post-meta-container">
@@ -251,15 +252,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2021-07-03 14:04:41" itemprop="dateCreated datePublished" datetime="2021-07-03T14:04:41+08:00">2021-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2021-07-14 22:43:07" itemprop="dateModified" datetime="2021-07-14T22:43:07+08:00">2021-07-14</time>
+      <time title="创建时间：2024-02-28 15:58:49 / 修改时间：16:33:10" itemprop="dateCreated datePublished" datetime="2024-02-28T15:58:49+08:00">2024-02-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -267,23 +262,11 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+          <a href="/categories/%E8%B0%83%E8%AF%95%E8%B0%83%E4%BC%98/" itemprop="url" rel="index"><span itemprop="name">调试调优</span></a>
         </span>
     </span>
 
   
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Changyan：</span>
-    
-    <a title="rz、sz 命令 - 文件传输" href="/posts/42689.html#SOHUCS" itemprop="discussionUrl">
-      <span id="sourceId::defe5300df460e43d2a1eb3dc47eb532" class="cy_cmt_count" itemprop="commentCount"></span>
-    </a>
-  </span>
   
   
 </div>
@@ -294,26 +277,35 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="1-软件安装"><a href="#1-软件安装" class="headerlink" title="1. 软件安装"></a>1. 软件安装</h1><p>rz/sz 命令用来在 xshell 远程服务器和本地之间传输文件，主要有两种方式安装，yum 安装或者编译安装。</p>
-<h2 id="1-1-yum包安装"><a href="#1-1-yum包安装" class="headerlink" title="1.1 yum包安装"></a>1.1 yum 包安装</h2><p>root 账号登陆后执行以下命令：</p>
-<blockquote>
-<p>yum install -y lrzsz</p>
-</blockquote>
-<h2 id="2-2-源码编译安装"><a href="#2-2-源码编译安装" class="headerlink" title="2.2 源码编译安装"></a>2.2 源码编译安装</h2><p>root 账号登陆后，依次执行以下命令：</p>
-<blockquote>
-<p>cd /tmp<br>wget <a target="_blank" rel="noopener" href="http://www.ohse.de/uwe/releases/lrzsz-0.12.20.tar.gz">http://www.ohse.de/uwe/releases/lrzsz-0.12.20.tar.gz</a><br>tar zxvf lrzsz-0.12.20.tar.gz &amp;&amp; cd lrzsz-0.12.20<br>./configure &amp;&amp; make &amp;&amp; make install</p>
-</blockquote>
-<p>上面安装过程默认把 lsz/lrz 安装到了 /usr/local/bin/ 目录下，现在我们还不能使用 sz/rz 命令，需要手动建立软链接：</p>
-<blockquote>
-<p>cd /usr/bin<br>ln -s /usr/local/bin/lsz sz<br>ln -s /usr/local/bin/lrz rz</p>
-</blockquote>
-<h1 id="2-使用说明"><a href="#2-使用说明" class="headerlink" title="2. 使用说明"></a>2. 使用说明</h1><h2 id="2-1-sz命令：发送文件到本地目录"><a href="#2-1-sz命令：发送文件到本地目录" class="headerlink" title="2.1 sz命令：发送文件到本地目录"></a>2.1 sz 命令：发送文件到本地目录</h2><blockquote>
-<p>sz filename</p>
-</blockquote>
-<h2 id="2-2-rz命令：将本地文件上传到linux服务器"><a href="#2-2-rz命令：将本地文件上传到linux服务器" class="headerlink" title="2.2 rz命令：将本地文件上传到linux服务器"></a>2.2 rz 命令：将本地文件上传到 linux 服务器</h2><blockquote>
-<p>rz</p>
-</blockquote>
-<p>执行此命令后，在弹出框中选择要上传的文件即可。</p>
+    <div class="post-body" itemprop="articleBody"><h2 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h2><ul>
+<li>仅修改源码里 CMakeLists.txt，添加获取 tag 的命令，保存到编译目录新建的头文件里。</li>
+<li>通过字符串操作，提取想要的 tag 名称，比如将 tag 原始名称 v9.0.0-sw1.0.0 改为 sw1.0.0。</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="llvm中获取git信息的思路"><a href="#llvm中获取git信息的思路" class="headerlink" title="llvm中获取git信息的思路"></a>llvm 中获取 git 信息的思路</h2><p>llvm 源码里通过 cmake/modules 目录下 VersionFromVCS.cmake 和 GenerateVersionFromVCS.cmake 两个文件来生成 git 源码仓库信息。</p>
+<p>lldb 源码里也是调用了 llvm 这个文件来生成自己的 git 信息，之前已经借助 llvm 实现了 tag 获取，但是这里 tag 信息改变了，从而之前额规则不太适用了，这里重新设计了下实现方式，避免与 llvm 耦合。</p>
+<ol>
+<li>新建 version.h 文件到编译目录</li>
+</ol>
+<p>set(version_h “${CMAKE_CURRENT_BINARY_DIR}/version.h”)</p>
+<ol start="2">
+<li>添加 git 命令获取 tag 信息，此时 tag 名称为 v9.0.0-sw1.0.0。</li>
+</ol>
+<p>execute_process(<br>  COMMAND git describe –tags<br>  WORKING_DIRECTORY ${LLDB_SOURCE_DIR}<br>  RESULT_VARIABLE git_result<br>  OUTPUT_VARIABLE git_tag<br>  OUTPUT_STRIP_TRAILING_WHITESPACE)</p>
+<ol start="3">
+<li>正则匹配 tag 字符串并处理，把 tag 名称改为 sw1.0.0。</li>
+</ol>
+<p>string(REGEX MATCHALL “sw.*$” git_tag_new “${git_tag}”)</p>
+<ol start="4">
+<li>将处理后的 tag 信息追加到 version.h 文件里，内容为：#define LLDB_GIT_TAG “sw1.0.0”<br>file(APPEND “${version_h}”<br>  “#define LLDB_GIT_TAG "${git_tag_new}"\n”)</li>
+</ol>
+<p>message(STATUS “LLDB_GIT_TAG: ${git_tag_new}”)</p>
+<ol start="5">
+<li>修改 source/lldb.cpp 文件，引入 version.h 头文件，在版本字符串后添加 LLDB_GIT_TAG 宏。</li>
+</ol>
+<h2 id="全部修改内容："><a href="#全部修改内容：" class="headerlink" title="全部修改内容："></a>全部修改内容：</h2><figure class="highlight diff"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt</span></span><br><span class="line"><span class="comment">index d229f74..a3d3ad5 100644</span></span><br><span class="line"><span class="comment">--- a/source/CMakeLists.txt</span></span><br><span class="line"><span class="comment">+++ b/source/CMakeLists.txt</span></span><br><span class="line"><span class="meta">@@ -29,6 +29,20 @@</span> add_custom_command(OUTPUT "${version_inc}"</span><br><span class="line">                            "-DHEADER_FILE=${version_inc}"</span><br><span class="line">                            -P "${generate_vcs_version_script}")</span><br><span class="line"> </span><br><span class="line"><span class="addition">+set(version_h "${CMAKE_CURRENT_BINARY_DIR}/version.h")</span></span><br><span class="line"><span class="addition">+execute_process(</span></span><br><span class="line"><span class="addition">+  COMMAND git describe --tags</span></span><br><span class="line"><span class="addition">+  WORKING_DIRECTORY ${LLDB_SOURCE_DIR}</span></span><br><span class="line"><span class="addition">+  RESULT_VARIABLE git_result</span></span><br><span class="line"><span class="addition">+  OUTPUT_VARIABLE git_tag</span></span><br><span class="line"><span class="addition">+  OUTPUT_STRIP_TRAILING_WHITESPACE)</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+string(REGEX MATCHALL "sw.*$" git_tag_new "${git_tag}")</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+file(APPEND "${version_h}"</span></span><br><span class="line"><span class="addition">+  "#define LLDB_GIT_TAG \"${git_tag_new}\"\n")</span></span><br><span class="line"><span class="addition">+message(STATUS "LLDB_GIT_TAG: ${git_tag_new}")</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"> # Mark the generated header as being generated.</span><br><span class="line"> set_source_files_properties("${version_inc}"</span><br><span class="line">   PROPERTIES GENERATED TRUE</span><br></pre></td></tr></tbody></table></figure>
+
 
     </div>
 
@@ -323,21 +315,19 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Linux%E5%91%BD%E4%BB%A4/" rel="tag"><i class="fa fa-tag"></i> Linux命令</a>
+              <a href="/tags/git/" rel="tag"><i class="fa fa-tag"></i> git</a>
+              <a href="/tags/lldb/" rel="tag"><i class="fa fa-tag"></i> lldb</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/posts/39483.html" rel="prev" title="V2Ray 配置教程">
-                  <i class="fa fa-angle-left"></i> V2Ray 配置教程
+                <a href="/posts/671f4d3c.html" rel="prev" title="spec2006 测试命令">
+                  <i class="fa fa-angle-left"></i> spec2006 测试命令
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/posts/29820.html" rel="next" title="yum 命令 - RPM 包管理器">
-                  yum 命令 - RPM 包管理器 <i class="fa fa-angle-right"></i>
-                </a>
             </div>
           </div>
     </footer>
@@ -349,7 +339,6 @@
 
 
 
-    <div class="comments" id="SOHUCS" sid="defe5300df460e43d2a1eb3dc47eb532"></div>
 </div>
   </main>
 

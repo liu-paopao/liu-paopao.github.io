@@ -28,7 +28,7 @@
 <meta property="og:description" content="不兼容问题描述负责 llvm 研发的同事在 cmake 脚本里补充了一个小功能，来获取 llvm 仓库的版本号 tag，实现原理是在官方的生成版本脚本里添加了一个 tag 变量，该 tag 变量值通过执行命令 git describe --contains HEAD 来获取。但是实现过程中，在代码里包含了 ${LLVM_SOURCE_DIR} 路径变量，编译 llvm 时不会报错，但当编译 lld">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-05-24T08:36:05.000Z">
-<meta property="article:modified_time" content="2023-06-20T09:21:30.219Z">
+<meta property="article:modified_time" content="2024-02-28T07:56:35.315Z">
 <meta property="article:author" content="paopao">
 <meta property="article:tag" content="llvm">
 <meta property="article:tag" content="lldb">
@@ -156,7 +156,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">96</span>
+          <span class="site-state-item-count">97</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -260,7 +260,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-20 17:21:30" itemprop="dateModified" datetime="2023-06-20T17:21:30+08:00">2023-06-20</time>
+      <time title="修改时间：2024-02-28 15:56:35" itemprop="dateModified" datetime="2024-02-28T15:56:35+08:00">2024-02-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -268,7 +268,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E7%BC%96%E8%AF%91%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">编译器</span></a>
+          <a href="/categories/%E8%B0%83%E8%AF%95%E8%B0%83%E4%BC%98/" itemprop="url" rel="index"><span itemprop="name">调试调优</span></a>
         </span>
     </span>
 
