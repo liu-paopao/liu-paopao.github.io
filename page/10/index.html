@@ -151,7 +151,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">97</span>
+          <span class="site-state-item-count">98</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -162,7 +162,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -209,6 +209,180 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/29820.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/posts/29820.html" class="post-title-link" itemprop="url">yum 命令 - RPM 包管理器</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-03 14:11:45" itemprop="dateCreated datePublished" datetime="2021-07-03T14:11:45+08:00">2021-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2021-07-14 22:43:07" itemprop="dateModified" datetime="2021-07-14T22:43:07+08:00">2021-07-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Changyan：</span>
+    
+    <a title="yum 命令 - RPM 包管理器" href="/posts/29820.html#SOHUCS" itemprop="discussionUrl">
+      <span id="sourceId::903bbeb1f5acfe8d181dbdc976c21e32" class="cy_cmt_count" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="yum命令介绍"><a href="#yum命令介绍" class="headerlink" title="yum命令介绍"></a>yum 命令介绍</h2><p>yum 命令是在 Fedora 和 RedHat 以及 SUSE 中基于 rpm 的软件包管理器，它可以使系统管理人员交互和自动化地更新与管理 RPM 软件包，能够从指定的服务器自动下载 RPM 包并且安装，可以自动处理依赖性关系，并且一次安装所有依赖的软体包，无须繁琐地一次次下载、安装。</p>
+<h2 id="yum命令常用参数"><a href="#yum命令常用参数" class="headerlink" title="yum命令常用参数"></a>yum 命令常用参数</h2><table>
+<thead>
+<tr>
+<th>-h</th>
+<th> 显示帮助信息</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> -y</td>
+<td> 对所有的提问都回答 “yes”</td>
+</tr>
+<tr>
+<td>install</td>
+<td> 安装 rpm 软件包</td>
+</tr>
+<tr>
+<td> update</td>
+<td> 更新 rpm 软件包</td>
+</tr>
+<tr>
+<td> check-update</td>
+<td> 检查是否有可用的更新 rpm 软件包</td>
+</tr>
+<tr>
+<td> remove</td>
+<td> 删除指定的 rpm 软件包</td>
+</tr>
+<tr>
+<td> list</td>
+<td> 显示软件包的信息</td>
+</tr>
+<tr>
+<td> search</td>
+<td> 检查软件包的信息</td>
+</tr>
+<tr>
+<td> info</td>
+<td> 显示指定的 rpm 软件包的描述信息和概要信息</td>
+</tr>
+<tr>
+<td> clean</td>
+<td> 清理 yum 过期的缓存</td>
+</tr>
+<tr>
+<td> resolvedep</td>
+<td> 显示 rpm 软件包的依赖关系</td>
+</tr>
+<tr>
+<td> localinstall</td>
+<td> 安装本地的 rpm 软件包</td>
+</tr>
+<tr>
+<td> localupdate</td>
+<td> 显示本地 rpm 软件包进行更新</td>
+</tr>
+<tr>
+<td> deplist</td>
+<td> 显示 rpm 软件包的所有依赖关系</td>
+</tr>
+</tbody></table>
+<h2 id="国内-yum-源"><a href="#国内-yum-源" class="headerlink" title="国内 yum 源"></a>国内 yum 源</h2><p>网易（163）yum 源是国内最好的 yum 源之一 ，无论是速度还是软件版本，都非常的不错。</p>
+<p>将 yum 源设置为 163 yum，可以提升软件包安装和更新的速度，同时避免一些常见软件版本无法找到。</p>
+<h3 id="yum源配置方法"><a href="#yum源配置方法" class="headerlink" title="yum源配置方法"></a>yum 源配置方法</h3><p>首先备份 /etc/yum.repos.d/CentOS-Base.repo</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</span><br></pre></td></tr></tbody></table></figure>
+
+<p>下载对应版本 repo 文件，放入 /etc/yum.repos.d/ (操作前请做好相应备份)</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://mirrors.163.com/.help/CentOS5-Base-163.repo">CentOS5</a> ：<a target="_blank" rel="noopener" href="http://mirrors.163.com/.help/CentOS5-Base-163.repo">http://mirrors.163.com/.help/CentOS5-Base-163.repo</a></li>
+<li><a target="_blank" rel="noopener" href="http://mirrors.163.com/.help/CentOS6-Base-163.repo">CentOS6</a> ：<a target="_blank" rel="noopener" href="http://mirrors.163.com/.help/CentOS6-Base-163.repo">http://mirrors.163.com/.help/CentOS6-Base-163.repo</a></li>
+<li><a target="_blank" rel="noopener" href="http://mirrors.163.com/.help/CentOS7-Base-163.repo">CentOS7</a> ：<a target="_blank" rel="noopener" href="http://mirrors.163.com/.help/CentOS7-Base-163.repo">http://mirrors.163.com/.help/CentOS7-Base-163.repo</a></li>
+</ul>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget http://mirrors.163.com/.help/CentOS6-Base-163.repo</span><br><span class="line">mv CentOS6-Base-163.repo CentOS-Base.repo</span><br></pre></td></tr></tbody></table></figure>
+
+<p>运行以下命令生成缓存</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum clean all</span><br><span class="line">yum makecache</span><br></pre></td></tr></tbody></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 

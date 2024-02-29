@@ -151,7 +151,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">97</span>
+          <span class="site-state-item-count">98</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -162,7 +162,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -209,6 +209,139 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/4169710f.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="paopao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaoPao's Blog">
+      <meta itemprop="description" content="Stay hungry, stay foolish.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | PaoPao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/posts/4169710f.html" class="post-title-link" itemprop="url">搭建个人免费稳定图床 GitHub+jsDelivr+PicGo+Typora</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-10-31 11:03:44" itemprop="dateCreated datePublished" datetime="2021-10-31T11:03:44+08:00">2021-10-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-06-20 16:58:28" itemprop="dateModified" datetime="2023-06-20T16:58:28+08:00">2023-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%98%E8%85%BE%E6%97%A5%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">折腾日记</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Changyan：</span>
+    
+    <a title="搭建个人免费稳定图床 GitHub+jsDelivr+PicGo+Typora" href="/posts/4169710f.html#SOHUCS" itemprop="discussionUrl">
+      <span id="sourceId::db388fe1f47eca64fce89c511919be93" class="cy_cmt_count" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="搭建个人免费稳定图床GitHub-jsDelivr-PicGo-Typora"><a href="#搭建个人免费稳定图床GitHub-jsDelivr-PicGo-Typora" class="headerlink" title="搭建个人免费稳定图床GitHub+jsDelivr+PicGo+Typora"></a>搭建个人免费稳定图床 GitHub+jsDelivr+PicGo+Typora</h1><p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311104520.gif" alt="IMG_256"></p>
+<p>搭建完个人博客以后，写文章的时候就不可避免需要插入图片，于是就需要使用图床工具把本地图片转换成网络图片再把图片链接分享出来。市面上的图床工具非常多，但很多都需要收费，有些免费的也存在着不稳定的风险。现在有一种基于 GitHub 和 jsDelivr 加速的免费图床。PicGo 是一个用于快速上传图片并获取图片 URL 链接的工具，支持多个图床进行使用，其中当然包括我们现在使用的 GitHub 图床了，它同时支持 Windows、macOS、Linux 平台。GitHub 和 jsDelivr 都是大厂，不用担心跑路问题，也不用担心速度和容量问题，而且完全开源免费，再结合 Typora 编辑器，书写 markdown 格式文章，简直效率神器，快来根据下面教程搭建个人的免费稳定图床吧！ </p>
+<h2 id="一、新建GitHub图床仓库"><a href="#一、新建GitHub图床仓库" class="headerlink" title="一、新建GitHub图床仓库"></a>一、新建 GitHub 图床仓库</h2><ol>
+<li>登录 GitHub 账户，没有的话就注册下，然后新建 GitHub 仓库。</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311104523.jpg" alt="img"></p>
+<p>2、填写仓库名【CDN1】，勾选上【Public】和【Add a README file】，最后点击创建。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311107307.jpg" alt="Snipaste_2021-10-24_15-30-47"></p>
+<p>3、创建 GitHub 中的 Token (令牌)</p>
+<p>点击右上角头像，选中头像列表中的【Settings】，进入【Settings】，点击【Developer Settings】，再点击【<a target="_blank" rel="noopener" href="https://github.com/settings/tokens">Personal access tokens</a>】，接着点击【Generate new token】。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311107067.jpg" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311107725.jpg" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311107888.jpg" alt="img"></p>
+<p>在 Note 中取一个名字，选中 repo 这个框过后直接点击完成（Generate token）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311107110.jpg" alt="img"></p>
+<p>最后生成 token，记住这个令牌一定要复制保存，建议保存到记事本里，如果没有保存的需要删除重来一遍。</p>
+<h2 id="二、配置PicGo"><a href="#二、配置PicGo" class="headerlink" title="二、配置PicGo"></a>二、配置 PicGo</h2><p>1、安装 PicGo</p>
+<p>下载地址 <a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/PicGo/releases">https://github.com/Molunerfinn/PicGo/releases</a> ，选择下载与系统匹配的安装包，根据默认勾选安装即可。</p>
+<p>2、打开 PicGo，配置图床</p>
+<p>设定仓库名：按照【GitHub 用户名 / 图床仓库名】的格式填写</p>
+<p>设定分支名：【main】</p>
+<p>设定 Token：粘贴 GitHub 生成的【Token】</p>
+<p>指定存储路径：默认路径为【img/】，图片将会储存在此文件夹中，而我改成了 img/2021/。</p>
+<p>设定自定义域名：它的的作用是，在图片上传后，PicGo 会按照【自定义域名 + 上传的图片名】的方式生成访问链接，放到粘贴板上，因为我们要使用 jsDelivr 加速访问，所以可以设置为【<a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/%E7%94%A8%E6%88%B7%E5%90%8D/%E5%9B%BE%E5%BA%8A%E4%BB%93%E5%BA%93%E5%90%8D%E3%80%91">https://cdn.jsdelivr.net/gh/ 用户名 / 图床仓库名】</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311104577.jpg" alt="2"></p>
+<p>3、进入 PicGo 设置，打开时间戳重命名，避免因图片重名而导致上传失败。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311345102.jpg" alt="3"></p>
+<p>4、可以打开上传区测试一下，选择 URL 的图片链接格式，上传完图片后复制链接，直接再浏览器打开就能看到了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311104927.jpg" alt="4"></p>
+<h2 id="三、配置typora"><a href="#三、配置typora" class="headerlink" title="三、配置typora"></a>三、配置 typora</h2><p>1、下载 typora：<a target="_blank" rel="noopener" href="https://typora.io/">https://typora.io/</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311104776.jpeg" alt="111"></p>
+<p>2、打开【文件】中【偏好设置】，选择【图像】，根据图片中配置进行勾选。最后再找到 PicGo 软件的安装位置，可以上传验证测试下，默认会上传 typora 图标。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311104208.jpg" alt="01"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311104756.jpg" alt="02"><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311104944.jpg" alt="03"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/HanxuLiu/CDN1/img/2021/202110311104504.jpg" alt="04"></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1506,180 +1639,6 @@
 <h3 id="df-ah显示全部文件系统"><a href="#df-ah显示全部文件系统" class="headerlink" title="df -ah显示全部文件系统"></a><code>df -ah</code> 显示全部文件系统</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">[root@paopao ~]# df -ah</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">sysfs              0     0     0    - /sys</span><br><span class="line">proc               0     0     0    - /proc</span><br><span class="line">devtmpfs        340M     0  340M   0% /dev</span><br><span class="line">securityfs         0     0     0    - /sys/kernel/security</span><br><span class="line">tmpfs           355M     0  355M   0% /dev/shm</span><br><span class="line">devpts             0     0     0    - /dev/pts</span><br><span class="line">tmpfs           355M   41M  315M  12% /run</span><br><span class="line">tmpfs           355M     0  355M   0% /sys/fs/cgroup</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/systemd</span><br><span class="line">pstore             0     0     0    - /sys/fs/pstore</span><br><span class="line">bpf                0     0     0    - /sys/fs/bpf</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/memory</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpu,cpuacct</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/net_cls,net_prio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/hugetlb</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpuset</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/freezer</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/perf_event</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/devices</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/pids</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/blkio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/rdma</span><br><span class="line">none               0     0     0    - /sys/kernel/tracing</span><br><span class="line">configfs           0     0     0    - /sys/kernel/config</span><br><span class="line">/dev/vda1        20G  1.6G   18G   9% /</span><br><span class="line">mqueue             0     0     0    - /dev/mqueue</span><br><span class="line">hugetlbfs          0     0     0    - /dev/hugepages</span><br><span class="line">debugfs            0     0     0    - /sys/kernel/debug</span><br><span class="line">systemd-1          -     -     -    - /proc/sys/fs/binfmt_misc</span><br><span class="line">binfmt_misc        0     0     0    - /proc/sys/fs/binfmt_misc</span><br><span class="line">tmpfs            71M     0   71M   0% /run/user/0</span><br><span class="line">[root@paopao ~]#      </span><br></pre></td></tr></tbody></table></figure>
 <h3 id="df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况"><a href="#df-目录-指定目录下的文件’指定文件所在分区的磁盘使用情况" class="headerlink" title="df  目录 指定目录下的文件’指定文件所在分区的磁盘使用情况"></a><code>df  目录</code> 指定目录下的文件’指定文件所在分区的磁盘使用情况</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@paopao ~]# df /root/.bashrc </span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">/dev/vda1       20510332 1610068  17835356   9% /</span><br><span class="line">[root@paopao ~]# </span><br><span class="line">[root@paopao ~]# </span><br></pre></td></tr></tbody></table></figure>
 
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://liu-paopao.github.io/posts/29820.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="paopao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PaoPao's Blog">
-      <meta itemprop="description" content="Stay hungry, stay foolish.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | PaoPao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/posts/29820.html" class="post-title-link" itemprop="url">yum 命令 - RPM 包管理器</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-07-03 14:11:45" itemprop="dateCreated datePublished" datetime="2021-07-03T14:11:45+08:00">2021-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2021-07-14 22:43:07" itemprop="dateModified" datetime="2021-07-14T22:43:07+08:00">2021-07-14</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-    </span>
-
-  
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Changyan：</span>
-    
-    <a title="yum 命令 - RPM 包管理器" href="/posts/29820.html#SOHUCS" itemprop="discussionUrl">
-      <span id="sourceId::903bbeb1f5acfe8d181dbdc976c21e32" class="cy_cmt_count" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="yum命令介绍"><a href="#yum命令介绍" class="headerlink" title="yum命令介绍"></a>yum 命令介绍</h2><p>yum 命令是在 Fedora 和 RedHat 以及 SUSE 中基于 rpm 的软件包管理器，它可以使系统管理人员交互和自动化地更新与管理 RPM 软件包，能够从指定的服务器自动下载 RPM 包并且安装，可以自动处理依赖性关系，并且一次安装所有依赖的软体包，无须繁琐地一次次下载、安装。</p>
-<h2 id="yum命令常用参数"><a href="#yum命令常用参数" class="headerlink" title="yum命令常用参数"></a>yum 命令常用参数</h2><table>
-<thead>
-<tr>
-<th>-h</th>
-<th> 显示帮助信息</th>
-</tr>
-</thead>
-<tbody><tr>
-<td> -y</td>
-<td> 对所有的提问都回答 “yes”</td>
-</tr>
-<tr>
-<td>install</td>
-<td> 安装 rpm 软件包</td>
-</tr>
-<tr>
-<td> update</td>
-<td> 更新 rpm 软件包</td>
-</tr>
-<tr>
-<td> check-update</td>
-<td> 检查是否有可用的更新 rpm 软件包</td>
-</tr>
-<tr>
-<td> remove</td>
-<td> 删除指定的 rpm 软件包</td>
-</tr>
-<tr>
-<td> list</td>
-<td> 显示软件包的信息</td>
-</tr>
-<tr>
-<td> search</td>
-<td> 检查软件包的信息</td>
-</tr>
-<tr>
-<td> info</td>
-<td> 显示指定的 rpm 软件包的描述信息和概要信息</td>
-</tr>
-<tr>
-<td> clean</td>
-<td> 清理 yum 过期的缓存</td>
-</tr>
-<tr>
-<td> resolvedep</td>
-<td> 显示 rpm 软件包的依赖关系</td>
-</tr>
-<tr>
-<td> localinstall</td>
-<td> 安装本地的 rpm 软件包</td>
-</tr>
-<tr>
-<td> localupdate</td>
-<td> 显示本地 rpm 软件包进行更新</td>
-</tr>
-<tr>
-<td> deplist</td>
-<td> 显示 rpm 软件包的所有依赖关系</td>
-</tr>
-</tbody></table>
-<h2 id="国内-yum-源"><a href="#国内-yum-源" class="headerlink" title="国内 yum 源"></a>国内 yum 源</h2><p>网易（163）yum 源是国内最好的 yum 源之一 ，无论是速度还是软件版本，都非常的不错。</p>
-<p>将 yum 源设置为 163 yum，可以提升软件包安装和更新的速度，同时避免一些常见软件版本无法找到。</p>
-<h3 id="yum源配置方法"><a href="#yum源配置方法" class="headerlink" title="yum源配置方法"></a>yum 源配置方法</h3><p>首先备份 /etc/yum.repos.d/CentOS-Base.repo</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</span><br></pre></td></tr></tbody></table></figure>
-
-<p>下载对应版本 repo 文件，放入 /etc/yum.repos.d/ (操作前请做好相应备份)</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="http://mirrors.163.com/.help/CentOS5-Base-163.repo">CentOS5</a> ：<a target="_blank" rel="noopener" href="http://mirrors.163.com/.help/CentOS5-Base-163.repo">http://mirrors.163.com/.help/CentOS5-Base-163.repo</a></li>
-<li><a target="_blank" rel="noopener" href="http://mirrors.163.com/.help/CentOS6-Base-163.repo">CentOS6</a> ：<a target="_blank" rel="noopener" href="http://mirrors.163.com/.help/CentOS6-Base-163.repo">http://mirrors.163.com/.help/CentOS6-Base-163.repo</a></li>
-<li><a target="_blank" rel="noopener" href="http://mirrors.163.com/.help/CentOS7-Base-163.repo">CentOS7</a> ：<a target="_blank" rel="noopener" href="http://mirrors.163.com/.help/CentOS7-Base-163.repo">http://mirrors.163.com/.help/CentOS7-Base-163.repo</a></li>
-</ul>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget http://mirrors.163.com/.help/CentOS6-Base-163.repo</span><br><span class="line">mv CentOS6-Base-163.repo CentOS-Base.repo</span><br></pre></td></tr></tbody></table></figure>
-
-<p>运行以下命令生成缓存</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum clean all</span><br><span class="line">yum makecache</span><br></pre></td></tr></tbody></table></figure>
 
       
     </div>
